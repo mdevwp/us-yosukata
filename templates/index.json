@@ -65,7 +65,7 @@
         "navigation_color_foreground": "#ffffff",
         "navigation_color_background": "",
         "navigation_background_opacity": 0,
-        "enable_animation": true,
+        "enable_animation": false,
         "section_padding": "section--vertical-padding-top-bottom"
       }
     },

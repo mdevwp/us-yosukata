@@ -57,6 +57,10 @@ body.template-index .slideshow-slide[data-slide="1"] .slideshow-slide__overlay {
 body.template-index .slideshow-slide[data-slide="1"] .slideshow-slide__text-container {
   max-width: 730px;
 }
+body.template-index .slideshow-slide[data-slide="1"] .slideshow-slide__text-container-inner > * {
+  opacity: 1 !important;
+  transform: none !important;
+}
 body.template-index .slideshow-slide[data-slide="1"] .slideshow-slide__text-container-heading {
   color: #fff;
   font-size: clamp(40px, 3.65vw, 60px);
