@@ -5,6 +5,7 @@
 {%- liquid
   assign yk_heading = settings.yk_font_heading
   assign yk_body = settings.yk_font_body
+  assign yk_heading_500 = yk_heading | font_modify: 'weight', '500'
   assign yk_heading_600 = yk_heading | font_modify: 'weight', '600'
   assign yk_heading_800 = yk_heading | font_modify: 'weight', '800'
   assign yk_body_500 = yk_body | font_modify: 'weight', '500'
@@ -12,6 +13,7 @@
 -%}
 <style>
   {{ yk_heading | font_face: font_display: 'swap' }}
+  {{ yk_heading_500 | font_face: font_display: 'swap' }}
   {{ yk_heading_600 | font_face: font_display: 'swap' }}
   {{ yk_heading_800 | font_face: font_display: 'swap' }}
   {{ yk_body | font_face: font_display: 'swap' }}

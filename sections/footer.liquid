@@ -28,10 +28,9 @@
 <style>
   #shopify-section-{{ section.id }} {
     {% if yk_redesign == 'true' %}
-      background-color: #121212;
-    {% endif %}
-    {% if section.settings.background_image != blank %}
-      background-image: {% if yk_redesign == 'true' %}linear-gradient(rgba(18, 18, 18, .55), rgba(18, 18, 18, .92) 70%), {% endif %}url('{{ section.settings.background_image | image_url }}');
+      background: #121212 url('{{ 'yk-footer-bg.jpg' | asset_url }}') center 69% / cover no-repeat;
+    {% elsif section.settings.background_image != blank %}
+      background-image: url('{{ section.settings.background_image | image_url }}');
       background-size: {{ section.settings.background_size | default: 'cover' }};
       background-position: {{ section.settings.background_position | default: 'center center' }};
       background-repeat: {% if section.settings.background_repeat %}repeat{% else %}no-repeat{% endif %};

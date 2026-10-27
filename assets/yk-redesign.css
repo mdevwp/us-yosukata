@@ -205,7 +205,7 @@ body.yk-redesign .yk-header .header__row-mobile .header__icon-touch--account { d
   color: #fff;
   font-family: var(--yk-font-heading);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 20px;
   letter-spacing: 0;
   text-transform: none;
@@ -256,7 +256,7 @@ body.yk-redesign .yk-header .header__row-mobile .header__icon-touch--account { d
   cursor: pointer;
   font-family: var(--yk-font-heading);
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 20px;
   list-style: none;
 }
@@ -289,7 +289,7 @@ body.yk-redesign .yk-header .header__row-mobile .header__icon-touch--account { d
   vertical-align: top;
   font-family: var(--yk-font-heading);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 16px;
   text-decoration: none;
 }
@@ -359,7 +359,7 @@ body.yk-redesign .yk-header .header__row-mobile .header__icon-touch--account { d
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
-    gap: 42px 24px;
+    gap: 50px 24px;
     margin-top: 61px;
     padding-top: 50px;
     border-top: 1px solid rgba(255, 255, 255, .25);
