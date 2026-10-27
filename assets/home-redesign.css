@@ -52,8 +52,12 @@ body.template-index .slideshow-slide[data-slide="1"] .slideshow-slide__text-cont
   min-width: 160px;
   border: 0;
   border-radius: 999px;
-  background: #bf0036;
-  color: #fff;
+  background: #bf0036 !important;
+  color: #fff !important;
+}
+body.template-index .slideshow-slide[data-slide="1"] .slideshow-slide__text-container-image-button .btn-borders,
+body.template-index .slideshow-slide[data-slide="1"] .slideshow-slide__text-container-image-button .btn-anim {
+  display: none;
 }
 body.template-index .home-hero-awards,
 body.template-index .home-hero-proof {
