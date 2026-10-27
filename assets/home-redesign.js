@@ -18,6 +18,9 @@ function initHomeCategorySwitcher(section) {
   }
   tabs.forEach((tab, index) => {
     tab.addEventListener('click', () => activate(tab));
+    tab.addEventListener('pointerenter', (event) => {
+      if (event.pointerType === 'mouse') activate(tab);
+    });
     tab.addEventListener('keydown', (event) => {
       if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp' && event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
       event.preventDefault();
