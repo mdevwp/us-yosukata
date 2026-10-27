@@ -1,0 +1,42 @@
+{%- liquid
+  comment
+    Animated button snippet with border effects
+
+    Parameters:
+    - text: Button text content
+    - url: Link URL (optional)
+    - type: Button type (submit, button, etc.) - defaults to 'button'
+    - class: Additional CSS classes
+    - disabled: Boolean to disable the button
+    - attributes: Additional HTML attributes
+  endcomment
+
+  assign button_text = text | default: 'Button'
+  if button_text contains 'products.product.'
+    assign button_text = button_text | t
+  endif
+  assign button_url = url
+  assign button_type = type | default: 'button'
+  assign button_class = class | default: ''
+  assign is_disabled = disabled | default: false
+  assign additional_attributes = attributes | default: ''
+-%}
+
+{%- if button_url -%}
+  <a href="{{ button_url }}" class="animated-btn {{ button_class }}" {{ additional_attributes }}>
+    <span class="btn-borders"></span>
+    <span class="btn-anim"></span>
+    <span class="btn-text">{{ button_text }}</span>
+  </a>
+{%- else -%}
+  <button
+    type="{{ button_type }}"
+    class="animated-btn {{ button_class }}"
+    {% if is_disabled %}disabled{% endif %}
+    {{ additional_attributes }}
+  >
+    <span class="btn-borders"></span>
+    <span class="btn-anim"></span>
+    <span class="btn-text">{{ button_text }}</span>
+  </button>
+{%- endif -%}

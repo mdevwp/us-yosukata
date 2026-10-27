@@ -1,0 +1,49 @@
+{%- liquid
+  assign first_block = section.blocks.first
+  assign first_url = first_block.settings.collection.url | default: routes.all_products_collection_url
+-%}
+<section class="home-categories" data-home-categories aria-label="{{ section.settings.aria_label | escape }}">
+  <div class="home-categories__inner">
+    <div class="home-categories__tabs" role="tablist" aria-label="{{ section.settings.aria_label | escape }}">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign category_image = block.settings.image
+          assign category_url = block.settings.collection.url | default: routes.all_products_collection_url
+          assign category_title = block.settings.title | default: block.settings.collection.title
+        -%}
+        <button class="home-categories__tab{% if forloop.first %} is-active{% endif %}"
+          id="CategoryTab-{{ block.id }}" type="button" role="tab"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+          aria-controls="CategoryPanel-{{ section.id }}"
+          data-home-category-tab
+          data-category-title="{{ category_title | escape }}"
+          data-category-url="{{ category_url | escape }}"
+          data-category-image="{% if category_image != blank %}{{ category_image | image_url: width: 1200 }}{% elsif forloop.first %}{{ 'home-category.jpg' | asset_url }}{% elsif forloop.index == 3 %}{{ 'home-category-accessories.jpg' | asset_url }}{% elsif block.settings.collection.featured_image != blank %}{{ block.settings.collection.featured_image | image_url: width: 1200 }}{% else %}{{ 'home-category.jpg' | asset_url }}{% endif %}"
+          {{ block.shopify_attributes }}>{{ category_title | escape }}</button>
+      {%- endfor -%}
+    </div>
+    <div class="home-categories__panel" id="CategoryPanel-{{ section.id }}" role="tabpanel" aria-labelledby="CategoryTab-{{ first_block.id }}">
+      <img data-home-category-image
+        src="{% if first_block.settings.image != blank %}{{ first_block.settings.image | image_url: width: 1200 }}{% else %}{{ 'home-category.jpg' | asset_url }}{% endif %}"
+        alt="{{ first_block.settings.title | default: first_block.settings.collection.title | escape }}"
+        width="1080" height="1080" loading="lazy">
+      <a data-home-category-link href="{{ first_url }}">{{ section.settings.button_label | escape }}</a>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Home categories",
+  "settings": [
+    {"type":"text","id":"aria_label","label":"Accessible label","default":"Shop categories"},
+    {"type":"text","id":"button_label","label":"Button label","default":"See All"}
+  ],
+  "blocks": [{"type":"category","name":"Category","settings":[
+    {"type":"text","id":"title","label":"Title"},
+    {"type":"collection","id":"collection","label":"Collection"},
+    {"type":"image_picker","id":"image","label":"Image override"}
+  ]}],
+  "max_blocks": 6,
+  "presets": [{"name":"Home categories"}]
+}
+{% endschema %}

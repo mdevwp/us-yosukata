@@ -1,0 +1,786 @@
+{{ 'template-blog.css' | asset_url | stylesheet_tag }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+{%- liquid
+  if section.settings.link != blank
+    assign button_link = section.settings.link
+  endif
+-%}
+
+<style>
+  .articles-slider {
+    --articles-slider-gap: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .articles-slider__container {
+    display: grid;
+    grid-template-columns: 1.9fr 1fr;
+    gap: 15px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .articles-slider__column {
+    position: relative;
+  }
+
+  .articles-slider__column--left {
+    display: flex;
+  }
+
+  .articles-slider__column--right {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 440px;
+    align-items: flex-start;
+  }
+
+  .articles-slider__item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    display: block;
+    width: 100%;
+  }
+
+  /* Large article: 806x454 aspect ratio with max-height constraint */
+  .articles-slider__column--left .articles-slider__item {
+    position: relative;
+    aspect-ratio: 806 / 454;
+    max-height: 454px;
+    width: 100%;
+    max-width: 806px; /* Ensures height stays at 454px when container is wide */
+  }
+
+  /* When container is wider, maintain aspect ratio but cap height */
+  .articles-slider__column--left {
+    align-items: flex-start;
+  }
+
+  .articles-slider__column--left .articles-slider__item-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  /* Small articles: 414x217 aspect ratio */
+  .articles-slider__column--right .articles-slider__item {
+    aspect-ratio: 414 / 217;
+    max-height: 217px; /* Ensures two images + gap don't exceed 454px */
+    flex: 0 0 auto;
+  }
+
+  .articles-slider__column--right .articles-slider__item-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .articles-slider__item-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .articles-slider__item:hover .articles-slider__item-image {
+    transform: scale(1.05);
+  }
+
+  .articles-slider__item-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    padding: 20px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+  }
+
+  .articles-slider__item:hover .articles-slider__item-overlay {
+    opacity: 1;
+  }
+
+  .articles-slider__item-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .articles-slider__play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: #e52e2e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .articles-slider__play-triangle {
+    width: 0;
+    height: 0;
+    border-left: 18px solid white;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    margin-left: 4px;
+  }
+
+  .articles-slider__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .articles-slider__header-content {
+    flex: 1;
+  }
+
+  .articles-slider__header-button {
+    flex-shrink: 0;
+  }
+
+  .articles-slider__heading-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .articles-slider__subheading-image {
+    max-width: 520px;
+    height: auto;
+  }
+
+  .articles-slider__subheading-image img {
+    width: 100%;
+    height: auto;
+    max-height: 40px;
+    object-fit: contain;
+  }
+
+  .articles-slider__swiper-container {
+    position: relative;
+    overflow: visible;
+  }
+
+  .articles-slider .swiper-button-prev,
+  .articles-slider .swiper-button-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    margin: 0;
+    transition: all 0.3s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .articles-slider .swiper-button-prev {
+    left: -40px;
+  }
+
+  .articles-slider .swiper-button-next {
+    right: -40px;
+  }
+
+  .articles-slider .swiper-button-prev svg,
+  .articles-slider .swiper-button-next svg {
+    color: #808080;
+    width: 28px;
+    height: 28px;
+  }
+
+  .articles-slider .swiper-button-prev svg path,
+  .articles-slider .swiper-button-next svg path {
+    stroke-width: 1.5;
+  }
+
+  .articles-slider .swiper-button-prev:after,
+  .articles-slider .swiper-button-next:after {
+    display: none;
+  }
+
+  .articles-slider .swiper-button-prev:hover,
+  .articles-slider .swiper-button-next:hover {
+    background: rgba(128, 128, 128, 0.1);
+  }
+
+  .articles-slider .swiper-button-prev.swiper-button-disabled,
+  .articles-slider .swiper-button-next.swiper-button-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .articles-slider .swiper-pagination {
+    display: none;
+  }
+
+  .articles-slider__mobile-slide {
+    display: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .articles-slider__desktop-slide {
+      display: none !important;
+    }
+
+    .articles-slider__mobile-slide {
+      display: block;
+    }
+
+    .articles-slider__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .articles-slider__header-button {
+      width: 100%;
+    }
+
+    .articles-slider__mobile-item {
+      aspect-ratio: 414 / 217;
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+      display: block;
+      width: 100%;
+    }
+
+    .articles-slider .swiper-button-prev {
+      left: -10px;
+    }
+
+    .articles-slider .swiper-button-next {
+      right: -10px;
+    }
+
+    .articles-slider .swiper-button-prev svg,
+    .articles-slider .swiper-button-next svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .articles-slider .swiper-pagination {
+      display: block;
+      position: relative;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .articles-slider .swiper-pagination-bullet {
+      width: 8px;
+      height: 8px;
+      background: #808080;
+      opacity: 0.3;
+      margin: 0 4px;
+      transition: all 0.3s ease;
+    }
+
+    .articles-slider .swiper-pagination-bullet-active {
+      opacity: 1;
+      background: #808080;
+    }
+  }
+</style>
+
+<div
+  class="
+    articles-slider
+    section
+    section--divider-{{ section.settings.divider_style }}
+    {{ section.settings.section_padding }}
+    {% if settings.enable_section_animations and section.settings.enable_animation %}
+      animation
+      animation--blog-posts
+    {% endif %}
+  "
+  data-section-id="{{ section.id }}"
+  data-section-type="articles-slider"
+>
+  <div class="articles-slider__header">
+    <div class="articles-slider__header-content section-introduction animation--section-introduction">
+      {%- if section.settings.heading != blank -%}
+        <div class="articles-slider__heading-wrapper">
+          <{{ section.settings.heading_tag }} class="articles-slider__heading ff-heading fs-heading-3-base section-introduction__heading" style="font-size: 30px;">
+            {{ section.settings.heading }}
+          </{{ section.settings.heading_tag }}>
+          {%- unless section.settings.subheading_image == blank -%}
+            <div class="articles-slider__subheading-image desktop-only">
+              <img
+                src="{{ section.settings.subheading_image | image_url: width: 620 }}"
+                alt="{{ section.settings.subheading_image.alt | default: section.settings.heading }}"
+                width="520"
+                height="40"
+                loading="lazy"
+              >
+            </div>
+          {%- endunless -%}
+        </div>
+      {%- endif -%}
+
+      {%- unless section.settings.subheading == blank -%}
+        <div class="articles-slider__subheading ff-body section-introduction__subheading rte" style="font-size: 14px;">
+          {{ section.settings.subheading }}
+        </div>
+      {%- endunless -%}
+    </div>
+
+    {%- if section.settings.link_text -%}
+      <div class="articles-slider__header-button">
+        {% render 'animated-button',
+          text: section.settings.link_text,
+          url: button_link
+        %}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="articles-slider__swiper-container swiper">
+    <div class="swiper-wrapper">
+        {%- liquid
+          assign slides_count = section.blocks.size | divided_by: 3
+          assign remainder = section.blocks.size | modulo: 3
+          if remainder > 0
+            assign slides_count = slides_count | plus: 1
+          endif
+        -%}
+
+        {%- for i in (1..slides_count) -%}
+          {%- liquid
+            assign slide_offset = forloop.index0 | times: 3
+            assign article_1_index = slide_offset
+            assign article_2_index = slide_offset | plus: 1
+            assign article_3_index = slide_offset | plus: 2
+
+            assign article_1_block = section.blocks[article_1_index]
+            assign article_2_block = section.blocks[article_2_index]
+            assign article_3_block = section.blocks[article_3_index]
+
+            assign article_1 = article_1_block.settings.article
+            assign article_2 = article_2_block.settings.article
+            assign article_3 = article_3_block.settings.article
+          -%}
+
+          <div class="swiper-slide articles-slider__desktop-slide">
+            <div class="articles-slider__container">
+              {%- comment -%} Left Column - Single Large Article {%- endcomment -%}
+              <div class="articles-slider__column articles-slider__column--left">
+                {%- if article_1 != blank -%}
+                  <a href="{{ article_1.url }}" class="articles-slider__item" {{ article_1_block.shopify_attributes }}>
+                    {%- if article_1.image -%}
+                      {{ article_1.image | image_url: width: 1000 | image_tag:
+                        alt: article_1.title,
+                        class: 'articles-slider__item-image',
+                        loading: 'lazy',
+                        width: 1000
+                      }}
+                    {%- else -%}
+                      {{ 'image' | placeholder_svg_tag: 'articles-slider__item-image' }}
+                    {%- endif -%}
+                    {%- if article_1.metafields.custom.video != blank -%}
+                      <div class="articles-slider__play-icon">
+                        <div class="articles-slider__play-triangle"></div>
+                      </div>
+                    {%- endif -%}
+                    <div class="articles-slider__item-overlay">
+                      <h3 class="articles-slider__item-title">{{ article_1.title }}</h3>
+                    </div>
+                  </a>
+                {%- else -%}
+                  <div class="articles-slider__item">
+                    {{ 'image' | placeholder_svg_tag: 'articles-slider__item-image' }}
+                  </div>
+                {%- endif -%}
+              </div>
+
+              {%- comment -%} Right Column - Two Stacked Articles {%- endcomment -%}
+              <div class="articles-slider__column articles-slider__column--right">
+                {%- if article_2 != blank -%}
+                  <a href="{{ article_2.url }}" class="articles-slider__item" {{ article_2_block.shopify_attributes }}>
+                    {%- if article_2.image -%}
+                      {{ article_2.image | image_url: width: 414 | image_tag:
+                        alt: article_2.title,
+                        class: 'articles-slider__item-image',
+                        loading: 'lazy',
+                        width: 414,
+                        height: 217
+                      }}
+                    {%- else -%}
+                      {{ 'image' | placeholder_svg_tag: 'articles-slider__item-image' }}
+                    {%- endif -%}
+                    {%- if article_2.metafields.custom.video != blank -%}
+                      <div class="articles-slider__play-icon">
+                        <div class="articles-slider__play-triangle"></div>
+                      </div>
+                    {%- endif -%}
+                    <div class="articles-slider__item-overlay">
+                      <h3 class="articles-slider__item-title">{{ article_2.title }}</h3>
+                    </div>
+                  </a>
+                {%- else -%}
+                  <div class="articles-slider__item">
+                    {{ 'image' | placeholder_svg_tag: 'articles-slider__item-image' }}
+                  </div>
+                {%- endif -%}
+
+                {%- if article_3 != blank -%}
+                  <a href="{{ article_3.url }}" class="articles-slider__item" {{ article_3_block.shopify_attributes }}>
+                    {%- if article_3.image -%}
+                      {{ article_3.image | image_url: width: 414 | image_tag:
+                        alt: article_3.title,
+                        class: 'articles-slider__item-image',
+                        loading: 'lazy',
+                        width: 414,
+                        height: 217
+                      }}
+                    {%- else -%}
+                      {{ 'image' | placeholder_svg_tag: 'articles-slider__item-image' }}
+                    {%- endif -%}
+                    {%- if article_3.metafields.custom.video != blank -%}
+                      <div class="articles-slider__play-icon">
+                        <div class="articles-slider__play-triangle"></div>
+                      </div>
+                    {%- endif -%}
+                    <div class="articles-slider__item-overlay">
+                      <h3 class="articles-slider__item-title">{{ article_3.title }}</h3>
+                    </div>
+                  </a>
+                {%- else -%}
+                  <div class="articles-slider__item">
+                    {{ 'image' | placeholder_svg_tag: 'articles-slider__item-image' }}
+                  </div>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+
+        {%- comment -%} Mobile slides - one article per slide {%- endcomment -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign mobile_article = block.settings.article
+          -%}
+          <div class="swiper-slide articles-slider__mobile-slide">
+            {%- if mobile_article != blank -%}
+              <a href="{{ mobile_article.url }}" class="articles-slider__mobile-item" {{ block.shopify_attributes }}>
+                {%- if mobile_article.image -%}
+                  {{ mobile_article.image | image_url: width: 414 | image_tag:
+                    alt: mobile_article.title,
+                    class: 'articles-slider__item-image',
+                    loading: 'lazy',
+                    width: 414,
+                    height: 217
+                  }}
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag: 'articles-slider__item-image' }}
+                {%- endif -%}
+                {%- if mobile_article.metafields.custom.video != blank -%}
+                  <div class="articles-slider__play-icon">
+                    <div class="articles-slider__play-triangle"></div>
+                  </div>
+                {%- endif -%}
+                <div class="articles-slider__item-overlay">
+                  <h3 class="articles-slider__item-title">{{ mobile_article.title }}</h3>
+                </div>
+              </a>
+            {%- else -%}
+              <div class="articles-slider__mobile-item">
+                {{ 'image' | placeholder_svg_tag: 'articles-slider__item-image' }}
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+    {%- if slides_count > 1 or section.blocks.size > 1 -%}
+      <div class="swiper-button-prev" aria-label="Previous">
+        <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 16L6 10L12 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="swiper-button-next" aria-label="Next">
+        <svg width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 4L14 10L8 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="swiper-pagination"></div>
+    {%- endif -%}
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  (function() {
+    const sectionId = '{{ section.id }}';
+    const section = document.querySelector('[data-section-id="' + sectionId + '"]');
+    if (!section) return;
+
+    function initSwiper() {
+      if (typeof Swiper === 'undefined') {
+        setTimeout(initSwiper, 100);
+        return;
+      }
+
+      const swiperContainer = section.querySelector('.articles-slider__swiper-container');
+      if (!swiperContainer || swiperContainer.swiper) return;
+
+      const hasMultipleSlides = {{ slides_count | default: 1 }} > 1;
+      const totalBlocks = {{ section.blocks.size }};
+      const isMobile = window.innerWidth <= 768;
+      const hasNavigation = isMobile ? totalBlocks > 1 : hasMultipleSlides;
+
+      const swiperConfig = {
+        slidesPerView: 1,
+        spaceBetween: isMobile ? 20 : 200,
+        loop: hasNavigation,
+      };
+
+      if (hasNavigation) {
+        swiperConfig.navigation = {
+          nextEl: section.querySelector('.swiper-button-next'),
+          prevEl: section.querySelector('.swiper-button-prev'),
+        };
+      }
+
+      if (isMobile && totalBlocks > 1) {
+        swiperConfig.pagination = {
+          el: section.querySelector('.swiper-pagination'),
+          clickable: true,
+          type: 'bullets',
+        };
+      }
+
+      const swiper = new Swiper(swiperContainer, swiperConfig);
+
+      console.log('Articles slider initialized for section:', sectionId);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSwiper);
+    } else {
+      initSwiper();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Articles Slider",
+  "tag": "section",
+  "class": "articles-slider-section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ],
+    "templates": [
+      "password"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Articles"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Description"
+    },
+    {
+      "type": "image_picker",
+      "id": "subheading_image",
+      "label": "Title image",
+      "info": "Optional image to display after the title"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Button text",
+      "default": "View All Articles"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "options": [
+        {
+          "value": "btn--primary",
+          "label": "Solid"
+        },
+        {
+          "value": "btn--secondary",
+          "label": "Outline"
+        },
+        {
+          "value": "btn--callout",
+          "label": "Text"
+        }
+      ],
+      "default": "btn--primary"
+    },
+    {
+      "type": "header",
+      "content": "Slider settings"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 3000,
+      "max": 9500,
+      "step": 500,
+      "unit": "ms",
+      "label": "Autoplay delay",
+      "default": 5000
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable animation",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "divider_style",
+      "label": "Divider style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_padding",
+      "label": "Section padding",
+      "options": [
+        {
+          "value": "section--vertical-padding-none",
+          "label": "None"
+        },
+        {
+          "value": "section--vertical-padding-top-bottom",
+          "label": "Top and bottom"
+        },
+        {
+          "value": "section--vertical-padding-top-only",
+          "label": "Top only"
+        },
+        {
+          "value": "section--vertical-padding-bottom-only",
+          "label": "Bottom only"
+        }
+      ],
+      "default": "section--vertical-padding-top-bottom"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "article",
+      "name": "Article",
+      "settings": [
+        {
+          "type": "article",
+          "id": "article",
+          "label": "Article"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Articles Slider",
+      "blocks": [
+        {
+          "type": "article"
+        },
+        {
+          "type": "article"
+        },
+        {
+          "type": "article"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

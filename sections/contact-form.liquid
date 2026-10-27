@@ -1,0 +1,1800 @@
+{%- liquid
+  assign alignment_values = section.settings.alignment | split: '_'
+  assign heading_alignment = alignment_values | first
+  assign text_alignment = alignment_values | last
+-%}
+
+<div
+  class="
+    contact-form
+    section
+    section--divider-{{ section.settings.divider_style }}
+    {{ section.settings.section_padding }}
+    {% if settings.enable_section_animations and section.settings.enable_animation %}
+      animation
+      animation--contact-form
+    {% endif %}
+  "
+  data-section-id="{{ section.id }}"
+  data-section-type="contact-form"
+  style="
+    --heading-alignment: {{ heading_alignment }};
+    --text-alignment: {{ text_alignment }};
+    {% if section.settings.content_width == 'custom' %}
+      --content-width: {{ section.settings.custom_content_width }}px;
+    {% endif %}
+  "
+>
+  <div class="contact-form__inner">
+    <div class="section-introduction animation--section-introduction">
+      {%- if section.settings.heading != blank -%}
+        <{{ section.settings.heading_tag }} class="contact-form__heading ff-heading {{ section.settings.heading_font_class }} section-introduction__heading">
+          {{ section.settings.heading }}
+        </{{ section.settings.heading_tag }}>
+      {%- endif -%}
+
+      {%- if section.settings.text != blank -%}
+        <div class="contact-form__text rte ff-body rte section-introduction__subheading">
+          {{ section.settings.text }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {% assign form_id = 'ContactForm-' | append: section.id %}
+    {%- liquid
+      assign inquiry_type_name = section.settings.inquiry_type_name | default: 'Inquiry type'
+      assign purchase_location_name = section.settings.purchase_location_name | default: 'Where did you purchase your item?'
+      assign order_number_name = section.settings.order_number_name | default: 'Order number'
+    -%}
+    <form
+      class="contact-form__form"
+      id="{{ form_id }}"
+      method="post"
+      action="{{ section.settings.contact_router_endpoint | escape }}"
+      novalidate
+    >
+        <div class="contact-form__wrapper animation--item">
+          <div class="contact-form__input-wrapper animation--item contact-form__item--full-width">
+            <label for="{{ form_id }}-inquiry-type">
+              {{ section.settings.inquiry_type_label }}
+              <span aria-hidden="true">*</span>
+            </label>
+            <div class="select-wrapper">
+              <select
+                id="{{ form_id }}-inquiry-type"
+                class="input"
+                name="contact[{{ inquiry_type_name | escape }}]"
+                required
+                aria-required="true"
+                data-routing-inquiry-type
+              >
+                <option value="" selected disabled>{{ section.settings.inquiry_placeholder_text }}</option>
+                <option value="{{ section.settings.inquiry_option_1 | escape }}">{{ section.settings.inquiry_option_1 }}</option>
+                <option value="{{ section.settings.inquiry_option_2 | escape }}">{{ section.settings.inquiry_option_2 }}</option>
+                <option value="{{ section.settings.inquiry_option_3 | escape }}">{{ section.settings.inquiry_option_3 }}</option>
+                <option value="{{ section.settings.inquiry_option_4 | escape }}">{{ section.settings.inquiry_option_4 }}</option>
+                <option value="{{ section.settings.inquiry_option_5 | escape }}">{{ section.settings.inquiry_option_5 }}</option>
+                <option value="{{ section.settings.inquiry_option_6 | escape }}">{{ section.settings.inquiry_option_6 }}</option>
+              </select>
+              {% render 'icon' with icon, icon: 'chevron-small' %}
+            </div>
+          </div>
+
+          <div class="contact-form__input-wrapper animation--item contact-form__item--full-width" data-routing-purchase-group>
+            <label for="{{ form_id }}-purchase-location">
+              {{ section.settings.purchase_location_label }}
+              <span aria-hidden="true">*</span>
+            </label>
+            <div class="select-wrapper">
+              <select
+                id="{{ form_id }}-purchase-location"
+                class="input"
+                name="contact[{{ purchase_location_name | escape }}]"
+                data-routing-purchase-location
+              >
+                <option value="" selected disabled>{{ section.settings.purchase_placeholder_text }}</option>
+                <option value="{{ section.settings.purchase_option_1 | escape }}">{{ section.settings.purchase_option_1 }}</option>
+                <option value="{{ section.settings.purchase_option_2 | escape }}">{{ section.settings.purchase_option_2 }}</option>
+                <option value="{{ section.settings.purchase_option_3 | escape }}">{{ section.settings.purchase_option_3 }}</option>
+                <option value="{{ section.settings.purchase_option_4 | escape }}">{{ section.settings.purchase_option_4 }}</option>
+              </select>
+              {% render 'icon' with icon, icon: 'chevron-small' %}
+            </div>
+          </div>
+
+          <div class="contact-form__input-wrapper animation--item contact-form__item--full-width" data-routing-order-number-group>
+            <label for="{{ form_id }}-order-number">
+              {{ section.settings.order_number_label }}
+              <span aria-hidden="true">*</span>
+            </label>
+            <input
+              type="text"
+              id="{{ form_id }}-order-number"
+              class="input"
+              name="contact[{{ order_number_name | escape }}]"
+              data-routing-order-number
+            >
+          </div>
+
+          {% if section.settings.enable_attachment_upload %}
+            <div class="contact-form__input-wrapper animation--item contact-form__item--full-width" data-routing-attachment-group>
+              <label>
+                {{ section.settings.attachment_label }}
+              </label>
+
+              <input
+                type="file"
+                data-routing-attachment-input
+                accept="{{ section.settings.attachment_accept | escape }}"
+                hidden
+                style="display:none !important;"
+              >
+
+              <input
+                type="hidden"
+                name="contact[{{ section.settings.attachment_field_name | escape }}]"
+                data-routing-attachment-url
+              >
+
+              <button type="button" class="contact-form__attachment-dropzone" data-routing-attachment-trigger>
+                <span class="contact-form__attachment-icon">↥</span>
+                <span class="contact-form__attachment-title">{{ section.settings.attachment_dropzone_title }}</span>
+                <span class="contact-form__attachment-hint">{{ section.settings.attachment_dropzone_hint }}</span>
+              </button>
+
+              <div class="contact-form__attachment-meta" data-routing-attachment-meta hidden style="display:none !important;"></div>
+              <button type="button" class="contact-form__attachment-remove" data-routing-attachment-remove hidden style="display:none !important;">
+                {{ section.settings.attachment_remove_label }}
+              </button>
+            </div>
+          {% endif %}
+
+          <div class="contact-form__item--full-width" data-routing-feedback hidden></div>
+
+          {% assign existing_keys = 'email' %}
+
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign input_id = 'contact-ContactForm-' | append: block.id
+              if block.type == 'email'
+                assign input_id = form_id | append: '-email'
+              endif
+              assign existing_keys_array = existing_keys | split: '|'
+              assign key = block.settings.title | escape | default: block.type
+              if existing_keys_array contains key
+                for i in (1..50)
+                  assign unique_key = key | append: '-' | append: i
+                  unless existing_keys_array contains unique_key
+                    break
+                  endunless
+                endfor
+                assign key = unique_key
+              endif
+              assign existing_keys = existing_keys | append: '|' | append: key
+              assign input_name = 'contact[' | append: key | append: ']'
+
+              assign block_is_required = false
+              if block.settings.required or block.type == 'email'
+                assign block_is_required = true
+              endif
+            %}
+
+            {%- capture label -%}
+              {%- unless block.settings.title == blank -%}
+                <label for="{{ input_id }}">
+                  {{ block.settings.title }}
+                  {% if block_is_required -%}
+                    <span aria-hidden="true">*</span>
+                  {%- endif %}
+                </label>
+              {%- endunless -%}
+            {%- endcapture -%}
+
+            {%- capture required -%}
+              {%- if block_is_required -%}
+                required aria-required="true"
+              {%- endif -%}
+            {%- endcapture -%}
+
+            {%- capture width_class -%}
+              {%- if block.settings.width == 'full' -%}
+                contact-form__item--full-width
+              {%- endif -%}
+            {%- endcapture -%}
+
+            {%- case block.type -%}
+              {%- when 'email' -%}
+                {%- assign has_email_block = true -%}
+                <div
+                  class="
+                    contact-form__input-wrapper
+                    animation--item
+                    {{ width_class }}
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  {{ label }}
+                  <input
+                    autocomplete="email"
+                    type="email"
+                    id="{{ input_id }}"
+                    class="input"
+                    name="contact[email]"
+                    spellcheck="false"
+                    autocapitalize="off"
+                    value="{% if customer %}{{ customer.email }}{% endif %}"
+                    {{ required }}
+                  >
+                </div>
+              {%- when 'text' -%}
+                <div
+                  class="
+                    contact-form__input-wrapper
+                    animation--item
+                    {{ width_class }}
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  {{ label }}
+                  <input
+                    type="text"
+                    name="{{ input_name }}"
+                    id="{{ input_id }}"
+                    class="input"
+                    value=""
+                    {{ required }}
+                  >
+                </div>
+              {%- when 'text_area' -%}
+                <div
+                  class="
+                    contact-form__input-wrapper
+                    animation--item
+                    {{ width_class }}
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  {{ label }}
+                  <textarea
+                    rows="5"
+                    name="{{ input_name }}"
+                    id="{{ input_id }}"
+                    class="input"
+                    placeholder="{{ block.settings.placeholder | escape }}"
+                    {{ required }}
+                    style="height: {{ block.settings.height }}px"
+                  ></textarea>
+                </div>
+              {%- when 'telephone' -%}
+                <div
+                  class="
+                    contact-form__input-wrapper
+                    animation--item
+                    {{ width_class }}
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  {{ label }}
+                  <input
+                    type="tel"
+                    name="{{ input_name }}"
+                    id="{{ input_id }}"
+                    class="input"
+                    value=""
+                    pattern="[0-9\-]*"
+                    {{ required }}
+                  >
+                </div>
+              {%- when 'heading' -%}
+                <{{ block.settings.heading_tag }}
+                  class="
+                    contact-form__item--full-width
+                    animation--item
+                    contact-form__heading-block
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  {{ block.settings.title }}
+                </{{ block.settings.heading_tag }}>
+              {%- when 'paragraph' -%}
+                <div
+                  class="
+                    contact-form__item--full-width
+                    animation--item
+                    contact-form__paragraph
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  {{ block.settings.text }}
+                </div>
+              {%- when 'spacer' -%}
+                <div
+                  class="
+                    contact-form__item--full-width
+                    contact-form__spacer
+                    contact-form__spacer--{{ block.settings.size }}
+                    {% if block.settings.show_divider %}
+                      contact-form__spacer--show-divider
+                      animation--item
+                    {% endif %}
+                  "
+                  {{ block.shopify_attributes }}
+                ></div>
+              {%- when 'checkbox' -%}
+                <div
+                  class="
+                    contact-form__input-wrapper
+                    animation--item
+                    {{ width_class }}
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  <label
+                    class="contact-form__checkbox-label"
+                    for="{{ input_id }}"
+                  >
+                    <div class="contact-form-checkbox">
+                      <input
+                        type="checkbox"
+                        name="{{ input_name }}"
+                        id="{{ input_id }}"
+                        class="contact-form-checkbox__checkbox visually-hidden"
+                        {{ required }}
+                      >
+                      <div class="contact-form-checkbox__content-inner">
+                        <div class="contact-form-checkbox__input">
+                          {% render 'icon' with icon, icon: 'checkmark' %}
+                        </div>
+                      </div>
+                    </div>
+                    {%- unless block.settings.title == blank -%}
+                      <div
+                        class="contact-form__checkbox-label-text"
+                        for="{{ input_id }}"
+                      >
+                        {{ block.settings.title }}
+                        {% if block.settings.required -%}
+                          <span aria-hidden="true">*</span>
+                        {%- endif %}
+                      </div>
+                    {%- endunless -%}
+                  </label>
+                </div>
+              {%- when 'select' -%}
+                <div
+                  class="
+                    contact-form__input-wrapper
+                    animation--item
+                    {{ width_class }}
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  {{ label }}
+                  <div class="select-wrapper">
+                    <select
+                      type="checkbox"
+                      name="{{ input_name }}"
+                      id="{{ input_id }}"
+                      class="input"
+                      {{ required }}
+                    >
+                      {%- for i in (1..10) -%}
+                        {%- assign key = 'option_' | append: i -%}
+                        {%- if block.settings[key] == blank -%}
+                          {% continue %}
+                        {%- endif -%}
+                        <option value="{{ block.settings[key] | escape }}">
+                          {{ block.settings[key] }}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                    {% render 'icon' with icon, icon: 'chevron-small' %}
+                  </div>
+                </div>
+              {%- when 'radio' -%}
+                <div
+                  class="
+                    contact-form__input-wrapper
+                    animation--item
+                    {{ width_class }}
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  {%- unless block.settings.title == blank -%}
+                    <div class="contact-form__radio-label">
+                      {{ block.settings.title }}
+                      {% if block.settings.required -%}
+                        <span aria-hidden="true">*</span>
+                      {%- endif %}
+                    </div>
+                  {%- endunless -%}
+                  {%- for i in (1..10) -%}
+                    {%- assign key = 'option_' | append: i -%}
+                    {%- if block.settings[key] == blank -%}
+                      {% continue %}
+                    {%- endif -%}
+                    {% assign radio_input_id = input_id | append: key %}
+
+                    <label for="{{ radio_input_id }}">
+                      <input
+                        type="radio"
+                        name="{{ input_name }}"
+                        id="{{ radio_input_id }}"
+                        class="contact-form__radio-input visually-hidden"
+                        value="{{ block.settings[key] | escape }}"
+                        {{ required }}
+                      >
+                      <div class="contact-form__radio-input-content">
+                        <div class="contact-form__radio-input-button">
+                          <div class="contact-form__radio-input-indicator"></div>
+                        </div>
+                        <span class="contact-form__radio-input-label">{{ block.settings[key] }}</span>
+                      </div>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              {%- when 'submit' -%}
+                {%- assign has_submit_block = true -%}
+                <div
+                  class="
+                    contact-form__input-wrapper
+                    animation--item
+                    {% if block.settings.full_width %}contact-form__item--full-width{% endif %}
+                  "
+                  {{ block.shopify_attributes }}
+                >
+                  <button
+                    type="submit"
+                    class="
+                      contact-form__button
+                      btn
+                      btn--primary
+                      btn--{{ block.settings.size }}
+                      {% if block.settings.full_width %}contact-form__button--full-width{% endif %}
+                    "
+                  >
+                    {{ block.settings.title }}
+                  </button>
+                </div>
+            {%- endcase -%}
+
+            {%- if forloop.last -%}
+              {%- unless has_email_block -%}
+                <div
+                  class="
+                    contact-form__input-wrapper
+                    animation--item
+                    contact-form__item--full-width
+                  "
+                >
+                  {%- assign input_id = form_id | append: '-email' -%}
+                  <label for="{{ input_id }}">
+                    {{ 'contact.form.email' | t }}
+                    <span aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    autocomplete="email"
+                    type="email"
+                    id="{{ input_id }}"
+                    class="input"
+                    name="contact[email]"
+                    spellcheck="false"
+                    autocapitalize="off"
+                    value="{% if customer %}{{ customer.email }}{% endif %}"
+                    required
+                  >
+                </div>
+              {%- endunless -%}
+              {%- unless has_submit_block -%}
+                <div class="animation--item">
+                  <button type="submit" class="contact-form__button btn btn--primary">
+                    {{ 'contact.form.submit' | t }}
+                  </button>
+                </div>
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {% if section.settings.show_recaptcha_terms %}
+          <div class="contact-form__recaptcha-terms rte ff-body fs-body-50 animation--item">
+            {{ 'contact.form.recaptcha_terms_html' | t }}
+          </div>
+        {% endif %}
+    </form>
+  </div>
+</div>
+
+<style>
+  .contact-form__routing-feedback {
+    margin-top: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-4);
+    border-radius: var(--border-radius-button, 4px);
+    font-size: var(--font-size-body-75, 14px);
+  }
+
+  .contact-form__routing-feedback--success {
+    background: #f0fff4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+  }
+
+  .contact-form__routing-feedback--error {
+    background: #fff5f5;
+    color: #9b1c1c;
+    border: 1px solid #fecaca;
+  }
+
+  .contact-form__attachment-dropzone {
+    width: 100%;
+    border: 1px dashed rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-button, 8px);
+    background: #fafafa;
+    color: inherit;
+    text-align: center;
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .contact-form__attachment-dropzone:hover,
+  .contact-form__attachment-dropzone:focus-visible,
+  .contact-form__attachment-dropzone.is-dragover {
+    border-color: rgba(0, 0, 0, 0.4);
+    background: #f3f4f6;
+  }
+
+  .contact-form__attachment-icon {
+    font-size: 20px;
+    line-height: 1;
+    opacity: 0.7;
+  }
+
+  .contact-form__attachment-title {
+    font-weight: 600;
+  }
+
+  .contact-form__attachment-hint {
+    font-size: var(--font-size-body-75, 14px);
+    opacity: 0.75;
+  }
+
+  .contact-form__attachment-meta {
+    margin-top: 8px;
+    font-size: var(--font-size-body-75, 14px);
+    line-height: 1.4;
+  }
+
+  .contact-form__attachment-meta--error {
+    color: #9b1c1c;
+  }
+
+  .contact-form__attachment-meta--success {
+    color: #166534;
+  }
+
+  .contact-form__attachment-remove {
+    margin-top: 8px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    text-decoration: underline;
+    cursor: pointer;
+    color: inherit;
+    font-size: var(--font-size-body-75, 14px);
+  }
+</style>
+
+<script>
+  (() => {
+    const sectionRoot = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!sectionRoot) return;
+
+    const form = sectionRoot.querySelector('#{{ form_id }}');
+    if (!form) return;
+
+    const inquiryType = form.querySelector('[data-routing-inquiry-type]');
+    const purchaseGroup = form.querySelector('[data-routing-purchase-group]');
+    const purchaseLocation = form.querySelector('[data-routing-purchase-location]');
+    const orderNumberGroup = form.querySelector('[data-routing-order-number-group]');
+    const orderNumber = form.querySelector('[data-routing-order-number]');
+    const feedback = form.querySelector('[data-routing-feedback]');
+    const attachmentGroup = form.querySelector('[data-routing-attachment-group]');
+    const attachmentInput = form.querySelector('[data-routing-attachment-input]');
+    const attachmentUrlInput = form.querySelector('[data-routing-attachment-url]');
+    const attachmentTrigger = form.querySelector('[data-routing-attachment-trigger]');
+    const attachmentMeta = form.querySelector('[data-routing-attachment-meta]');
+    const attachmentRemove = form.querySelector('[data-routing-attachment-remove]');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    const endpoint = '{{ section.settings.contact_router_endpoint | escape }}'.trim();
+    const cloudinaryCloudName = '{{ section.settings.cloudinary_cloud_name | escape }}'.trim();
+    const cloudinaryUploadPreset = '{{ section.settings.cloudinary_upload_preset | escape }}'.trim();
+    const attachmentMaxSizeMb = Number({{ section.settings.attachment_max_size_mb | json }}) || 10;
+    const attachmentUploadingText = {{ section.settings.attachment_uploading_text | json }};
+    const attachmentUploadFailedText = {{ section.settings.attachment_upload_failed_text | json }};
+    const attachmentTooLargeText = {{ section.settings.attachment_too_large_text | json }};
+    const attachmentUploadedText = {{ section.settings.attachment_uploaded_text | json }};
+
+    let isUploadingAttachment = false;
+
+    const shouldShowRoutingFields = (value) => [
+      {{ section.settings.inquiry_option_1 | json }},
+      {{ section.settings.inquiry_option_2 | json }},
+      {{ section.settings.inquiry_option_3 | json }}
+    ].includes(value);
+
+    const toggleRoutingFields = () => {
+      const show = shouldShowRoutingFields(inquiryType.value);
+
+      purchaseGroup.hidden = !show;
+      orderNumberGroup.hidden = !show;
+
+      purchaseLocation.required = show;
+      purchaseLocation.setAttribute('aria-required', show ? 'true' : 'false');
+
+      orderNumber.required = show;
+      orderNumber.setAttribute('aria-required', show ? 'true' : 'false');
+
+      if (!show) {
+        purchaseLocation.value = '';
+        orderNumber.value = '';
+      }
+    };
+
+    const getFieldValue = (keys) => {
+      const formData = new FormData(form);
+      for (const key of keys) {
+        const value = formData.get(key);
+        if (typeof value === 'string' && value.trim() !== '') return value.trim();
+      }
+      return '';
+    };
+
+    const getNameValue = () => {
+      const direct = getFieldValue(['contact[Name]', 'contact[name]', 'contact[Full name]', 'contact[Full Name]']);
+      if (direct) return direct;
+
+      const candidate = Array.from(form.querySelectorAll('input[type="text"][name^="contact["]'))
+        .find((input) => !input.matches('[data-routing-order-number]'));
+
+      return candidate?.value?.trim() || '';
+    };
+
+    const getMessageValue = () => {
+      const direct = getFieldValue(['contact[Message]', 'contact[message]']);
+      if (direct) return direct;
+
+      const candidate = form.querySelector('textarea[name^="contact["]');
+      return candidate?.value?.trim() || '';
+    };
+
+    const showFeedback = (message, type) => {
+      feedback.hidden = false;
+      feedback.className = `contact-form__item--full-width contact-form__routing-feedback contact-form__routing-feedback--${type}`;
+      feedback.textContent = message;
+    };
+
+    const setAttachmentMeta = (message = '', type = '') => {
+      if (!attachmentMeta) return;
+
+      if (!message) {
+        attachmentMeta.hidden = true;
+        attachmentMeta.style.setProperty('display', 'none', 'important');
+        attachmentMeta.textContent = '';
+        attachmentMeta.className = 'contact-form__attachment-meta';
+        return;
+      }
+
+      attachmentMeta.hidden = false;
+      attachmentMeta.style.removeProperty('display');
+      attachmentMeta.textContent = message;
+      attachmentMeta.className = `contact-form__attachment-meta${type ? ` contact-form__attachment-meta--${type}` : ''}`;
+    };
+
+    const collectRawFields = () => {
+      const values = {};
+      const formData = new FormData(form);
+      for (const [key, value] of formData.entries()) {
+        values[key] = value;
+      }
+      return values;
+    };
+
+    const resetAttachment = () => {
+      if (attachmentInput) attachmentInput.value = '';
+      if (attachmentUrlInput) attachmentUrlInput.value = '';
+      if (attachmentRemove) {
+        attachmentRemove.hidden = true;
+        attachmentRemove.style.setProperty('display', 'none', 'important');
+      }
+      setAttachmentMeta('');
+      isUploadingAttachment = false;
+    };
+
+    const uploadFileToCloudinary = async (file) => {
+      if (!file || !attachmentUrlInput) return;
+
+      const maxBytes = attachmentMaxSizeMb * 1024 * 1024;
+      if (file.size > maxBytes) {
+        setAttachmentMeta(attachmentTooLargeText.replace('{size}', String(attachmentMaxSizeMb)), 'error');
+        return;
+      }
+
+      if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
+        setAttachmentMeta(attachmentUploadFailedText, 'error');
+        return;
+      }
+
+      isUploadingAttachment = true;
+      attachmentTrigger?.setAttribute('disabled', 'disabled');
+      setAttachmentMeta(attachmentUploadingText);
+
+      try {
+        const body = new FormData();
+        body.append('file', file);
+        body.append('upload_preset', cloudinaryUploadPreset);
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/auto/upload`, {
+          method: 'POST',
+          body
+        });
+
+        if (!response.ok) throw new Error('Cloudinary upload failed');
+
+        const result = await response.json();
+        if (!result?.secure_url) throw new Error('Cloudinary URL missing');
+
+        attachmentUrlInput.value = result.secure_url;
+        if (attachmentRemove) {
+          attachmentRemove.hidden = false;
+          attachmentRemove.style.setProperty('display', 'inline-block', 'important');
+        }
+        setAttachmentMeta(attachmentUploadedText.replace('{file}', file.name), 'success');
+      } catch (_error) {
+        attachmentUrlInput.value = '';
+        if (attachmentRemove) {
+          attachmentRemove.hidden = true;
+          attachmentRemove.style.setProperty('display', 'none', 'important');
+        }
+        setAttachmentMeta(attachmentUploadFailedText, 'error');
+      } finally {
+        isUploadingAttachment = false;
+        attachmentTrigger?.removeAttribute('disabled');
+      }
+    };
+
+    toggleRoutingFields();
+    inquiryType.addEventListener('change', toggleRoutingFields);
+
+    if (attachmentGroup && attachmentInput && attachmentTrigger) {
+      resetAttachment();
+      attachmentTrigger.addEventListener('click', () => attachmentInput.click());
+
+      attachmentInput.addEventListener('change', async () => {
+        const [file] = attachmentInput.files || [];
+        if (!file) return;
+        await uploadFileToCloudinary(file);
+      });
+
+      ['dragenter', 'dragover'].forEach((eventName) => {
+        attachmentTrigger.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          attachmentTrigger.classList.add('is-dragover');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach((eventName) => {
+        attachmentTrigger.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          attachmentTrigger.classList.remove('is-dragover');
+        });
+      });
+
+      attachmentTrigger.addEventListener('drop', async (event) => {
+        const [file] = event.dataTransfer?.files || [];
+        if (!file) return;
+        await uploadFileToCloudinary(file);
+      });
+
+      attachmentRemove?.addEventListener('click', resetAttachment);
+    }
+
+    if (!endpoint) return;
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!form.reportValidity()) return;
+      if (isUploadingAttachment) return;
+
+      submitButton?.setAttribute('disabled', 'disabled');
+
+      try {
+        const payload = {
+          email: getFieldValue(['contact[email]']),
+          name: getNameValue(),
+          message: getMessageValue(),
+          inquiryType: inquiryType.value,
+          purchaseLocation: purchaseGroup.hidden ? '' : purchaseLocation.value,
+          orderNumber: orderNumberGroup.hidden ? '' : orderNumber.value.trim(),
+          attachmentUrl: attachmentUrlInput?.value || ''
+        };
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=UTF-8'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const body = await response.text();
+          throw new Error(body || 'Request failed');
+        }
+
+        showFeedback({{ section.settings.routing_success_message | json }}, 'success');
+        form.reset();
+        toggleRoutingFields();
+        resetAttachment();
+      } catch (_error) {
+        showFeedback({{ section.settings.routing_error_message | json }}, 'error');
+      } finally {
+        submitButton?.removeAttribute('disabled');
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.contact_form.name",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "t:sections.contact_form.settings.alignment.label",
+      "options": [
+        {
+          "value": "left_left",
+          "label": "t:sections.contact_form.settings.alignment.options.all_left"
+        },
+        {
+          "value": "center_center",
+          "label": "t:sections.contact_form.settings.alignment.options.all_center"
+        },
+        {
+          "value": "center_left",
+          "label": "t:sections.contact_form.settings.alignment.options.heading_center"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.contact_form.settings.title.label",
+      "default": "t:sections.contact_form.settings.title.default"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "t:shared.settings.heading_tag.heading.label",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:shared.settings.heading_tag.options.h2"
+        },
+        {
+          "value": "h3",
+          "label": "t:shared.settings.heading_tag.options.h3"
+        },
+        {
+          "value": "h4",
+          "label": "t:shared.settings.heading_tag.options.h4"
+        },
+        {
+          "value": "h5",
+          "label": "t:shared.settings.heading_tag.options.h5"
+        },
+        {
+          "value": "h6",
+          "label": "t:shared.settings.heading_tag.options.h6"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:shared.settings.heading_tag.heading.info"
+    },
+    {
+      "type": "select",
+      "id": "heading_font_class",
+      "label": "t:shared.settings.heading_font_class.label",
+      "options": [
+        {
+          "value": "fs-heading-4-base",
+          "label": "t:shared.settings.heading_font_class.options.small"
+        },
+        {
+          "value": "fs-heading-3-base",
+          "label": "t:shared.settings.heading_font_class.options.medium"
+        },
+        {
+          "value": "fs-heading-2-base",
+          "label": "t:shared.settings.heading_font_class.options.large"
+        }
+      ],
+      "default": "fs-heading-3-base"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.contact_form.settings.text.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recaptcha_terms",
+      "label": "t:sections.contact_form.settings.show_recaptcha_terms.label",
+      "default": true,
+      "info": "t:sections.contact_form.settings.show_recaptcha_terms.info"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "t:shared.settings.section_style.enable_animation.label",
+      "default": true,
+      "info": "t:shared.settings.section_style.enable_animation.info"
+    },
+    {
+      "type": "select",
+      "id": "divider_style",
+      "label": "t:shared.settings.section_style.divider_style.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:shared.settings.section_style.divider_style.options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:shared.settings.section_style.divider_style.options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_padding",
+      "label": "t:shared.settings.section_style.section_padding.label",
+      "options": [
+        {
+          "value": "section--vertical-padding-none",
+          "label": "t:shared.settings.section_style.section_padding.options.none"
+        },
+        {
+          "value": "section--vertical-padding-top-bottom",
+          "label": "t:shared.settings.section_style.section_padding.options.both"
+        },
+        {
+          "value": "section--vertical-padding-top-only",
+          "label": "t:shared.settings.section_style.section_padding.options.top"
+        },
+        {
+          "value": "section--vertical-padding-bottom-only",
+          "label": "t:shared.settings.section_style.section_padding.options.bottom"
+        }
+      ],
+      "default": "section--vertical-padding-top-bottom"
+    },
+    {
+      "type": "radio",
+      "id": "content_width",
+      "label": "t:shared.settings.section_style.content_width.label",
+      "options": [
+        {
+          "value": "full",
+          "label": "t:shared.settings.section_style.content_width.options.full"
+        },
+        {
+          "value": "custom",
+          "label": "t:shared.settings.section_style.content_width.options.custom"
+        }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "custom_content_width",
+      "label": "t:shared.settings.section_style.custom_content_width.label",
+      "min": 400,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "default": 700
+    },
+    {
+      "type": "text",
+      "id": "contact_router_endpoint",
+      "label": "Contact router endpoint",
+      "info": "Vercel API endpoint, for example: https://your-app.vercel.app/api/contact"
+    },
+    {
+      "type": "header",
+      "content": "Contact routing content"
+    },
+    {
+      "type": "text",
+      "id": "inquiry_type_label",
+      "label": "Inquiry type label",
+      "default": "Inquiry type"
+    },
+    {
+      "type": "text",
+      "id": "inquiry_type_name",
+      "label": "Inquiry type field name (email payload)",
+      "default": "Inquiry type"
+    },
+    {
+      "type": "text",
+      "id": "inquiry_placeholder_text",
+      "label": "Inquiry placeholder",
+      "default": "Please choose inquiry type"
+    },
+    {
+      "type": "text",
+      "id": "inquiry_option_1",
+      "label": "Inquiry option 1",
+      "default": "Product question before purchase"
+    },
+    {
+      "type": "text",
+      "id": "inquiry_option_2",
+      "label": "Inquiry option 2",
+      "default": "Order support"
+    },
+    {
+      "type": "text",
+      "id": "inquiry_option_3",
+      "label": "Inquiry option 3",
+      "default": "Warranty / replacement"
+    },
+    {
+      "type": "text",
+      "id": "inquiry_option_4",
+      "label": "Inquiry option 4",
+      "default": "Wholesale / distributor inquiry"
+    },
+    {
+      "type": "text",
+      "id": "inquiry_option_5",
+      "label": "Inquiry option 5",
+      "default": "Partnership / media"
+    },
+    {
+      "type": "text",
+      "id": "inquiry_option_6",
+      "label": "Inquiry option 6",
+      "default": "General question"
+    },
+    {
+      "type": "text",
+      "id": "purchase_location_label",
+      "label": "Purchase location label",
+      "default": "Where did you purchase your item?"
+    },
+    {
+      "type": "text",
+      "id": "purchase_location_name",
+      "label": "Purchase location field name (email payload)",
+      "default": "Where did you purchase your item?"
+    },
+    {
+      "type": "text",
+      "id": "purchase_placeholder_text",
+      "label": "Purchase location placeholder",
+      "default": "Please choose purchase location"
+    },
+    {
+      "type": "text",
+      "id": "purchase_option_1",
+      "label": "Purchase option 1",
+      "default": "Yosukata store"
+    },
+    {
+      "type": "text",
+      "id": "purchase_option_2",
+      "label": "Purchase option 2",
+      "default": "Amazon"
+    },
+    {
+      "type": "text",
+      "id": "purchase_option_3",
+      "label": "Purchase option 3",
+      "default": "Walmart"
+    },
+    {
+      "type": "text",
+      "id": "purchase_option_4",
+      "label": "Purchase option 4",
+      "default": "From another retailer"
+    },
+    {
+      "type": "text",
+      "id": "order_number_label",
+      "label": "Order number label",
+      "default": "Order number"
+    },
+    {
+      "type": "text",
+      "id": "order_number_name",
+      "label": "Order number field name (email payload)",
+      "default": "Order number"
+    },
+    {
+      "type": "text",
+      "id": "routing_success_message",
+      "label": "Success message",
+      "default": "Thanks, your message was sent successfully."
+    },
+    {
+      "type": "text",
+      "id": "routing_error_message",
+      "label": "Error message",
+      "default": "We could not send your message right now. Please try again in a minute."
+    },
+    {
+      "type": "header",
+      "content": "Attachment upload"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_attachment_upload",
+      "label": "Enable attachment upload",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "attachment_label",
+      "label": "Attachment label",
+      "default": "Attachment (optional)"
+    },
+    {
+      "type": "text",
+      "id": "attachment_dropzone_title",
+      "label": "Dropzone title",
+      "default": "Drag and drop a file here"
+    },
+    {
+      "type": "text",
+      "id": "attachment_dropzone_hint",
+      "label": "Dropzone hint",
+      "default": "or click to choose a file"
+    },
+    {
+      "type": "text",
+      "id": "attachment_remove_label",
+      "label": "Remove file label",
+      "default": "Remove file"
+    },
+    {
+      "type": "text",
+      "id": "attachment_field_name",
+      "label": "Attachment field name (email payload)",
+      "default": "Attachment URL"
+    },
+    {
+      "type": "text",
+      "id": "attachment_accept",
+      "label": "Accepted file extensions",
+      "default": ".jpg,.jpeg,.png,.pdf,.doc,.docx,.txt,.zip,.heic"
+    },
+    {
+      "type": "range",
+      "id": "attachment_max_size_mb",
+      "label": "Max file size (MB)",
+      "min": 1,
+      "max": 25,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "text",
+      "id": "attachment_uploading_text",
+      "label": "Uploading text",
+      "default": "Uploading file..."
+    },
+    {
+      "type": "text",
+      "id": "attachment_uploaded_text",
+      "label": "Uploaded text",
+      "default": "Uploaded: {file}"
+    },
+    {
+      "type": "text",
+      "id": "attachment_upload_failed_text",
+      "label": "Upload failed text",
+      "default": "Could not upload file. Please try again."
+    },
+    {
+      "type": "text",
+      "id": "attachment_too_large_text",
+      "label": "File too large text",
+      "default": "File is too large. Max size is {size} MB."
+    },
+    {
+      "type": "text",
+      "id": "cloudinary_cloud_name",
+      "label": "Cloudinary cloud name",
+      "default": "dfbppdozx"
+    },
+    {
+      "type": "text",
+      "id": "cloudinary_upload_preset",
+      "label": "Cloudinary upload preset",
+      "default": "ml_default"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "email",
+      "name": "t:sections.contact_form.blocks.email.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.contact_form.blocks.shared.settings.label.label",
+          "default": "t:sections.contact_form.blocks.email.settings.title.default"
+        },
+        {
+          "type": "radio",
+          "id": "width",
+          "label": "t:sections.contact_form.blocks.shared.settings.width.label",
+          "options": [
+            {
+              "value": "full",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.full"
+            },
+            {
+              "value": "half",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.half"
+            }
+          ],
+          "default": "full",
+          "info": "t:sections.contact_form.blocks.shared.settings.width.info"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.contact_form.blocks.text.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.contact_form.blocks.shared.settings.label.label",
+          "default": "t:sections.contact_form.blocks.text.settings.title.default"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "t:sections.contact_form.blocks.shared.settings.required.label"
+        },
+        {
+          "type": "radio",
+          "id": "width",
+          "label": "t:sections.contact_form.blocks.shared.settings.width.label",
+          "options": [
+            {
+              "value": "full",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.full"
+            },
+            {
+              "value": "half",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.half"
+            }
+          ],
+          "default": "full",
+          "info": "t:sections.contact_form.blocks.shared.settings.width.info"
+        }
+      ]
+    },
+    {
+      "type": "text_area",
+      "name": "t:sections.contact_form.blocks.text_area.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.contact_form.blocks.shared.settings.label.label",
+          "default": "t:sections.contact_form.blocks.text_area.settings.title.default"
+        },
+        {
+          "type": "textarea",
+          "id": "placeholder",
+          "label": "t:sections.contact_form.blocks.text_area.settings.placeholder.label",
+          "default": "t:sections.contact_form.blocks.text_area.settings.placeholder.default"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "t:sections.contact_form.blocks.shared.settings.required.label"
+        },
+        {
+          "type": "range",
+          "id": "height",
+          "label": "t:sections.contact_form.blocks.text_area.settings.height.label",
+          "min": 120,
+          "max": 250,
+          "step": 5,
+          "unit": "px",
+          "default": 180
+        },
+        {
+          "type": "radio",
+          "id": "width",
+          "label": "t:sections.contact_form.blocks.shared.settings.width.label",
+          "options": [
+            {
+              "value": "full",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.full"
+            },
+            {
+              "value": "half",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.half"
+            }
+          ],
+          "default": "full",
+          "info": "t:sections.contact_form.blocks.shared.settings.width.info"
+        }
+      ]
+    },
+    {
+      "type": "telephone",
+      "name": "t:sections.contact_form.blocks.telephone.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.contact_form.blocks.shared.settings.label.label",
+          "default": "t:sections.contact_form.blocks.telephone.settings.title.default"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "t:sections.contact_form.blocks.shared.settings.required.label"
+        },
+        {
+          "type": "radio",
+          "id": "width",
+          "label": "t:sections.contact_form.blocks.shared.settings.width.label",
+          "options": [
+            {
+              "value": "full",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.full"
+            },
+            {
+              "value": "half",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.half"
+            }
+          ],
+          "default": "full",
+          "info": "t:sections.contact_form.blocks.shared.settings.width.info"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "t:sections.contact_form.blocks.heading.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.contact_form.blocks.shared.settings.label.label",
+          "default": "t:sections.contact_form.blocks.heading.settings.title.default"
+        },
+        {
+          "type": "select",
+          "id": "heading_tag",
+          "label": "t:shared.settings.heading_tag.heading.label",
+          "options": [
+            {
+              "value": "h2",
+              "label": "t:shared.settings.heading_tag.options.h2"
+            },
+            {
+              "value": "h3",
+              "label": "t:shared.settings.heading_tag.options.h3"
+            },
+            {
+              "value": "h4",
+              "label": "t:shared.settings.heading_tag.options.h4"
+            },
+            {
+              "value": "h5",
+              "label": "t:shared.settings.heading_tag.options.h5"
+            },
+            {
+              "value": "h6",
+              "label": "t:shared.settings.heading_tag.options.h6"
+            }
+          ],
+          "default": "h2"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:shared.settings.heading_tag.heading.info"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "name": "t:sections.contact_form.blocks.paragraph.name",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:sections.contact_form.blocks.paragraph.settings.text.label",
+          "default": "t:sections.contact_form.blocks.paragraph.settings.text.default"
+        }
+      ]
+    },
+    {
+      "type": "spacer",
+      "name": "t:sections.contact_form.blocks.spacer.name",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_divider",
+          "label": "t:sections.contact_form.blocks.spacer.settings.show_divider.label"
+        },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "t:sections.contact_form.blocks.spacer.settings.size.label",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.contact_form.blocks.spacer.settings.size.options.small"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.contact_form.blocks.spacer.settings.size.options.medium"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.contact_form.blocks.spacer.settings.size.options.large"
+            },
+            {
+              "value": "extra_large",
+              "label": "t:sections.contact_form.blocks.spacer.settings.size.options.extra_large"
+            }
+          ],
+          "default": "medium"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "name": "t:sections.contact_form.blocks.checkbox.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.contact_form.blocks.shared.settings.label.label",
+          "default": "t:sections.contact_form.blocks.checkbox.settings.title.default"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "t:sections.contact_form.blocks.shared.settings.required.label"
+        },
+        {
+          "type": "radio",
+          "id": "width",
+          "label": "t:sections.contact_form.blocks.shared.settings.width.label",
+          "options": [
+            {
+              "value": "full",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.full"
+            },
+            {
+              "value": "half",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.half"
+            }
+          ],
+          "default": "full",
+          "info": "t:sections.contact_form.blocks.shared.settings.width.info"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "name": "t:sections.contact_form.blocks.select.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.contact_form.blocks.shared.settings.label.label",
+          "default": "t:sections.contact_form.blocks.select.settings.title.default"
+        },
+        {
+          "type": "radio",
+          "id": "width",
+          "label": "t:sections.contact_form.blocks.shared.settings.width.label",
+          "options": [
+            {
+              "value": "full",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.full"
+            },
+            {
+              "value": "half",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.half"
+            }
+          ],
+          "default": "full",
+          "info": "t:sections.contact_form.blocks.shared.settings.width.info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.contact_form.blocks.shared.settings.options.header.content"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:sections.contact_form.blocks.shared.settings.options.paragraph.content"
+        },
+        {
+          "type": "text",
+          "id": "option_1",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_1.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_1.default"
+        },
+        {
+          "type": "text",
+          "id": "option_2",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_2.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_2.default"
+        },
+        {
+          "type": "text",
+          "id": "option_3",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_3.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_3.default"
+        },
+        {
+          "type": "text",
+          "id": "option_4",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_4.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_4.default"
+        },
+        {
+          "type": "text",
+          "id": "option_5",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_5.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_5.default"
+        },
+        {
+          "type": "text",
+          "id": "option_6",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_6.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_6.default"
+        },
+        {
+          "type": "text",
+          "id": "option_7",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_7.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_7.default"
+        },
+        {
+          "type": "text",
+          "id": "option_8",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_8.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_8.default"
+        },
+        {
+          "type": "text",
+          "id": "option_9",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_9.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_9.default"
+        },
+        {
+          "type": "text",
+          "id": "option_10",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_10.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_10.default"
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "name": "t:sections.contact_form.blocks.radio.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.contact_form.blocks.shared.settings.label.label",
+          "default": "t:sections.contact_form.blocks.radio.settings.title.default"
+        },
+        {
+          "type": "radio",
+          "id": "width",
+          "label": "t:sections.contact_form.blocks.shared.settings.width.label",
+          "options": [
+            {
+              "value": "full",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.full"
+            },
+            {
+              "value": "half",
+              "label": "t:sections.contact_form.blocks.shared.settings.width.options.half"
+            }
+          ],
+          "default": "full",
+          "info": "t:sections.contact_form.blocks.shared.settings.width.info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.contact_form.blocks.shared.settings.options.header.content"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:sections.contact_form.blocks.shared.settings.options.paragraph.content"
+        },
+        {
+          "type": "text",
+          "id": "option_1",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_1.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_1.default"
+        },
+        {
+          "type": "text",
+          "id": "option_2",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_2.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_2.default"
+        },
+        {
+          "type": "text",
+          "id": "option_3",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_3.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_3.default"
+        },
+        {
+          "type": "text",
+          "id": "option_4",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_4.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_4.default"
+        },
+        {
+          "type": "text",
+          "id": "option_5",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_5.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_5.default"
+        },
+        {
+          "type": "text",
+          "id": "option_6",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_6.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_6.default"
+        },
+        {
+          "type": "text",
+          "id": "option_7",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_7.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_7.default"
+        },
+        {
+          "type": "text",
+          "id": "option_8",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_8.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_8.default"
+        },
+        {
+          "type": "text",
+          "id": "option_9",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_9.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_9.default"
+        },
+        {
+          "type": "text",
+          "id": "option_10",
+          "label": "t:sections.contact_form.blocks.shared.settings.options.option_10.label",
+          "default": "t:sections.contact_form.blocks.shared.settings.options.option_10.default"
+        }
+      ]
+    },
+    {
+      "type": "submit",
+      "name": "t:sections.contact_form.blocks.submit.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "t:sections.contact_form.blocks.shared.settings.label.label",
+          "default": "t:sections.contact_form.blocks.submit.settings.title.default"
+        },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "t:sections.contact_form.blocks.submit.settings.size.label",
+          "options": [
+            {
+              "value": "normal",
+              "label": "t:sections.contact_form.blocks.submit.settings.size.options.normal"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.contact_form.blocks.submit.settings.size.options.large"
+            }
+          ],
+          "default": "normal"
+        },
+        {
+          "type": "checkbox",
+          "id": "full_width",
+          "label": "t:sections.contact_form.blocks.submit.settings.full_width.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.contact_form.presets.name",
+      "blocks": [
+        {
+          "type": "text",
+          "settings": {
+            "width": "half"
+          }
+        },
+        {
+          "type": "email",
+          "settings": {
+            "width": "half"
+          }
+        },
+        {
+          "type": "telephone"
+        },
+        {
+          "type": "text_area"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'icon' with icon: 'chevron-small' %}"
+  to: "{% render 'icon' with icon, icon: 'chevron-small' %}"
+  position: 3626..3678
+- from: "{% render 'icon' with icon: 'chevron-small' %}"
+  to: "{% render 'icon' with icon, icon: 'chevron-small' %}"
+  position: 4985..5037
+- from: "{% render 'icon' with icon: 'checkmark' %}"
+  to: "{% render 'icon' with icon, icon: 'checkmark' %}"
+  position: 14407..14455
+- from: "{% render 'icon' with icon: 'chevron-small' %}"
+  to: "{% render 'icon' with icon, icon: 'chevron-small' %}"
+  position: 16217..16269
+{% endcomment %}

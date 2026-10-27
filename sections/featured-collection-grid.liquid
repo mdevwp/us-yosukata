@@ -1,0 +1,530 @@
+{%- liquid
+  assign max_products = section.settings.maximum_products
+  assign has_products = false
+
+  for block in section.blocks
+    if block.settings.collection != blank
+      assign collection_products = block.settings.collection.products
+      if collection_products.size > 0
+        assign has_products = true
+        break
+      endif
+    elsif block.settings.product_list != blank
+      assign product_list_size = block.settings.product_list | size
+      if product_list_size > 0
+        assign has_products = true
+        break
+      endif
+    endif
+  endfor
+-%}
+
+{%- if has_products -%}
+<div
+  class="
+    featured-collection-grid
+    featured-collection-grid--rows-{{ section.settings.rows }}
+    featured-collection-grid--per-view-{{ section.settings.columns }}
+    section
+    section--includes-product-items
+    section--divider-{{ section.settings.divider_style }}
+    {{ section.settings.section_padding }}
+    {% if settings.enable_section_animations and section.settings.enable_animation %}
+      animation
+      animation--featured-collection-grid
+    {% endif %}
+  "
+  data-section-id="{{ section.id }}"
+  data-section-type="featured-collection-grid"
+  data-layout-type="grid"
+  data-products-per-view="{{ section.settings.columns }}"
+  data-mobile-products-per-view="{{ section.settings.mobile_columns }}"
+>
+  <div class="featured-collection-grid__inner">
+    <div class="section-introduction animation--section-introduction">
+      {%- unless section.settings.heading == blank -%}
+        <{{ section.settings.heading_tag }} class="featured-collection-grid__heading ff-heading fs-heading-3-base section-introduction__heading">
+          {{ section.settings.heading }}
+        </{{ section.settings.heading_tag }}>
+      {%- endunless -%}
+
+      {%- unless section.settings.subheading == blank -%}
+        <div class="featured-collection-grid__subheading ff-body fs-body-100 rte section-introduction__subheading">
+          {{ section.settings.subheading }}
+        </div>
+      {%- endunless -%}
+
+      {%- render 'button-block' with wrapper_class, wrapper_class: "featured-collection-grid__button section-introduction__button", link: section.settings.link, label: section.settings.link_text, button_style: section.settings.button_style -%}
+    </div>
+
+    <div
+      class="
+        featured-collection-grid__content
+        carousel
+        carousel--mobile-per-view-{{ section.settings.mobile_columns }}
+        carousel--per-view-{{ section.settings.columns }}
+        swiper
+      "
+    >
+      <div class="featured-collection-grid__products carousel__wrapper swiper-wrapper">
+        {%- for block in section.blocks -%}
+          {%- assign featured_collection_products = block.settings.collection.products
+            | default: block.settings.product_list
+          -%}
+
+          {%- for product in featured_collection_products limit: max_products -%}
+            <div class="featured-collection-grid__product carousel_slide swiper-slide">
+              <div class="product-item">
+                <div class="product-item__inner">
+                  <div class="product-item__media">
+                    <a class="product-item__image-link" href="{{ product.url | within: collection }}" aria-label="{{ product.title }}">
+                      {% render 'image',
+                        image: product.featured_media,
+                        wrapper_class: 'product-item__image',
+                        aspect_ratio: settings.product_listing_aspect_ratio,
+                        object_fit: settings.product_listing_media_fit,
+                        include_placeholder: true,
+                        sizes: '(max-width: 720px) calc((90vw - 12px) / 2), (max-width: 1400px) calc((93.4vw - (12px * 3)) / 4), 304px',
+                        src_set_type: 'grid'
+                      %}
+                    </a>
+                  </div>
+
+                  <div class="product-item__meta">
+                    <div class="product-item__text">
+                      <h4 class="ff-body product-item__product-title fs-product-card-title">
+                        <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+                      </h4>
+                      <!-- Start of Judge.me code --> 
+                      <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'>   
+                      {{ product.metafields.judgeme.badge }} 
+                      </div> <!-- End of Judge.me code -->
+
+                      <div class="product-item__price-and-cart">
+                        <p class="product-item__price">
+                          {% liquid
+                            # Check if product has compare_at_price set
+                            assign has_compare_at_price = false
+                            if product.compare_at_price > product.price
+                              assign has_compare_at_price = true
+                            endif
+
+                            # Also check if any variant has compare_at_price
+                            if has_compare_at_price == false
+                              for variant in product.variants
+                                if variant.compare_at_price != null and variant.compare_at_price > variant.price
+                                  assign has_compare_at_price = true
+                                  break
+                                endif
+                              endfor
+                            endif
+
+                            # Check for varied compare_at_price
+                            assign has_null_compare_at_price = false
+                            for variant in product.variants
+                              if variant.compare_at_price == null
+                                assign has_null_compare_at_price = true
+                                break
+                              endif
+                            endfor
+                          %}
+
+                          {% if has_compare_at_price %}
+                            <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+
+                            {% unless product.compare_at_price_varies or has_null_compare_at_price %}
+                              <s class="t-subdued">{{ product.compare_at_price | money_without_trailing_zeros }}</s>
+                            {% endunless %}
+
+                            {% if product.price_varies or product.compare_at_price_varies or has_null_compare_at_price %}
+                              {%- assign sale_price = product.price | money_without_trailing_zeros -%}
+                              <span class="sale">
+                                {{- 'products.product.on_sale_from_html' | t: price: sale_price -}}
+                              </span>
+                            {% else %}
+                              <span class="sale">{{ product.price | money_without_trailing_zeros }}</span>
+                            {% endif %}
+
+                          {% else %}
+                            {% if product.price_varies %}
+                              {%- assign price = product.price | money_without_trailing_zeros -%}
+                              {{ 'products.product.from_lowest_price_html' | t: lowest_price: price }}
+                            {% else %}
+                              {{ product.price | money_without_trailing_zeros }}
+                            {% endif %}
+                          {% endif %}
+                        </p>
+
+                        <div class="product-item__add-to-cart">
+                          {%- if product.available -%}
+                            {%- if product.has_only_default_variant -%}
+                              <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                                {% render 'animated-button',
+                                  text: 'products.product.add_to_cart',
+                                  type: 'submit'
+                                %}
+                              </form>
+                            {%- else -%}
+                              {% render 'animated-button',
+                                text: 'products.product.choose_options',
+                                url: product.url
+                              %}
+                            {%- endif -%}
+                          {%- else -%}
+                            {% render 'animated-button',
+                              text: 'products.product.sold_out',
+                              type: 'button',
+                              disabled: true
+                            %}
+                          {%- endif -%}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="product-item__hover-container"></div>
+              </div>
+            </div>
+          {%- else -%}
+            {%- for i in (1..max_products) -%}
+              <div class="featured-collection-grid__product carousel_slide swiper-slide">
+                <div class="product-item">
+                  <div class="product-item__inner">
+                    <div class="product-item__media">
+                      <a class="product-item__image-link" href="#" aria-label="Placeholder product">
+                        {% render 'image',
+                          image: blank,
+                          wrapper_class: 'product-item__image',
+                          aspect_ratio: settings.product_listing_aspect_ratio,
+                          object_fit: settings.product_listing_media_fit,
+                          include_placeholder: true,
+                          sizes: '(max-width: 720px) calc((90vw - 12px) / 2), (max-width: 1400px) calc((93.4vw - (12px * 3)) / 4), 304px',
+                          src_set_type: 'grid'
+                        %}
+                      </a>
+                    </div>
+
+                    <div class="product-item__meta">
+                      <div class="product-item__text">
+                        <h4 class="ff-body product-item__product-title fs-product-card-title">
+                          <a href="#">{{ 'homepage.onboarding.product_title' | t }}</a>
+                        </h4>
+
+                        <div class="product-item__price-and-cart">
+                          <p class="product-item__price">
+                            <span class="product-item__price">{{ 9999 | money_without_trailing_zeros }}</span>
+                          </p>
+
+                          <div class="product-item__add-to-cart">
+                            {% render 'animated-button',
+                              text: 'products.product.add_to_cart',
+                              type: 'button',
+                              disabled: true
+                            %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="product-item__hover-container"></div>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..max_products) -%}
+            <div class="featured-collection-grid__product carousel_slide swiper-slide">
+              <div class="product-item">
+                <div class="product-item__inner">
+                  <div class="product-item__media">
+                    <a class="product-item__image-link" href="#" aria-label="Placeholder product">
+                      {% render 'image',
+                        image: blank,
+                        wrapper_class: 'product-item__image',
+                        aspect_ratio: settings.product_listing_aspect_ratio,
+                        object_fit: settings.product_listing_media_fit,
+                        include_placeholder: true,
+                        sizes: '(max-width: 720px) calc((90vw - 12px) / 2), (max-width: 1400px) calc((93.4vw - (12px * 3)) / 4), 304px',
+                        src_set_type: 'grid'
+                      %}
+                    </a>
+                  </div>
+
+                  <div class="product-item__meta">
+                    <div class="product-item__text">
+                      <h4 class="ff-body product-item__product-title fs-product-card-title">
+                        <a href="#">{{ 'homepage.onboarding.product_title' | t }}</a>
+                      </h4>
+
+                      <div class="product-item__price-and-cart">
+                        <p class="product-item__price">
+                          <span class="product-item__price">{{ 9999 | money_without_trailing_zeros }}</span>
+                        </p>
+
+                        <div class="product-item__add-to-cart">
+                          {% render 'animated-button',
+                            text: 'products.product.add_to_cart',
+                            type: 'button',
+                            disabled: true
+                          %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="product-item__hover-container"></div>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "t:sections.featured_collection_grid.name",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ],
+    "templates": [
+      "password"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.shared.collections.settings.title.label",
+      "default": "t:sections.featured_collection_grid.settings.heading.default"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "t:shared.settings.heading_tag.heading.label",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:shared.settings.heading_tag.options.h2"
+        },
+        {
+          "value": "h3",
+          "label": "t:shared.settings.heading_tag.options.h3"
+        },
+        {
+          "value": "h4",
+          "label": "t:shared.settings.heading_tag.options.h4"
+        },
+        {
+          "value": "h5",
+          "label": "t:shared.settings.heading_tag.options.h5"
+        },
+        {
+          "value": "h6",
+          "label": "t:shared.settings.heading_tag.options.h6"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:shared.settings.heading_tag.heading.info"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "t:sections.shared.collections.settings.subheading.label"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:shared.settings.button_link.label"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "t:shared.settings.button_link_text.label"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:shared.settings.button_style.label",
+      "options": [
+        {
+          "value": "btn--primary",
+          "label": "t:shared.settings.button_style.options.solid"
+        },
+        {
+          "value": "btn--secondary",
+          "label": "t:shared.settings.button_style.options.outline"
+        },
+        {
+          "value": "btn--callout",
+          "label": "t:shared.settings.button_style.options.text"
+        }
+      ],
+      "default": "btn--callout"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.shared.collections.settings.product_list.header.content"
+    },
+    {
+      "type": "range",
+      "id": "maximum_products",
+      "label": "t:sections.shared.collections.settings.product_list.maximum_products.label",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "t:shared.settings.column_count.desktop.label",
+      "options": [
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "t:shared.settings.column_count.mobile.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "t:shared.settings.section_style.enable_animation.label",
+      "default": true,
+      "info": "t:shared.settings.section_style.enable_animation.info"
+    },
+    {
+      "type": "select",
+      "id": "divider_style",
+      "label": "t:shared.settings.section_style.divider_style.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:shared.settings.section_style.divider_style.options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:shared.settings.section_style.divider_style.options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_padding",
+      "label": "t:shared.settings.section_style.section_padding.label",
+      "options": [
+        {
+          "value": "section--vertical-padding-none",
+          "label": "t:shared.settings.section_style.section_padding.options.none"
+        },
+        {
+          "value": "section--vertical-padding-top-bottom",
+          "label": "t:shared.settings.section_style.section_padding.options.both"
+        },
+        {
+          "value": "section--vertical-padding-top-only",
+          "label": "t:shared.settings.section_style.section_padding.options.top"
+        },
+        {
+          "value": "section--vertical-padding-bottom-only",
+          "label": "t:shared.settings.section_style.section_padding.options.bottom"
+        }
+      ],
+      "default": "section--vertical-padding-top-bottom"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "t:sections.featured_collection_grid.blocks.collection.name",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.shared.collections.settings.collection.label"
+        }
+      ]
+    },
+    {
+      "type": "product_list",
+      "name": "t:sections.featured_collection_grid.blocks.product_list.name",
+      "settings": [
+        {
+          "type": "product_list",
+          "id": "product_list",
+          "label": "t:sections.shared.collections.settings.product_list.label"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 1,
+  "presets": [
+    {
+      "name": "t:sections.featured_collection_grid.presets.name",
+      "blocks": [
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {%-
+            render 'button-block' with
+            wrapper_class: "featured-collection-grid__button section-introduction__button",
+            link: section.settings.link,
+            label: section.settings.link_text,
+            button_style: section.settings.button_style
+          -%}
+  to: '{%- render ''button-block'' with wrapper_class, wrapper_class: "featured-collection-grid__button
+    section-introduction__button", link: section.settings.link, label: section.settings.link_text,
+    button_style: section.settings.button_style -%}'
+  position: 2024..2261
+{% endcomment %}

@@ -1,0 +1,75 @@
+/* Navigation Filter Styles */
+/* Navigation filter items styled as links with checkboxes matching theme styles */
+
+.navigation-filter-item .filter-item__content {
+  display: block;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.navigation-filter-item .filter-item__content:hover {
+  color: var(--color-text);
+}
+
+.navigation-filter-item .filter-item__content:focus {
+  outline: solid;
+  outline-offset: -1px;
+}
+
+.navigation-filter-item .filter-item__content-inner {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+/* Override disabled checkbox styles to prevent color changes */
+.navigation-filter-item .filter-item__checkbox:disabled + .filter-item__content-inner {
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+/* Checkbox border black initially */
+.navigation-filter-item .filter-item__checkbox:disabled + .filter-item__content-inner .filter-input__input {
+  border-color: var(--color-text);
+  background-color: var(--color-text-input-alpha);
+}
+
+/* Checkbox styling matching theme filters */
+.navigation-filter-item .filter-item__checkbox:checked + .filter-item__content-inner .filter-input__input {
+  border-color: var(--color-text);
+}
+
+.navigation-filter-item .filter-item__checkbox:checked + .filter-item__content-inner .filter-input__input .icon {
+  opacity: 1;
+  color: var(--color-text-popover);
+}
+
+/* Active state styling */
+.navigation-filter-item .filter-item__content--active {
+  color: var(--color-text);
+}
+
+.navigation-filter-item .filter-item__content--active .filter-item__content-inner {
+  color: var(--color-text);
+}
+
+/* Label styling matching theme filters */
+.navigation-filter-item .filter-item__label {
+  align-items: center;
+  padding-left: calc(4px * 3);
+  padding-left: var(--spacing-3);
+  color: var(--color-text);
+}
+
+.navigation-filter-item .filter-item__label span {
+  margin-left: auto;
+  color: var(--color-text);
+}
+
+/* Hover effect on label text */
+.navigation-filter-item .filter-item__content:hover .filter-item__label {
+  color: var(--color-text);
+}

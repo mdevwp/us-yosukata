@@ -1,0 +1,89 @@
+{%- if template contains 'customers' -%}
+  <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer></script>
+{%- endif -%}
+
+<script>
+  flu = window.flu || {};
+  flu.chunks = {
+    photoswipe: "{{ 'photoswipe-chunk.js' | asset_url }}",
+    swiper: "{{ 'swiper-chunk.js' | asset_url }}",
+    nouislider: "{{ 'nouislider-chunk.js' | asset_url }}",
+    polyfillInert: "{{ 'polyfill-inert-chunk.js' | asset_url }}",
+    polyfillResizeObserver: "{{ 'polyfill-resize-observer-chunk.js' | asset_url }}",
+  };
+</script>
+
+{% # Set the following line to true to use the unminified javascript file theme.js %}
+{% assign useUnminThemeJS = false %}
+
+{% if useUnminThemeJS %}
+  <script type="module" src="{{ 'theme.js' | asset_url }}"></script>
+{% else %}
+  <script type="module" src="{{ 'theme.min.js' | asset_url }}"></script>
+{% endif %}
+
+{% # Set the following line to true to import custom-events.js %}
+{% assign useCustomEvents = false %}
+
+{% # Set the following line to true to import custom.css %}
+{% assign useCustomCSS = false %}
+
+{% if useCustomEvents %}
+  <script src="{{ 'custom-events.js' | asset_url }}" defer></script>
+  <script>
+    window.flu.states = {
+      useCustomEvents: true,
+    };
+  </script>
+{% endif %}
+
+<script defer>
+  var defineVH = function () {
+    document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+  };
+  window.addEventListener('resize', defineVH);
+  window.addEventListener('orientationchange', defineVH);
+  defineVH();
+</script>
+
+<script defer>
+  // Handle anchor links in navigation - redirect to homepage if section doesn't exist on current page
+  (function() {
+    function handleAnchorLinks() {
+      const navigation = document.querySelector('[data-navigation]');
+      if (!navigation) return;
+
+      navigation.addEventListener('click', function(e) {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
+
+        // Check if target element exists on current page
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId) || document.querySelector(href);
+
+        // If target doesn't exist and we're not on homepage, redirect to homepage with anchor
+        if (!targetElement && window.location.pathname !== '/' && window.location.pathname !== '/index') {
+          e.preventDefault();
+          window.location.href = '/' + href;
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', handleAnchorLinks);
+    } else {
+      handleAnchorLinks();
+    }
+  })();
+</script>
+
+{{ 'theme.css' | asset_url | stylesheet_tag: preload: true }}
+
+{{ 'navigation-filter.css' | asset_url | stylesheet_tag }}
+
+{% if useCustomCSS %}
+  {{ 'custom.css' | asset_url | stylesheet_tag: preload: true }}
+{% endif %}

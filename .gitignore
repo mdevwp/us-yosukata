@@ -1,0 +1,5 @@
+design-review/
+*.pdf
+*.zip
+.shopify/
+node_modules/

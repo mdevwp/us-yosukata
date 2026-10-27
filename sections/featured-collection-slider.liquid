@@ -1,0 +1,557 @@
+{%- liquid
+  assign max_products = section.settings.maximum_products
+
+  capture custom_swatch_color_maps
+    render 'get-custom-swatch-color-maps'
+  endcapture
+
+  assign custom_color_key_map = custom_swatch_color_maps | split: ' | ' | first | split: ','
+  assign custom_color_value_map = custom_swatch_color_maps | split: ' | ' | last | split: ','
+-%}
+
+{%- for block in section.blocks -%}
+  {%- liquid
+    assign collection_has_more_products = false
+    assign carousel_navigation_class = 'featured-collection-slider__navigation-buttons animation--controls'
+
+    if forloop.first
+      assign carousel_navigation_class = carousel_navigation_class | append: ' visible'
+    endif
+
+    if block.type == 'product_list'
+      assign featured_collection_products = block.settings.product_list
+    else
+      assign featured_collection_products = block.settings.collection.products
+    endif
+
+    if block.settings.collection.products.size > max_products and block.type == 'collection'
+      assign collection_has_more_products = true
+    endif
+  -%}
+
+  {%- capture navigation_list_items -%}
+    {{ navigation_list_items }}
+    <li>
+      <button
+        type="button"
+        class="featured-collection-slider__navigation-list-item{% if forloop.first %} selected{% endif %}"
+        data-navigation-item="{{ forloop.index0 }}"
+      >
+        <span class="ff-heading fs-body-150">{{ block.settings.collection_name }}</span>
+        <span class="indicator"></span>
+      </button>
+    </li>
+  {%- endcapture -%}
+  {%- capture navigation_buttons -%}
+    {{ navigation_buttons }}
+    {%- capture index_attribute -%}data-navigation="{{ forloop.index0 }}"{%- endcapture -%}
+    {%- render 'carousel-navigation' with wrapper_class, wrapper_class: carousel_navigation_class, data_attribute: index_attribute -%}
+  {%- endcapture -%}
+
+  {%- capture carousel_elements -%}
+    {{ carousel_elements }}
+    <div
+      class="featured-collection-slider__content{% unless section.settings.disable_slider %} carousel swiper{% endunless %}{% if forloop.first %} visible{% endif %}"
+      data-collection="{{ forloop.index0 }}"
+      {{ block.shopify_attributes }}
+    >
+      <div class="featured-collection-slider__products{% unless section.settings.disable_slider %} carousel__wrapper swiper-wrapper{% endunless %}">
+        {%- for product in featured_collection_products limit: max_products -%}
+          <div class="featured-collection-slider__product{% unless section.settings.disable_slider %} carousel__slide swiper-slide{% endunless %}">
+            {% if forloop.first %}
+              <div class="product-item__deal-text">Deal of the month</div>
+            {% endif %}
+            <div class="product-item">
+              <div class="product-item__inner">
+                <div class="product-item__media">
+                  <a class="product-item__image-link" href="{{ product.url | within: collection }}" aria-label="{{ product.title }}">
+                    {% render 'image',
+                      image: product.featured_media,
+                      wrapper_class: 'product-item__image',
+                      aspect_ratio: settings.product_listing_aspect_ratio,
+                      object_fit: settings.product_listing_media_fit,
+                      include_placeholder: true,
+                      sizes: '(max-width: 720px) calc((90vw - 12px) / 2), (max-width: 1400px) calc((93.4vw - (12px * 3)) / 4), 304px',
+                      src_set_type: 'grid'
+                    %}
+                  </a>
+                  {%- render 'product-badges',
+                    prod: product,
+                    show_sale_badge: settings.product_listing_show_sale_badge,
+                    show_custom_badges: settings.product_listing_show_custom_badges,
+                    show_sold_out_badge: settings.product_listing_show_sold_out_badge
+                  -%}
+                </div>
+
+                <div class="product-item__meta">
+                  <div class="product-item__text">
+                    <h4 class="ff-body product-item__product-title fs-product-card-title">
+                      <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+                    </h4>
+                    <!-- Start of Judge.me code --> 
+                    <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'>   
+                    {{ product.metafields.judgeme.badge }} 
+                    </div> <!-- End of Judge.me code -->
+
+                    <div class="product-item__price-and-cart">
+                      <p class="product-item__price">
+                        {% liquid
+                          # Check if product has compare_at_price set
+                          assign has_compare_at_price = false
+                          if product.compare_at_price > product.price
+                            assign has_compare_at_price = true
+                          endif
+
+                          # Also check if any variant has compare_at_price
+                          if has_compare_at_price == false
+                            for variant in product.variants
+                              if variant.compare_at_price != null and variant.compare_at_price > variant.price
+                                assign has_compare_at_price = true
+                                break
+                              endif
+                            endfor
+                          endif
+
+                          # Check for varied compare_at_price
+                          assign has_null_compare_at_price = false
+                          for variant in product.variants
+                            if variant.compare_at_price == null
+                              assign has_null_compare_at_price = true
+                              break
+                            endif
+                          endfor
+                        %}
+
+                        {% if has_compare_at_price %}
+                          <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+
+                          {% if product.price_varies or product.compare_at_price_varies or has_null_compare_at_price %}
+                            {%- assign sale_price = product.price | money_without_trailing_zeros -%}
+                            <span class="sale">
+                              {{- 'products.product.on_sale_from_html' | t: price: sale_price -}}
+                            </span>
+                          {% else %}
+                            <span class="sale">{{ product.price | money_without_trailing_zeros }}</span>
+                          {% endif %}
+
+                          {% unless product.compare_at_price_varies or has_null_compare_at_price %}
+                            <s class="t-subdued">{{ product.compare_at_price | money_without_trailing_zeros }}</s>
+                          {% endunless %}
+
+                        {% else %}
+                          {% if product.price_varies %}
+                            {%- assign price = product.price | money_without_trailing_zeros -%}
+                            {{ 'products.product.from_lowest_price_html' | t: lowest_price: price }}
+                          {% else %}
+                            {{ product.price | money_without_trailing_zeros }}
+                          {% endif %}
+                        {% endif %}
+                      </p>
+
+                      <div class="product-item__add-to-cart">
+                        {%- if product.available -%}
+                          {%- if product.has_only_default_variant -%}
+                            <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+                              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                              {% render 'animated-button',
+                                text: 'products.product.add_to_cart',
+                                type: 'submit'
+                              %}
+                            </form>
+                          {%- else -%}
+                            {% render 'animated-button',
+                              text: 'products.product.choose_options',
+                              url: product.url
+                            %}
+                          {%- endif -%}
+                        {%- else -%}
+                          {% render 'animated-button',
+                            text: 'products.product.sold_out',
+                            type: 'button',
+                            disabled: true
+                          %}
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="product-item__hover-container"></div>
+            </div>
+          </div>
+        {%- else -%}
+          {%- for i in (1..max_products) -%}
+            <div class="featured-collection-slider__product{% unless section.settings.disable_slider %} carousel__slide swiper-slide{% endunless %}">
+              {% render 'product-item',
+                aspect_ratio: settings.product_listing_aspect_ratio,
+                product_columns: section.settings.columns,
+                placeholder: true,
+                custom_color_key_map: custom_color_key_map,
+                custom_color_value_map: custom_color_value_map
+              %}
+            </div>
+          {%- endfor -%}
+        {%- endfor -%}
+
+        {%- if block.settings.show_view_all and collection_has_more_products and block.settings.collection_name != blank -%}
+          <div class="featured-collection-slider__content-view-all-wrapper{% unless section.settings.disable_slider %} swiper-slide{% endunless %}">
+            <div class="featured-collection-slider__content-view-all">
+              <h4 class="featured-collection-slider__content-view-all-header ff-heading fs-heading-4-base">
+                {{ block.settings.collection_name }}
+              </h4>
+              <a
+                href="{{ block.settings.collection.url }}"
+                class="featured-collection-slider__view-all btn btn--callout"
+              >
+                <span>
+                  {{- 'collections.general.view_all' | t -}}
+                </span>
+              </a>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endcapture -%}
+{%- endfor -%}
+
+<div
+  class="
+    featured-collection-slider
+    featured-collection-slider--mobile-per-view-{{ section.settings.mobile_columns }}
+    featured-collection-slider--per-view-{{ section.settings.mobile_columns }}
+    section
+    section--includes-product-items
+    section--divider-{{ section.settings.divider_style }}
+    {{ section.settings.section_padding }}
+    {% if settings.enable_section_animations and section.settings.enable_animation %}
+      animation
+      animation--list-slider
+    {% endif %}
+  "
+  data-section-id="{{ section.id }}"
+  data-section-type="featured-collection-slider"
+  data-products-per-view="{{ section.settings.columns }}"
+  data-mobile-products-per-view="{{ section.settings.mobile_columns }}"
+>
+  <div class="featured-collection-slider__inner">
+    <div class="featured-collection-slider__meta{% if section.blocks.size == 1 %} carousel__navigation-wrapper{% endif %}">
+      <div class="section-introduction animation--section-introduction">
+        {%- unless section.settings.heading == blank -%}
+          <{{ section.settings.heading_tag }} class="featured-collection-slider__heading section-introduction__heading ff-heading fs-heading-3-base">
+            {{ section.settings.heading }}
+          </{{ section.settings.heading_tag }}>
+        {%- endunless -%}
+
+        {%- unless section.settings.subheading == blank -%}
+          <div class="featured-collection-slider__subheading section-introduction__subheading rte ff-body fs-body-100">
+            {{ section.settings.subheading }}
+          </div>
+        {%- endunless -%}
+
+
+      </div>
+
+      {%- if section.blocks.size == 1 -%}
+        {{ navigation_buttons }}
+      {%- elsif section.blocks.size > 1 -%}
+        <div class="featured-collection-slider__meta-controls">
+          <ul class="featured-collection-slider__navigation-list animation--controls">
+            {{ navigation_list_items }}
+          </ul>
+          {{ navigation_buttons }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {{ carousel_elements }}
+
+    {%- render 'button-block' with wrapper_class, wrapper_class: "featured-collection-slider__footer-button section-introduction__button", link: section.settings.link, label: section.settings.link_text, button_style: 'btn--primary' -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured Collections",
+  "tag": "section",
+  "class": "featured-collections-slider-wrap",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "custom.overlay"
+    ],
+    "templates": [
+      "password"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:sections.shared.collections.settings.title.label",
+      "default": "t:sections.featured_collection_slider.settings.heading.default"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "t:shared.settings.heading_tag.heading.label",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:shared.settings.heading_tag.options.h2"
+        },
+        {
+          "value": "h3",
+          "label": "t:shared.settings.heading_tag.options.h3"
+        },
+        {
+          "value": "h4",
+          "label": "t:shared.settings.heading_tag.options.h4"
+        },
+        {
+          "value": "h5",
+          "label": "t:shared.settings.heading_tag.options.h5"
+        },
+        {
+          "value": "h6",
+          "label": "t:shared.settings.heading_tag.options.h6"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "paragraph",
+      "content": "t:shared.settings.heading_tag.heading.info"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "t:sections.shared.collections.settings.subheading.label"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:shared.settings.button_link.label"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "t:shared.settings.button_link_text.label"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:shared.settings.button_style.label",
+      "options": [
+        {
+          "value": "btn--primary",
+          "label": "t:shared.settings.button_style.options.solid"
+        },
+        {
+          "value": "btn--secondary",
+          "label": "t:shared.settings.button_style.options.outline"
+        },
+        {
+          "value": "btn--callout",
+          "label": "t:shared.settings.button_style.options.text"
+        }
+      ],
+      "default": "btn--callout"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.shared.collections.settings.product_list.header.content"
+    },
+    {
+      "type": "range",
+      "id": "maximum_products",
+      "label": "t:sections.shared.collections.settings.product_list.maximum_products.label",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "t:shared.settings.column_count.desktop.label",
+      "options": [
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "t:shared.settings.column_count.mobile.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_slider",
+      "label": "Disable slider functionality",
+      "default": false,
+      "info": "When enabled, products will display in a static grid instead of a slider, allowing custom widths to work properly."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "t:shared.settings.section_style.enable_animation.label",
+      "default": true,
+      "info": "t:shared.settings.section_style.enable_animation.info"
+    },
+    {
+      "type": "select",
+      "id": "divider_style",
+      "label": "t:shared.settings.section_style.divider_style.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:shared.settings.section_style.divider_style.options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:shared.settings.section_style.divider_style.options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_padding",
+      "label": "t:shared.settings.section_style.section_padding.label",
+      "options": [
+        {
+          "value": "section--vertical-padding-none",
+          "label": "t:shared.settings.section_style.section_padding.options.none"
+        },
+        {
+          "value": "section--vertical-padding-top-bottom",
+          "label": "t:shared.settings.section_style.section_padding.options.both"
+        },
+        {
+          "value": "section--vertical-padding-top-only",
+          "label": "t:shared.settings.section_style.section_padding.options.top"
+        },
+        {
+          "value": "section--vertical-padding-bottom-only",
+          "label": "t:shared.settings.section_style.section_padding.options.bottom"
+        }
+      ],
+      "default": "section--vertical-padding-top-bottom"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "t:sections.featured_collection_slider.blocks.collection.name",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "t:sections.shared.collections.settings.collection.label"
+        },
+        {
+          "type": "text",
+          "id": "collection_name",
+          "label": "t:sections.featured_collection_slider.blocks.collection.settings.collection_name.label",
+          "default": "t:sections.featured_collection_slider.blocks.collection.settings.collection_name.default"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_view_all",
+          "label": "t:sections.shared.collections.settings.show_view_all.label",
+          "default": true,
+          "info": "t:sections.shared.collections.settings.show_view_all.info"
+        }
+      ]
+    },
+    {
+      "type": "product_list",
+      "name": "t:sections.featured_collection_slider.blocks.product_list.name",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "product_list",
+          "id": "product_list",
+          "label": "t:sections.shared.collections.settings.product_list.label"
+        },
+        {
+          "type": "text",
+          "id": "collection_name",
+          "label": "t:sections.featured_collection_slider.blocks.collection.settings.collection_name.label",
+          "default": "t:sections.featured_collection_slider.blocks.collection.settings.collection_name.default"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.featured_collection_slider.presets.name",
+      "blocks": [
+        {
+          "type": "collection",
+          "settings": {
+            "collection_name": "First collection"
+          }
+        },
+        {
+          "type": "collection",
+          "settings": {
+            "collection_name": "Second collection"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- render 'carousel-navigation' with wrapper_class: carousel_navigation_class,
+    data_attribute: index_attribute -%}"
+  to: "{%- render 'carousel-navigation' with wrapper_class, wrapper_class: carousel_navigation_class,
+    data_attribute: index_attribute -%}"
+  position: 1667..1797
+- from: |-
+    {%- render 'button-block' with
+          wrapper_class: "featured-collection-slider__footer-button section-introduction__button",
+          link: section.settings.link,
+          label: section.settings.link_text,
+          button_style: 'btn--primary'
+        -%}
+  to: '{%- render ''button-block'' with wrapper_class, wrapper_class: "featured-collection-slider__footer-button
+    section-introduction__button", link: section.settings.link, label: section.settings.link_text,
+    button_style: ''btn--primary'' -%}'
+  position: 12510..12741
+{% endcomment %}

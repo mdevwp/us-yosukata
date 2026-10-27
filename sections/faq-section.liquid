@@ -1,0 +1,150 @@
+{{ 'faq-section.js' | asset_url | script_tag }}
+{{ 'faq-section.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign section_id = 'faq-section-' | append: section.id
+  assign first_expanded = section.settings.first_item_expanded
+-%}
+
+<style>
+  :root {
+    --faq-primary-color: {{ section.settings.primary_color | default: '#2c5530' }};
+    --faq-text-color: {{ section.settings.text_color | default: '#333333' }};
+    --faq-link-color: #d50230;
+    --faq-transition-duration: 0.3s;
+    --faq-border-radius: 4px;
+  }
+</style>
+
+<div class="faq-section" id="{{ section_id }}">
+  <div class="faq-container">
+    {% if section.settings.title != blank %}
+      <h2 class="faq-title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    {% if section.settings.description != blank %}
+      <p class="faq-description">{{ section.settings.description }}</p>
+    {% endif %}
+
+    <div class="faq-items">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'faq_item' %}
+            <div class="faq-item" {{ block.shopify_attributes }}>
+              <button class="faq-question"
+                      type="button"
+                      aria-expanded="{% if first_expanded and forloop.first %}true{% else %}false{% endif %}"
+                      aria-controls="faq-answer-{{ block.id }}">
+                <span class="faq-question-text">{{ block.settings.question }}</span>
+                <span class="faq-icon" aria-hidden="true">
+                  {{ 'icon-chevron-faq.svg' | inline_asset_content }}
+                </span>
+              </button>
+              <div class="faq-answer"
+                   id="faq-answer-{{ block.id }}"
+                   aria-hidden="{% if first_expanded and forloop.first %}false{% else %}true{% endif %}">
+                <div class="faq-answer-content">
+                  {{ block.settings.answer }}
+                </div>
+              </div>
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "FAQ Section",
+  "tag": "section",
+  "class": "section-faq",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Section Description",
+      "default": "You may have questions about sourcing wholesale tea bags, and bulk spices. Below are answers to some of the most common queries from our partners."
+    },
+    {
+      "type": "checkbox",
+      "id": "first_item_expanded",
+      "label": "Expand first item by default",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary Color",
+      "default": "#2c5530"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What types of tea do you offer?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>We offer a wide variety of premium teas including black, green, white, oolong, and herbal teas. All our teas are carefully sourced and certified organic.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Section",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What types of tea do you offer?",
+            "answer": "<p>We offer a wide variety of premium teas including black, green, white, oolong, and herbal teas. All our teas are carefully sourced and certified organic.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What are the terms for wholesale purchases?",
+            "answer": "<p>We are pleased to offer wholesale pricing for business partners. Minimum order requirements and wholesale terms are available upon request. Please contact our sales team for further information.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How do I place an order for retail purchases?",
+            "answer": "<p>You can place retail orders directly through our website by adding products to your cart and proceeding to checkout. We accept all major credit cards and PayPal.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Do you provide custom tea blending services?",
+            "answer": "<p>Yes, we offer custom tea blending services for both retail and wholesale customers. Contact our team to discuss your specific requirements and we'll create a unique blend just for you.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

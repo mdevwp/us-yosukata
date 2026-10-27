@@ -1,0 +1,577 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "enable_animation": true,
+        "content_width": "custom",
+        "custom_content_width": 700
+      }
+    },
+    "rich-text": {
+      "type": "rich-text",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "title": "FAQ",
+            "heading_tag": "h1",
+            "heading_font_class": "fs-heading-1-base"
+          }
+        },
+        "spacer-1": {
+          "type": "spacer",
+          "settings": {
+            "space": 12
+          }
+        },
+        "text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Have questions? We've got answers!</p>",
+            "text_font_class": "fs-body-100"
+          }
+        },
+        "text-2": {
+          "type": "text",
+          "settings": {
+            "text": "",
+            "text_font_class": "fs-body-100"
+          }
+        },
+        "spacer-2": {
+          "type": "spacer",
+          "settings": {
+            "space": 12
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "spacer-1",
+        "text-1",
+        "text-2",
+        "spacer-2"
+      ],
+      "settings": {
+        "alignment": "center_center",
+        "background_color": "",
+        "enable_animation": true,
+        "divider_style": "none",
+        "section_padding": "section--vertical-padding-top-bottom",
+        "content_width": "custom",
+        "custom_content_width": 700
+      }
+    },
+    "collapsible-row-list-1": {
+      "type": "collapsible-row-list",
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do I need a round or a flat bottom?",
+            "text": "<p>It depends on what kind of stove you will be using. If you will be using a gas stove or open fire, we recommend a wok with a round bottom. If you will be using an electric stove, ceramic cooktop, or induction cooktop, we recommend a flat-bottomed wok. The flat-bottomed wok is also suitable for gas stoves and open fires.</p>"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What size do I need?",
+            "text": "<p>In choosing the right size, remember that the wok is rather heavy: 14= 3.8 pounds, 13.5 =3.6 pounds, 11.8= 2.9 pounds. On average you can cook a meal in a 14 wok for 4–5 people, in a 13.5 wok for 3–4 people and in an 11.8 wok for 2–3 people.</p>"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "The wok's weight I received is different from the one mentioned in the product description. Is this normal?",
+            "text": "<p>Due to the specificity of the material and production processes, manual work is required. Thus, the product's weight may vary, and a deviation in weight is acceptable. However, it does not influence the product's performance and quality.</p>"
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do I need to do anything before first use? Do I scrub to remove the anti-rust coating?",
+            "text": "<p>\"Please follow the following steps to prepare your wok:<br/>1. Wash both sides of the wok with hot soapy water using a non-metallic scouring pad. The wok shouldn't be scrubbed too hard.<br/>2. Dry the wok with paper towels, which may turn grey or black. Please repeat the first step. If you find it difficult to finish the initial cleaning please proceed to the seasoning process. It will perform the final cleaning.<br/>3. Before you start cooking your first meal, it is required to season the wok. This will help create a non-stick patina and remove any metallic taste. Please follow the steps below:<br/>- Turn the stove's exhaust fan on high and/or open the window. Heat the wok and add 1–2 tablespoons of oil. The oil should start smoking.<br/>- Reduce the heat and use a paper towel to spread the oil around the wok with spiral movements for about 5–10 minutes.<br/>- Let the wok cool.<br/>- Wipeout excess oil with a paper towel. If desired, repeat for better seasoning.<br/>4. Wash the wok with hot water and a soft sponge. Dry with a paper towel or over low heat. Your wok is now ready for use.<br/><br/></p>"
+          }
+        },
+        "item_JDKHwF": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What is meant by Pre-seasoned Black Steel Wok?",
+            "text": "<p>The seasoning process includes two steps - pre-seasoning and seasoning. If you wash the fully seasoned wok with hot soapy water it will remove the seasoning.<br/><br/>Before seasoning with oil, wok should be pre-seasoned without oil (other names boiling, bluing). It is a high-temperature treatment to create a protective iron oxide layer. It protects from red iron oxide (rust) but doesn't make the wok non-stick. The blue color is a natural color of steel that is treated with a high temperature (bluing process). It is natural for steel to change the color depending on the temperature.<br/><br/>Our wok is already pre-seasoned. But you still need to make the seasoning with oil. The seasoning will form another protective layer from oil (patina). The seasoning happens all the time when you cook with oil. The longer you use, the thicker protective layer will be. This layer makes the wok non-stick.<br/><br/>We don’t season with oil. Fully seasoned wok will get dirty easily during storage and transportation and for safety reasons it must be washed before use. Washing the wok will damage seasoning. Please note that the user early or later should re-season the wok himself. It is best if the user learns how to season before first use.</p>"
+          }
+        },
+        "item_rUxxwR": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do I need to season my wok after its first washing even though it's a pre-seasoned wok?",
+            "text": "<p>Yosukata woks have already been pre-seasoned but still need to be seasoned. Our woks were treated at a high temperature at production, leaving the color naturally uneven. Despite this initial pre-seasoning, it still needs to be fully seasoned with vegetable oil or lard.<br/>If you buy a wok that has not been pre-seasoned, you will need to heat it to a very high temperature without oil until the color changes to blue. Only after pre-seasoning can you season it with oil. If you wash a fully seasoned wok with dish soap, the patina will be destroyed, and the wok should be seasoned again.</p>"
+          }
+        },
+        "item_tJhMMD": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do you need to season the wok with each use, i.e., heating up the oil and wiping with paper towels, or is once enough?",
+            "text": "<p>You don't need to season the wok before every use.<br/>Seasoning should be done before first use and whenever necessary. If you notice that your food is starting to stick, it means the patina has been damaged and needs to be seasoned to restore it.<br/>The patina could be damaged if:<br/>- the wok is new and acidic food is cooked for a prolonged period;<br/>- the wok wasn't washed after cooking;<br/>- the wok was washed with dishwashing liquid;<br/>- the wok wasn't dried after washing;<br/>- the wok was heavily scrubbed to remove stuck-on food or rust.<br/><br/>If you can avoid these situations, an initial seasoning will be enough. Please check the video on our YouTube channel for more details.</p>"
+          }
+        },
+        "item_ymr86V": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What do I do after using my wok?",
+            "text": "<p>After cooking, when the wok has cooled down, you should:<br/>1) remove food residue from the surface of the wok.<br/>2) wash the wok in warm water using a soft sponge WITHOUT using detergents.<br/>3) wipe the wok dry both outside and inside with a napkin or towel.<br/>Keep the wok clean and dry. Don't leave food residue on the wok for long. Your wok will serve you for a long time if you follow these instructions.</p>"
+          }
+        },
+        "item_8WqgUG": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "The wok is rusty; what should I do?",
+            "text": "<p>If the wok is not washed and dried right after cooking, rust may appear on the surface.<br/>This is not a reason for frustration. Remove the rusty spot with a hard metal sponge and re-season your wok with oil. Your wok is ready to work.</p>"
+          }
+        },
+        "item_eRPe4D": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "It looks like the top layer has come off. What should I do?",
+            "text": "<p>If you leave food residue on your wok for a long time, the sauces' acidic environment can destroy the heat treatment layer that the wok received during production. This is not a reason to say goodbye to your wok. Wash the wok with detergent and a soft sponge. After that, bake the wok in a stove or heat it over an open fire. You will see how the color changes and restores the heat treatment layer. After that, season your wok with oil and you're back in business.</p>"
+          }
+        },
+        "item_KLktzV": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "I've cooked several times, but the food still sticks. What should I do?",
+            "text": "<p>Even though you have cooked with it several times, the wok's surface may still not be completely non-stick. The more you use your wok, the faster the surface will become saturated with natural oils and become completely non-stick. PLEASE REMEMBER that you do not need to use detergents, just warm water and a soft sponge when washing up after cooking. It is also essential to wipe your pan dry. If you have cooked with it for a long time and the surface is still not non-stick, you should wash the wok with detergent and season the wok with oil again.</p>"
+          }
+        },
+        "item_WqaFLR": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Where are the woks made?",
+            "text": "<p>The woks are produced exclusively in China according to the design developed by our team of chefs. We tried to create a design that combines everything for more comfortable cooking: we removed the rivets that trap food; we added a high-quality, elongated handle for a more comfortable hold. We improved the welding for durability. We stand behind our product 100%.</p>"
+          }
+        },
+        "item_g3pfPa": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What materials are used?",
+            "text": "<p>To make black carbon steel woks, we use steel exclusively produced for us by Japanese supplier that has been specially heat-treated during production. We use New Zealand beech wood to make the handles because it's exceptionally durable and doesn't dry out. The handle is attached to the wok in a way that avoids even the slightest possibility that it will become loose.</p>"
+          }
+        },
+        "item_eaqLQb": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What is the thickness of the steel, and why did you choose it?",
+            "text": "<p>For our black carbon pre-seasoned woks, we use 1.5 mm steel to provide the maximum balance between the weight of the wok and its thermal properties.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item_JDKHwF",
+        "item_rUxxwR",
+        "item_tJhMMD",
+        "item_ymr86V",
+        "item_8WqgUG",
+        "item_eRPe4D",
+        "item_KLktzV",
+        "item_WqaFLR",
+        "item_g3pfPa",
+        "item_eaqLQb"
+      ],
+      "settings": {
+        "title": "Black carbon steel wok",
+        "heading_tag": "h2",
+        "heading_font_class": "fs-heading-2-base",
+        "heading_alignment": "left",
+        "heading_background_image": "shopify://shop_images/sect3-bg_2d94ac4b-2575-4c0a-8dec-d7d73cba3672.webp",
+        "subheading": "",
+        "subheading_tag": "h3",
+        "subheading_font_class": "fs-heading-4-base",
+        "item_heading_font": "heading",
+        "enable_animation": false,
+        "divider_style": "none",
+        "section_padding": "section--vertical-padding-top-bottom",
+        "content_width": "full",
+        "custom_content_width": 850
+      }
+    },
+    "collapsible-row-list-2": {
+      "type": "collapsible-row-list",
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do I need a round or a flat bottom?",
+            "text": "<p>It depends on what kind of stove you will be using. If you will be using a gas stove or open fire, we recommend a wok with a round bottom. If you will be using an electric stove, ceramic cooktop, or induction cooktop, we recommend a flat-bottomed wok. The flat-bottomed wok is also suitable for gas stoves and open fires.</p>"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "The wok's weight I received is different from the one mentioned in the product description. Is this normal?",
+            "text": "<p>Due to the specificity of the material and production processes, manual work is required. Thus, the product's weight may vary, and a deviation in weight is acceptable. However, it does not influence the product's performance and quality.</p>"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do I need to do anything before first use? Do I scrub to remove the anti-rust coating?",
+            "text": "<p>Please follow the following steps to prepare your wok:<br/>1. Wash both sides of the wok with hot soapy water using a non-metallic scouring pad. The wok shouldn't be scrubbed too hard.<br/>2. Dry the wok with paper towels, which may turn grey or black. Please repeat the first step. If you find it difficult to finish the initial cleaning please proceed to the seasoning process. It will perform the final cleaning.<br/>3. Before you start cooking your first meal, it is required to season the wok. This will help create a non-stick patina and remove any metallic taste. Please follow the steps below:<br/>- Turn the stove's exhaust fan on high and/or open the window. Heat the wok and add 1–2 tablespoons of oil. The oil should start smoking.<br/>- Reduce the heat and use a paper towel to spread the oil around the wok with spiral movements for about 5–10 minutes.<br/>- Let the wok cool.<br/>- Wipeout excess oil with a paper towel. If desired, repeat for better seasoning.<br/>4. Wash the wok with hot water and a soft sponge. Dry with a paper towel or over low heat. Your wok is now ready for use.<br/><br/></p>"
+          }
+        },
+        "item-4": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What is meant by Pre-seasoned Blue Steel Wok?",
+            "text": "<p>The seasoning process includes two steps - pre-seasoning and seasoning. If you wash the fully seasoned wok with hot soapy water it will remove the seasoning.<br/><br/>Before seasoning with oil, wok should be pre-seasoned without oil (other names boiling, bluing). It is a high-temperature treatment to create a protective iron oxide layer. It protects from red iron oxide (rust) but doesn't make the wok non-stick. The blue color is a natural color of steel that is treated with a high temperature (bluing process). It is natural for steel to change the color depending on the temperature.<br/><br/>Our range includes pre-seasoned and not pre-seasoned woks. Pre-seasoned woks still need to be seasoned with oil. The seasoning will form another protective layer from oil (patina). The seasoning happens all the time when you cook with oil. The longer you use, the thicker protective layer will be. This layer makes the wok non-stick.<br/><br/>We don’t season with oil. Fully seasoned wok will get dirty easily during storage and transportation and for safety reasons it must be washed before use. Washing the wok will damage seasoning. Please note that the user early or later should re-season the wok himself. It is best if the user learns how to season before first use.</p>"
+          }
+        },
+        "item_FjdmNP": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do I need to season my wok after its first washing even though it's a pre-seasoned wok?",
+            "text": "<p>Yosukata woks have already been pre-seasoned but still need to be seasoned. Our wok was treated at a high temperature at production, leaving the color naturally uneven. Despite this initial pre-seasoning, it still needs to be fully seasoned with vegetable oil or lard.<br/>If you buy a wok that has not been pre-seasoned, you will need to heat it to a very high temperature without oil until the color changes to blue. Only after pre-seasoning can you season it with oil. If you wash a fully seasoned wok with dish soap, the patina will be destroyed, and the wok should be seasoned again.</p>"
+          }
+        },
+        "item_CDHxyr": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What do I do after using my wok?",
+            "text": "<p>After cooking, when the wok has cooled down, you should:<br/>1) remove food residue from the surface of the wok.<br/>2) wash the wok in warm water using a soft sponge WITHOUT using detergents.<br/>3) wipe the wok dry both outside and inside with a napkin or towel.<br/>Keep the wok clean and dry. Don't leave food residue on the wok for long. Your wok will serve you for a long time if you follow these instructions.</p>"
+          }
+        },
+        "item_fwy8Ma": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "The wok is rusty; what should I do?",
+            "text": "<p>If the wok is not washed and dried right after cooking, rust may appear on the surface.<br/>This is not a reason for frustration. Remove the rusty spot with a hard metal sponge and re-season your wok with oil. Your wok is ready to work.</p>"
+          }
+        },
+        "item_Mw39yp": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "It looks like the top layer has come off. What should I do?",
+            "text": "<p>If you leave food residue on your wok for a long time, the sauces' acidic environment can destroy the heat treatment layer that the wok received during production. This is not a reason to say goodbye to your wok. Wash the wok with detergent and a soft sponge. After that, bake the wok in a stove or heat it over an open fire. You will see how the color changes and restores the heat treatment layer. After that, season your wok with oil and you're back in business.</p>"
+          }
+        },
+        "item_eVxQr4": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "I've cooked several times, but the food still sticks. What should I do?",
+            "text": "<p>Even though you have cooked with it several times, the wok's surface may still not be completely non-stick. The more you use your wok, the faster the surface will become saturated with natural oils and become completely non-stick. PLEASE REMEMBER that you do not need to use detergents, just warm water and a soft sponge when washing up after cooking. It is also essential to wipe your pan dry. If you have cooked with it for a long time and the surface is still not non-stick, you should wash the wok with detergent and season the wok with oil again.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item-4",
+        "item_FjdmNP",
+        "item_CDHxyr",
+        "item_fwy8Ma",
+        "item_Mw39yp",
+        "item_eVxQr4"
+      ],
+      "settings": {
+        "title": "Blue carbon steel wok",
+        "heading_tag": "h2",
+        "heading_font_class": "fs-heading-3-base",
+        "heading_alignment": "left",
+        "heading_background_image": "shopify://shop_images/sect3-bg_2d94ac4b-2575-4c0a-8dec-d7d73cba3672.webp",
+        "subheading": "",
+        "subheading_tag": "h3",
+        "subheading_font_class": "fs-heading-5-base",
+        "item_heading_font": "heading",
+        "enable_animation": false,
+        "divider_style": "none",
+        "section_padding": "section--vertical-padding-top-bottom",
+        "content_width": "full",
+        "custom_content_width": 850
+      }
+    },
+    "collapsible-row-list-3": {
+      "type": "collapsible-row-list",
+      "blocks": {
+        "item-1": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What size do I need?",
+            "text": "<p>In choosing the right size, remember that the pan is rather heavy: 11.8\"= 3.4 pounds, 10 1/4\" =2.5 pounds, 7.9\"= 1.6 pounds. On average you can cook a meal in a 11.8\" pan for 3–4 people, in a 10 1/4\" pan for 2–3 people and in an 7.9\" pan for 1 people.</p>"
+          }
+        },
+        "item-2": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "The skillet's weight I received is different from the one mentioned in the product description. Is this normal?",
+            "text": "<p>Due to the specificity of the material and production processes, manual work is required. Thus, the product's weight may vary, and a deviation in weight is acceptable. However, it does not influence the product's performance and quality.</p>"
+          }
+        },
+        "item-3": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "Do I need to do anything before first use? Do I scrub to remove the anti-rust coating?",
+            "text": "<p>Yosukata pans have already been pre-seasoned but still need to be seasoned. Our pans were treated at a high temperature at production, leaving the color naturally uneven. Despite this initial pre-seasoning, it still needs to be fully seasoned with vegetable oil or lard.<br/>If you buy a pan that has not been pre-seasoned, you will need to heat it to a very high temperature without oil until the color changes to blue. Only after pre-seasoning can you season it with oil. If you wash a fully seasoned pan with dish soap, the patina will be destroyed, and the pan should be seasoned again.</p>"
+          }
+        },
+        "item_VimPMd": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What is meant by Pre-seasoned Black Steel Pan?",
+            "text": "<p>The seasoning process includes two steps - pre-seasoning and seasoning. If you wash the fully seasoned pan with hot soapy water it will remove the seasoning.<br/><br/>Before seasoning with oil, pan should be pre-seasoned without oil (other names boiling, bluing). It is a high-temperature treatment to create a protective iron oxide layer. It protects from red iron oxide (rust) but doesn't make the skillet non-stick. The blue color is a natural color of steel that is treated with a high temperature (bluing process). It is natural for steel to change the color depending on the temperature.<br/><br/>Our pans are already pre-seasoned. But you still need to make the seasoning with oil. The seasoning will form another protective layer from oil (patina). The seasoning happens all the time when you cook with oil. The longer you use, the thicker protective layer will be. This layer makes the skillets non-stick.<br/><br/>We don’t season with oil. Fully seasoned pans will get dirty easily during storage and transportation and for safety reasons it must be washed before use. Washing the pan will damage seasoning. Please note that the user early or later should re-season the pan himself. It is best if the user learns how to season before first use.</p>"
+          }
+        },
+        "item_tf8edN": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What do I do after using my pan?",
+            "text": "<p>After cooking, when the pan has cooled down, you should:<br/>1) remove food residue from the surface of the skillet.<br/>2) wash the pan in warm water using a soft sponge WITHOUT using detergents.<br/>3) wipe the skillet dry both outside and inside with a napkin or towel.<br/>Keep the pan clean and dry. Don't leave food residue on the skillet for long. Your pan will serve you for a long time if you follow these instructions.</p>"
+          }
+        },
+        "item_PPQeGm": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "The pan is rusty; what should I do?",
+            "text": "<p>If the pan is not washed and dried right after cooking, rust may appear on the surface.<br/>This is not a reason for frustration. Remove the rusty spot with a hard metal sponge and re-season your skillet with oil. Your pan is ready to work.</p>"
+          }
+        },
+        "item_gMtFm3": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "It looks like the top layer has come off. What should I do?",
+            "text": "<p>If you leave food residue on your pan for a long time, the sauces' acidic environment can destroy the heat treatment layer that the skillet received during production. This is not a reason to say goodbye to your pan. Wash the pan with detergent and a soft sponge. After that, bake the skillet in a stove or heat it over an open fire. You will see how the color changes and restores the heat treatment layer. After that, season your skillet with oil and you're back in business.</p>"
+          }
+        },
+        "item_864bep": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "I've cooked several times, but the food still sticks. What should I do?",
+            "text": "<p>Even though you have cooked with it several times, the pan's surface may still not be completely non-stick. The more you use your pan, the faster the surface will become saturated with natural oils and become completely non-stick. PLEASE REMEMBER that you do not need to use detergents, just warm water and a soft sponge when washing up after cooking. It is also essential to wipe your pan dry. If you have cooked with it for a long time and the surface is still not non-stick, you should wash the skillet with detergent and season the pan with oil again.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item-1",
+        "item-2",
+        "item-3",
+        "item_VimPMd",
+        "item_tf8edN",
+        "item_PPQeGm",
+        "item_gMtFm3",
+        "item_864bep"
+      ],
+      "settings": {
+        "title": "Black carbon steel pan",
+        "heading_tag": "h2",
+        "heading_font_class": "fs-heading-3-base",
+        "heading_alignment": "left",
+        "heading_background_image": "shopify://shop_images/sect3-bg_2d94ac4b-2575-4c0a-8dec-d7d73cba3672.webp",
+        "subheading": "",
+        "subheading_tag": "h3",
+        "subheading_font_class": "fs-heading-5-base",
+        "item_heading_font": "heading",
+        "enable_animation": false,
+        "divider_style": "none",
+        "section_padding": "section--vertical-padding-top-bottom",
+        "content_width": "full",
+        "custom_content_width": 850
+      }
+    },
+    "collapsible_row_list_WUJTiR": {
+      "type": "collapsible-row-list",
+      "blocks": {
+        "item_XWXdwG": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "The wooden lid/Iron set weight I received is different from the one mentioned in the product description. Is this normal?",
+            "text": "<p>Due to the specificity of the material and production processes, manual work is required. Thus, the product's weight may vary, and a deviation in weight is acceptable. However, it does not influence the product's performance and quality.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_XWXdwG"
+      ],
+      "settings": {
+        "title": "Accessories",
+        "heading_tag": "h2",
+        "heading_font_class": "fs-heading-3-base",
+        "heading_alignment": "left",
+        "heading_background_image": "shopify://shop_images/sect3-bg_2d94ac4b-2575-4c0a-8dec-d7d73cba3672.webp",
+        "subheading": "",
+        "subheading_tag": "h3",
+        "subheading_font_class": "fs-heading-5-base",
+        "item_heading_font": "heading",
+        "enable_animation": false,
+        "divider_style": "none",
+        "section_padding": "section--vertical-padding-top-bottom",
+        "content_width": "full",
+        "custom_content_width": 850
+      }
+    },
+    "collapsible_row_list_KCMi4i": {
+      "type": "collapsible-row-list",
+      "blocks": {
+        "item_fUwtjz": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "What is the shipping cost to my address?",
+            "text": "<p>At this time, we offer <strong>free shipping on orders over $50</strong>. For orders below $50, shipping costs are calculated at checkout based on the delivery address and selected shipping method</p>"
+          }
+        },
+        "item_rmdEiN": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "I haven't received my order.",
+            "text": "<p>If you haven’t received your order, please contact us using the feedback form or by email at <a><strong>store.us@yosukata.com</strong></a>, and be sure to include your order number. We will investigate the status of your order and let you know when it is expected to be delivered.</p>"
+          }
+        },
+        "item_HJNTnQ": {
+          "type": "item",
+          "settings": {
+            "expand_by_default": false,
+            "icon": "none",
+            "title": "I'm not satisfied with my order.",
+            "text": "<p>If you are not satisfied with your order for any reason, please contact us using the feedback form or by email at <a><strong>store.us@yosukata.com</strong></a>. Please let us know the reason for your dissatisfaction so we can better assist you and continue improving our products. If your order qualifies for a return, you will be able to return the product and receive a refund in accordance with our return policy</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_fUwtjz",
+        "item_rmdEiN",
+        "item_HJNTnQ"
+      ],
+      "settings": {
+        "title": "Shipping costs and warranty",
+        "heading_tag": "h2",
+        "heading_font_class": "fs-heading-3-base",
+        "heading_alignment": "left",
+        "heading_background_image": "shopify://shop_images/sect3-bg_2d94ac4b-2575-4c0a-8dec-d7d73cba3672.webp",
+        "subheading": "",
+        "subheading_tag": "h3",
+        "subheading_font_class": "fs-heading-5-base",
+        "item_heading_font": "heading",
+        "enable_animation": false,
+        "divider_style": "none",
+        "section_padding": "section--vertical-padding-top-bottom",
+        "content_width": "full",
+        "custom_content_width": 850
+      }
+    },
+    "promotion_bar": {
+      "type": "promotion-bar",
+      "settings": {
+        "min_height": 100,
+        "min_height_mobile": 60,
+        "heading": "Didn't find your answer?",
+        "heading_tag": "h2",
+        "text": "<p>Don't hesitate to reach out with any questions</p>",
+        "link": "/pages/contact",
+        "link_text": "Contact us",
+        "button_style": "btn--primary",
+        "focal_point": "image_presentation",
+        "mobile_focal_point": "image_presentation",
+        "background_color": "#2b3135",
+        "text_color": "#f7f7e8",
+        "button_background_color": "#faf7c3",
+        "button_text_color": "#2b3135",
+        "color_overlay": "#000000",
+        "color_overlay_gradient": "",
+        "overlay_opacity": 0,
+        "enable_animation": true,
+        "full_width": false,
+        "section_padding": "section--vertical-padding-top-bottom"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rich-text",
+    "collapsible-row-list-1",
+    "collapsible-row-list-2",
+    "collapsible-row-list-3",
+    "collapsible_row_list_WUJTiR",
+    "collapsible_row_list_KCMi4i",
+    "promotion_bar"
+  ]
+}

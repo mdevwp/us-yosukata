@@ -1,0 +1,183 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow_EfpUF4": {
+      "type": "slideshow",
+      "blocks": {
+        "slide_maVpFR": {
+          "type": "slide",
+          "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/wok-sharp-landscape.png",
+            "image_mobile": "shopify://shop_images/wok-banner-2026_vert_b43c5dad-54d3-42e9-817b-3c37890507f4.png",
+            "video": "",
+            "autoplay_video": true,
+            "mute_video": true,
+            "loop_video": false,
+            "focal_point": "image_presentation",
+            "mobile_focal_point": "image_presentation",
+            "media_link": "",
+            "text_position": "flex-start_center",
+            "text_position_mobile": "center_flex-end",
+            "accent": "Get additional -10% with a promo code: Extra10",
+            "title": "Black Carbon Steel Wok 13,5-inch",
+            "heading_tag": "h2",
+            "heading_font_class": "fs-heading-display-3",
+            "subheading": "",
+            "subheading_tag": "h2",
+            "subheading_font_class": "fs-heading-4-base",
+            "text": "",
+            "text_font_class": "fs-body-100",
+            "link_1": "shopify://products/13-5-inch-pre-seasoned-black-carbon-steel-wok-flat-bottomed",
+            "link_text_1": "Shop Now",
+            "button_style_1": "btn--primary",
+            "link_2": "",
+            "link_text_2": "Read more",
+            "button_style_2": "btn--primary",
+            "text_color": "#ffffff",
+            "button_background_color": "#ffffff",
+            "button_text_color": "#000000",
+            "color_overlay": "#000000",
+            "color_overlay_gradient": "",
+            "overlay_opacity": 0
+          }
+        }
+      },
+      "block_order": [
+        "slide_maVpFR"
+      ],
+      "name": "t:sections.slideshow.presets.name",
+      "settings": {
+        "image_aspect": "custom",
+        "desktop_height": 80,
+        "mobile_height": 80,
+        "enable_autoplay": false,
+        "duration_autoplay": 6,
+        "navigation_alignment": "center",
+        "navigation_color_foreground": "#ffffff",
+        "navigation_color_background": "",
+        "navigation_background_opacity": 0,
+        "enable_animation": true,
+        "section_padding": "section--vertical-padding-top-bottom"
+      }
+    },
+    "home_categories": {
+      "type": "home-category-switcher",
+      "blocks": {
+        "category_1": {
+          "type": "category",
+          "settings": {
+            "title": "Carbon Steel Woks",
+            "collection": "black-carbon-steel-woks"
+          }
+        },
+        "category_2": {
+          "type": "category",
+          "settings": {
+            "title": "Carbon Steel Skillets",
+            "collection": "black-carbon-steel-skillets"
+          }
+        },
+        "category_3": {
+          "type": "category",
+          "settings": {
+            "title": "Accessories",
+            "collection": "accessories"
+          }
+        },
+        "category_4": {
+          "type": "category",
+          "settings": {
+            "title": "Bundles",
+            "collection": "bundles"
+          }
+        }
+      },
+      "block_order": [
+        "category_1",
+        "category_2",
+        "category_3",
+        "category_4"
+      ],
+      "settings": {
+        "aria_label": "Shop categories",
+        "button_label": "See All"
+      }
+    },
+    "home_benefits": {
+      "type": "multi-column",
+      "blocks": {
+        "benefit_1": {
+          "type": "icon_column",
+          "settings": {
+            "icon": "package-open",
+            "icon_width": 28,
+            "icon_width_mobile": 28,
+            "heading": "Easy Returns",
+            "text": "<p>Free returning of your order within 30 days of purchase.</p>"
+          }
+        },
+        "benefit_2": {
+          "type": "icon_column",
+          "settings": {
+            "icon": "globe",
+            "icon_width": 28,
+            "icon_width_mobile": 28,
+            "heading": "Fast Delivery",
+            "text": "<p>Get your order within 4 business days.</p>"
+          }
+        },
+        "benefit_3": {
+          "type": "icon_column",
+          "settings": {
+            "icon": "leaf",
+            "icon_width": 28,
+            "icon_width_mobile": 28,
+            "heading": "Non-Toxic Products",
+            "text": "<p>All products are made from safe and tested materials.</p>"
+          }
+        },
+        "benefit_4": {
+          "type": "icon_column",
+          "settings": {
+            "icon": "stopwatch",
+            "icon_width": 28,
+            "icon_width_mobile": 28,
+            "heading": "Buy Now, Pay Later",
+            "text": "<p>Pay for your order upon receipt of your goods.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4"
+      ],
+      "settings": {
+        "title": "",
+        "columns": "4",
+        "columns_mobile": "1",
+        "heading_alignment": "center",
+        "column_alignment": "center",
+        "column_alignment_mobile": "center",
+        "content_vertical_alignment": "center",
+        "background_color": "#f5f5f5",
+        "section_padding": "section--vertical-padding-top-bottom"
+      }
+    }
+  },
+  "order": [
+    "slideshow_EfpUF4",
+    "home_categories",
+    "home_benefits"
+  ]
+}

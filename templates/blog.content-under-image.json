@@ -1,0 +1,23 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "blog_list_menu": "blogs",
+        "show_tag_nav": true,
+        "article_per_page": 12,
+        "show_tags": true,
+        "show_author": false,
+        "show_date": false,
+        "show_excerpt": true,
+        "show_featured_image": true,
+        "aspect_ratio": "natural",
+        "content_under_image": true,
+        "enable_animation": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

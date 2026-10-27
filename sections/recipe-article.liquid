@@ -1,0 +1,352 @@
+{{ 'template-article.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  if comment.status == 'pending'
+    assign number_of_comments = article.comments_count | plus: 1
+  else
+    assign number_of_comments = article.comments_count
+  endif
+-%}
+
+<section
+  class="
+    recipe-article
+    {% if settings.enable_section_animations and section.settings.enable_animation %}
+      animation
+      animation--article
+    {% endif %}
+  "
+  style="
+    {% if section.settings.content_width == 'custom' %}
+      --content-width: {{ section.settings.custom_content_width }}px;
+    {% endif %}
+  "
+  data-section-id="{{ section.id }}"
+  data-section-type="recipe-article"
+>
+  <div class="recipe-article__inner">
+    {%- comment -%} Breadcrumbs {%- endcomment -%}
+    {%- if section.settings.show_breadcrumbs -%}
+      <div class="recipe-article__breadcrumbs">
+        {% render 'breadcrumbs', show_breadcrumbs: true %}
+      </div>
+    {%- endif -%}
+
+    <article itemscope itemtype="http://schema.org/Recipe">
+      <div class="recipe-article__container">
+        {%- comment -%} Recipe Image {%- endcomment -%}
+        {%- if article.image != blank -%}
+          <div class="recipe-article__image" {{ block.shopify_attributes }}>
+            <div class="recipe-article__image-container">
+              {%- render 'image' with wrapper_class, wrapper_class: "recipe-article__image-inner", image: article.image, sizes: "100vw", focal_point: section.settings.focal_point, animate: true, prioritize_loading: true -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Recipe Content {%- endcomment -%}
+        <div class="recipe-article__content">
+          {%- comment -%} Recipe Title {%- endcomment -%}
+          <header class="recipe-article__header">
+            <h1 class="recipe-article__title ff-heading fs-heading-display-3">{{ article.title }}</h1>
+
+            {%- comment -%} Recipe Meta (Time and Serving) {%- endcomment -%}
+            {%- if article.metafields.custom.timing != blank -%}
+              <div class="recipe-article__meta">
+                {%- comment -%} Handle custom.timing metafield {%- endcomment -%}
+                {%- if article.metafields.custom.timing != blank -%}
+                  {%- assign timing_data = article.metafields.custom.timing.value -%}
+                  {%- assign timing_items = timing_data | split: ';' -%}
+                  {%- for item in timing_items -%}
+                    {%- assign clean_item = item | strip -%}
+                    {%- if clean_item != blank -%}
+                      {%- assign first_word = clean_item | split: ' ' | first -%}
+                      {%- assign remaining_text = clean_item | remove_first: first_word | strip -%}
+                      <div class="recipe-article__meta-item">
+                        <span class="recipe-article__meta-bullet">•</span>
+                        <span class="recipe-article__meta-value">
+                          <span class="recipe-article__meta-first-word">{{ first_word }}</span>
+                          {%- if remaining_text != blank -%}
+                            <span class="recipe-article__meta-remaining">{{ remaining_text }}</span>
+                          {%- endif -%}
+                        </span>
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </header>
+
+          {%- comment -%} Ingredients (Excerpt) {%- endcomment -%}
+          {%- if article.excerpt != blank -%}
+            <div class="recipe-article__ingredients">
+              <h2 class="recipe-article__ingredients-title ff-heading fs-heading-3-base">Ingredients</h2>
+              <div class="recipe-article__ingredients-content rte">
+                {{ article.excerpt }}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Social Sharing {%- endcomment -%}
+          {%- if section.settings.show_social_sharing -%}
+            <div class="recipe-article__social-sharing">
+              {%- capture article_url -%}
+                {{- shop.url -}}
+                {{- article.url -}}
+              {%- endcapture -%}
+              {% render 'social-share',
+                url: article_url,
+                share_text: section.settings.share_text,
+                title: article.title,
+                image: article.image,
+                alignment: 'left-above'
+              %}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} Recipe Description - Full Width {%- endcomment -%}
+      {%- if article.content != blank -%}
+        <div class="recipe-article__description-container">
+          <div class="recipe-article__description">
+            <div class="recipe-article__description-content rte rte--article">
+              {{ article.content }}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Comments Section {%- endcomment -%}
+      {%- if blog.comments_enabled? -%}
+        <div class="recipe-article__comments">
+          <div class="recipe-article__comments-inner">
+            {%- if number_of_comments > 0 -%}
+              <h2 class="comments__heading ff-heading fs-heading-4-base fs-heading-3-base-ns">
+                {{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}
+              </h2>
+
+              {%- paginate article.comments by 5 -%}
+                <div id="comments">
+                  <ul class="comments">
+                    {%- if comment.status == 'pending' -%}
+                      <li id="{{ comment.id }}" class="comment">
+                        {% render 'comment', comment: comment %}
+                      </li>
+                    {%- endif -%}
+
+                    {%- for comment in article.comments -%}
+                      <li id="{{ comment.id }}" class="comment">
+                        {% render 'comment', comment: comment %}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                  {%- if paginate.pages > 1 -%}
+                    {% render 'pagination', paginate: paginate, type: 'general.pagination.comments' %}
+                  {%- endif -%}
+                </div>
+              {%- endpaginate -%}
+            {%- endif -%}
+
+            {%- form 'new_comment', article -%}
+              {%- assign formId = 'CommentForm' -%}
+
+              <h2 class="comments__leave-heading ff-heading fs-heading-4-base c-heading">
+                {{ 'blogs.comments.title' | t }}
+              </h2>
+              {%- liquid
+                assign post_message = 'blogs.comments.success' | t
+
+                if blog.moderated? and comment.status == 'pending' or comment.status == 'unapproved'
+                  assign post_message = 'blogs.comments.success_moderated' | t
+                elsif comment.status == 'spam'
+                  assign post_message = 'blogs.comments.unapproved' | t
+                endif
+              -%}
+
+              {% render 'form-status', form: form, form_id: formId, success_message: post_message %}
+
+              <div class="input-control__container ">
+                <div class="input-control input-control--half">
+                  <label for="{{ formId }}-author">{{ 'blogs.comments.name' | t }} *</label>
+                  <input
+                    type="text"
+                    name="comment[author]"
+                    placeholder="{{ 'blogs.comments.name' | t }}"
+                    required="required"
+                    id="{{ formId }}-author"
+                    class="input{% if form.errors contains 'author' %} input--error{% endif %}"
+                  >
+                </div>
+
+                <div class="input-control input-control--half">
+                  <label for="{{ formId }}-email">{{ 'blogs.comments.email' | t }} *</label>
+                  <input
+                    type="email"
+                    name="comment[email]"
+                    placeholder="{{ 'blogs.comments.email' | t }}"
+                    required="required"
+                    id="{{ formId }}-email"
+                    class="input{% if form.errors contains 'email' %} input--error{% endif %}"
+                  >
+                </div>
+
+                <div class="input-control">
+                  <label for="{{ formId }}-body">{{ 'blogs.comments.message' | t }} *</label>
+                  <textarea
+                    name="comment[body]"
+                    placeholder="{{ 'blogs.comments.message' | t }}"
+                    required="required"
+                    id="{{ formId }}-body"
+                    class="input{% if form.errors contains 'body' %} input--error{% endif %}"
+                    rows="5"
+                  >
+                    {{- form.body -}}
+                  </textarea>
+                </div>
+              </div>
+
+              {% if blog.moderated? %}
+                <p class="comments__mod-message ff-body fs-body-75">{{ 'blogs.comments.moderated' | t }}</p>
+              {% endif %}
+
+              <button type="submit" class="btn btn--secondary btn--small comments__submit">
+                {{ 'blogs.comments.post' | t }}
+              </button>
+            {%- endform -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </article>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Recipe Article",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "radio",
+      "id": "content_width",
+      "label": "Content width",
+      "options": [
+        {
+          "value": "full",
+          "label": "Full width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "range",
+      "id": "custom_content_width",
+      "label": "Custom content width",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "default": 1000
+    },
+    {
+      "type": "select",
+      "id": "focal_point",
+      "label": "Image focal point",
+      "options": [
+        {
+          "value": "image_presentation",
+          "label": "Image presentation"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "image_presentation"
+    },
+    {
+      "type": "header",
+      "content": "Breadcrumbs"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Social sharing"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_sharing",
+      "label": "Show social sharing",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "share_text",
+      "label": "Share text",
+      "default": "Share this recipe"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable animation",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recipe Article"
+    }
+  ]
+}
+{% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {%-
+                    render 'image' with
+                    wrapper_class: "recipe-article__image-inner",
+                    image: article.image,
+                    sizes: "100vw",
+                    focal_point: section.settings.focal_point,
+                    animate: true,
+                    prioritize_loading: true
+                  -%}
+  to: '{%- render ''image'' with wrapper_class, wrapper_class: "recipe-article__image-inner",
+    image: article.image, sizes: "100vw", focal_point: section.settings.focal_point,
+    animate: true, prioritize_loading: true -%}'
+  position: 1290..1499
+{% endcomment %}

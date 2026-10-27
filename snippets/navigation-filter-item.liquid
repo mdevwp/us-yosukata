@@ -1,0 +1,55 @@
+{%- liquid
+  assign is_active = false
+  assign current_url = request.path
+
+  # Check if this navigation link is currently active
+  if link.url == current_url or link.active
+    assign is_active = true
+  endif
+
+  # Check if any child links are active
+  if link.links.size > 0
+    for child_link in link.links
+      if child_link.url == current_url or child_link.active
+        assign is_active = true
+        break
+      endif
+    endfor
+  endif
+-%}
+
+<li class="filter-item navigation-filter-item">
+  <a
+    href="{{ link.url }}"
+    class="filter-item__content {% if is_active %}filter-item__content--active{% endif %}"
+  >
+    <input
+      type="checkbox"
+      class="filter-item__checkbox visually-hidden"
+      {% if is_active %}
+        checked
+      {% endif %}
+      disabled
+      tabindex="-1"
+      aria-hidden="true"
+    >
+
+    <div class="filter-item__content-inner">
+      <div class="filter-input__input">
+        {% render 'icon' with icon, icon: 'checkmark' %}
+      </div>
+
+      <span class="filter-item__label">{{ link.title }}</span>
+    </div>
+  </a>
+</li>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'icon' with icon: 'checkmark' %}"
+  to: "{% render 'icon' with icon, icon: 'checkmark' %}"
+  position: 928..976
+{% endcomment %}

@@ -1,0 +1,612 @@
+{%- liquid
+  assign paginated = false
+  if section.settings.pagination == 'paginated'
+    assign paginated = true
+  endif
+
+  assign per_page = section.settings.rows | times: section.settings.columns_desktop
+  assign filter_bar_enabled = false
+  if section.settings.show_item_count or section.settings.show_sort or section.settings.show_filters
+    assign filter_bar_enabled = true
+  endif
+
+  assign swatch_options = settings.swatch_options | downcase | split: ', '
+  assign chip_options = settings.chip_options | downcase | split: ', '
+-%}
+
+<section
+  data-section-id="{{ section.id }}"
+  data-section-type="collection"
+  data-layout-type="grid"
+  data-pagination-type="{{ section.settings.pagination }}"
+  data-collection-item-count="{{ collection.all_products_count }}"
+  data-collection-items-per-page="{{ per_page }}"
+  data-collection-columns-desktop="{{ section.settings.columns_desktop }}"
+  data-collection-columns-mobile="{{ section.settings.columns_mobile }}"
+  data-enable-sticky-filter-sidebar="{{ section.settings.enable_sticky_filter_sidebar }}"
+
+  class="
+    section
+    section--includes-product-items
+    section--full-width
+    collection
+    collection--pagination-{{ section.settings.pagination }}
+    {% if filter_bar_enabled %}collection--has-filter-bar{% endif %}
+    {% if settings.enable_section_animations and section.settings.enable_animation %}
+      animation
+      animation--collection
+    {% endif %}
+  "
+
+  style="
+    --collection-columns-desktop: {{ section.settings.columns_desktop }};
+    --collection-columns-mobile: {{ section.settings.columns_mobile }};
+  "
+>
+  {%- if section.settings.divider_style == 'solid' -%}
+    <div class="collection__divider"></div>
+  {%- endif -%}
+  <div class="collection__inner">
+    {%- comment -%}
+      The collection banner (which normally renders the page <h1>) is disabled on these
+      templates, so output the collection title as a visually-hidden <h1> to keep a single,
+      unique top-level heading per collection page for SEO and accessibility. Skip it when
+      the collection description already provides an <h1> to avoid duplicate headings.
+    {%- endcomment -%}
+    {%- liquid
+      assign description_has_h1 = false
+      if collection.description contains '<h1'
+        assign description_has_h1 = true
+      endif
+    -%}
+    {%- if section.settings.show_collection_title_heading and description_has_h1 == false -%}
+      <h1 class="visually-hidden">{{ collection.title }}</h1>
+    {%- endif -%}
+    {%- if collection.all_products_count > 0 -%}
+      <script type="application/json" data-tags>
+        {% if collection.all_tags.size > 0 %}
+          [
+            {%- for tag in collection.all_tags -%}
+              { "label": "{{ tag | escape }}", "handle": "{{ tag | handleize }}" }
+              {%- if forloop.last == false -%}, {%- endif -%}
+            {%- endfor -%}
+          ]
+        {% else %}
+          []
+        {% endif %}
+      </script>
+
+      {% paginate collection.products by per_page %}
+        <div class="collection__container">
+          <div class="collection__content">
+            {% render 'filter-bar',
+              results: collection,
+              show_item_count: section.settings.show_item_count,
+              show_sort: section.settings.show_sort,
+              show_filters: section.settings.show_filters,
+              filter_location: section.settings.desktop_filter_location,
+              show_swatch_filters: section.settings.show_swatch_filters,
+              swatch_options: swatch_options,
+              show_chip_filters: section.settings.show_chip_filters,
+              chip_options: chip_options,
+              enable_sticky_filter_bar: section.settings.enable_sticky_filter_bar,
+              collapse_filter_bar: section.settings.collapse_filter_bar,
+              chip_layout: section.settings.chip_layout
+            %}
+
+            {% render 'mobile-filters',
+              results: collection,
+              show_sort: section.settings.show_sort,
+              show_filters: section.settings.show_filters,
+              enable_sticky_filter_bar: section.settings.enable_sticky_filter_bar,
+              show_navigation_filter: section.settings.show_navigation_filter
+            %}
+
+            <div class="collection__main-area">
+              {%- if section.settings.desktop_filter_location == 'sidebar' -%}
+                {% render 'filter-sidebar',
+                  results: collection,
+                  show_filters: section.settings.show_filters,
+                  collapse_filter_bar: section.settings.collapse_filter_bar,
+                  collapse_filter_groups: section.settings.collapse_filter_groups_desktop,
+                  show_swatch_filters: section.settings.show_swatch_filters,
+                  swatch_options: swatch_options,
+                  show_chip_filters: section.settings.show_chip_filters,
+                  chip_options: chip_options,
+                  chip_layout: section.settings.chip_layout,
+                  show_navigation_filter: section.settings.show_navigation_filter,
+                  navigation_filter_menu: section.settings.navigation_filter_menu,
+                  navigation_filter_label: section.settings.navigation_filter_label
+                %}
+              {%- endif -%}
+
+              <div class="collection__window">
+                <div class="collection__loading" data-loading>
+                  {%- render 'loader' -%}
+                </div>
+
+                <div
+                  id="root"
+                  class="animation--collection-items"
+                  data-partial
+                  data-collection-products-count="{{ collection.products_count }}"
+                >
+                  <div
+                    class="
+                      collection__products
+                      collection__infinite-container
+                      {% if collection.products_count == 0 %}
+                        collection__products--no-products
+                      {% endif %}
+                    "
+                  >
+                    {% for product in collection.products %}
+                      <div class="product-item animation animation--item animation--item-initial" style="--z-index-item: {{ forloop.index }};">
+                        <div class="product-item__inner">
+                          <div class="product-item__media">
+                            <a class="product-item__image-link" href="{{ product.url | within: collection }}" aria-label="{{ product.title }}">
+                              {% render 'image',
+                                image: product.featured_media,
+                                wrapper_class: 'product-item__image',
+                                aspect_ratio: settings.product_listing_aspect_ratio,
+                                object_fit: settings.product_listing_media_fit,
+                                include_placeholder: true,
+                                sizes: '(max-width: 720px) calc((90vw - 12px) / 2), (max-width: 1400px) calc((93.4vw - (12px * 3)) / 4), 304px',
+                                src_set_type: 'grid'
+                              %}
+                            </a>
+                            {% unless placeholder %}
+                              {%- render 'product-badges',
+                                prod: product,
+                                show_sale_badge: settings.product_listing_show_sale_badge,
+                                show_custom_badges: settings.product_listing_show_custom_badges,
+                                show_sold_out_badge: settings.product_listing_show_sold_out_badge
+                              -%}
+                            {% endunless %}
+                          </div>
+
+                          <div class="product-item__meta">
+                            <div class="product-item__text">
+                              <h4 class="ff-body product-item__product-title fs-product-card-title">
+                                <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+                              </h4>
+                               <!-- Start of Judge.me code --> 
+                            <div style='{{ jm_style }}' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'>   
+                            {{ product.metafields.judgeme.badge }} 
+                            </div> <!-- End of Judge.me code -->
+                              <div class="product-item__price-and-cart">
+                                <p class="product-item__price">
+                                  {% liquid
+                                    # Check if product has compare_at_price set
+                                    assign has_compare_at_price = false
+                                    if product.compare_at_price > product.price
+                                      assign has_compare_at_price = true
+                                    endif
+
+                                    # Also check if any variant has compare_at_price
+                                    if has_compare_at_price == false
+                                      for variant in product.variants
+                                        if variant.compare_at_price != null and variant.compare_at_price > variant.price
+                                          assign has_compare_at_price = true
+                                          break
+                                        endif
+                                      endfor
+                                    endif
+
+                                    # Check for varied compare_at_price
+                                    assign has_null_compare_at_price = false
+                                    for variant in product.variants
+                                      if variant.compare_at_price == null
+                                        assign has_null_compare_at_price = true
+                                        break
+                                      endif
+                                    endfor
+                                  %}
+
+                                  {% if has_compare_at_price %}
+                                    <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+
+                                    {% unless product.compare_at_price_varies or has_null_compare_at_price %}
+                                      <s class="t-subdued">{{ product.compare_at_price | money_without_trailing_zeros }}</s>
+                                    {% endunless %}
+
+                                    {% if product.price_varies or product.compare_at_price_varies or has_null_compare_at_price %}
+                                      {%- assign sale_price = product.price | money_without_trailing_zeros -%}
+                                      <span class="sale">
+                                        {{- 'products.product.on_sale_from_html' | t: price: sale_price -}}
+                                      </span>
+                                    {% else %}
+                                      <span class="sale">{{ product.price | money_without_trailing_zeros }}</span>
+                                    {% endif %}
+
+                                  {% else %}
+                                    {% if product.price_varies %}
+                                      {%- assign price = product.price | money_without_trailing_zeros -%}
+                                      {{ 'products.product.from_lowest_price_html' | t: lowest_price: price }}
+                                    {% else %}
+                                      {{ product.price | money_without_trailing_zeros }}
+                                    {% endif %}
+                                  {% endif %}
+                                </p>
+
+                                <div class="product-item__add-to-cart">
+                                  {%- if product.available -%}
+                                    {%- if product.has_only_default_variant -%}
+                                      <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                                        {% render 'animated-button',
+                                          text: 'products.product.add_to_cart',
+                                          type: 'submit'
+                                        %}
+                                      </form>
+                                    {%- else -%}
+                                      {% render 'animated-button',
+                                        text: 'products.product.choose_options',
+                                        url: product.url
+                                      %}
+                                    {%- endif -%}
+                                  {%- else -%}
+                                    {% render 'animated-button',
+                                      text: 'products.product.sold_out',
+                                      type: 'button',
+                                      disabled: true
+                                    %}
+                                  {%- endif -%}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="product-item__hover-container"></div>
+                      </div>
+                    {% else %}
+                      <div class="collection__empty">
+                        <div>{{ 'collections.general.no_products' | t }}</div>
+                        <button type="button" class="btn btn--text-link" data-clear-all-filters>
+                          {{ 'filters.clear_filters' | t }}
+                        </button>
+                      </div>
+                    {% endfor %}
+                  </div>
+
+                  {% unless paginated %}
+                    <div>
+                      {% render 'pagination',
+                        paginate: paginate,
+                        type: 'general.pagination.products',
+                        display_paginate_item_count_only: true
+                      %}
+                      <div class="collection__infinite-trigger">
+                        {% if paginate.next %}
+                          <a href="{{ paginate.next.url }}" class="btn btn--secondary no-transition" data-click-to-load>
+                            {{- 'general.pagination.load_more' | t -}}
+                          </a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endunless %}
+
+                  {% if paginated %}
+                    <div>
+                      {% if paginate.pages > 1 %}
+                        {% render 'pagination',
+                          paginate: paginate,
+                          type: 'general.pagination.products',
+                          show_item_count: true
+                        %}
+                      {% else %}
+                        {% render 'pagination',
+                          paginate: paginate,
+                          type: 'general.pagination.products',
+                          display_paginate_item_count_only: true
+                        %}
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endpaginate %}
+
+      {% render 'filter-drawer',
+        results: collection,
+        show_sort: section.settings.show_sort,
+        show_filters: section.settings.show_filters,
+        show_swatch_filters: section.settings.show_swatch_filters,
+        swatch_options: swatch_options,
+        show_chip_filters: section.settings.show_chip_filters,
+        chip_options: chip_options,
+        chip_layout: section.settings.chip_layout,
+        collapse_filter_groups: section.settings.collapse_filter_groups_mobile,
+        show_navigation_filter: section.settings.show_navigation_filter,
+        navigation_filter_menu: section.settings.navigation_filter_menu,
+        navigation_filter_label: section.settings.navigation_filter_label
+      %}
+    {%- else -%}
+      <div class="collection__empty ta-c">
+        <p class="fs-body-100 fs-body-200-ns">{{ 'collections.general.no_matches' | t }}</p>
+        <a class="btn btn--text-link" href="{{ routes.all_products_collection_url }}">{{ 'general.404.link' | t }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "t:sections.main_collection_product_grid.name",
+  "class": "collection-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main_collection_product_grid.settings.collection.header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_title_heading",
+      "label": "Show collection title as page heading (H1)",
+      "info": "Outputs the collection title as a visually-hidden H1 for SEO. Turn off if another section already provides the page H1.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "t:sections.shared.collection_search.settings.results.columns_desktop.label",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "t:sections.shared.collection_search.settings.results.columns_mobile.label",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "select",
+      "id": "rows",
+      "label": "t:sections.shared.collection_search.settings.results.rows.label",
+      "options": [
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        },
+        {
+          "value": "7",
+          "label": "7"
+        },
+        {
+          "value": "8",
+          "label": "8"
+        },
+        {
+          "value": "9",
+          "label": "9"
+        },
+        {
+          "value": "10",
+          "label": "10"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_item_count",
+      "label": "t:sections.shared.collection_search.settings.results.show_item_count.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.shared.collection_search.settings.filtering.header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "t:sections.shared.collection_search.settings.filtering.show_sort.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "t:sections.shared.collection_search.settings.filtering.show_filters.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_filter_bar",
+      "label": "t:sections.shared.collection_search.settings.filtering.enable_sticky_filter_bar.label",
+      "default": true,
+      "info": "t:sections.shared.collection_search.settings.filtering.enable_sticky_filter_bar.info"
+    },
+    {
+      "type": "select",
+      "id": "desktop_filter_location",
+      "label": "t:sections.shared.collection_search.settings.filtering.desktop_filter_location.label",
+      "options": [
+        {
+          "value": "filter_bar",
+          "label": "t:sections.shared.collection_search.settings.filtering.desktop_filter_location.options.filter_bar"
+        },
+        {
+          "value": "sidebar",
+          "label": "t:sections.shared.collection_search.settings.filtering.desktop_filter_location.options.sidebar"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "collapse_filter_bar",
+      "label": "t:sections.shared.collection_search.settings.filtering.collapse_filter_bar.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_filter_sidebar",
+      "label": "t:sections.shared.collection_search.settings.filtering.enable_sticky_filter_sidebar.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "collapse_filter_groups_desktop",
+      "label": "t:sections.shared.collection_search.settings.filtering.collapse_filter_groups_desktop.label",
+      "default": true,
+      "info": "t:sections.shared.collection_search.settings.filtering.collapse_filter_groups_desktop.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "collapse_filter_groups_mobile",
+      "label": "t:sections.shared.collection_search.settings.filtering.collapse_filter_groups_mobile.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_swatch_filters",
+      "label": "t:sections.shared.collection_search.settings.filtering.show_swatch_filters.label",
+      "default": true,
+      "info": "t:sections.shared.collection_search.settings.filtering.show_swatch_filters.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_chip_filters",
+      "label": "t:sections.shared.collection_search.settings.filtering.show_chip_filters.label",
+      "default": true,
+      "info": "t:sections.shared.collection_search.settings.filtering.show_chip_filters.info"
+    },
+    {
+      "type": "select",
+      "id": "chip_layout",
+      "label": "t:shared.settings.chip_layout.label",
+      "options": [
+        {
+          "value": "3col",
+          "label": "t:shared.settings.chip_layout.options.3col"
+        },
+        {
+          "value": "2col",
+          "label": "t:shared.settings.chip_layout.options.2col"
+        },
+        {
+          "value": "natural",
+          "label": "t:shared.settings.chip_layout.options.natural"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Custom Navigation Filter"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation_filter",
+      "label": "Show Navigation Filter",
+      "default": false,
+      "info": "Add a dropdown filter with navigation menu items as checkboxes"
+    },
+    {
+      "type": "link_list",
+      "id": "navigation_filter_menu",
+      "label": "Navigation Menu for Filter",
+      "info": "Select a navigation menu to use for the custom filter dropdown"
+    },
+    {
+      "type": "text",
+      "id": "navigation_filter_label",
+      "label": "Filter Label",
+      "default": "Categories",
+      "info": "Label for the navigation filter dropdown"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.shared.collection_search.settings.pagination.header.content"
+    },
+    {
+      "type": "select",
+      "id": "pagination",
+      "label": "t:sections.shared.collection_search.settings.pagination.pagination.label",
+      "options": [
+        {
+          "value": "infinite",
+          "label": "t:sections.shared.collection_search.settings.pagination.pagination.options.infinite"
+        },
+        {
+          "value": "click",
+          "label": "t:sections.shared.collection_search.settings.pagination.pagination.options.click"
+        },
+        {
+          "value": "paginated",
+          "label": "t:sections.shared.collection_search.settings.pagination.pagination.options.paginated"
+        }
+      ],
+      "default": "paginated",
+      "info": "t:sections.shared.collection_search.settings.pagination.pagination.info"
+    },
+    {
+      "type": "header",
+      "content": "t:shared.settings.section_style.header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "t:shared.settings.section_style.enable_animation.label",
+      "default": true,
+      "info": "t:shared.settings.section_style.enable_animation.info"
+    },
+    {
+      "type": "select",
+      "id": "divider_style",
+      "label": "t:shared.settings.section_style.divider_style.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:shared.settings.section_style.divider_style.options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:shared.settings.section_style.divider_style.options.solid"
+        }
+      ],
+      "default": "none"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,93 @@
+{%- liquid
+  assign has_three_levels = false
+  for link in menu
+    if link.links.size > 0
+      assign has_three_levels = true
+      break
+    endif
+  endfor
+-%}
+
+<div
+  class="
+    navigation__submenu
+    {% if menu_id contains 'buy-now' %}
+      navigation__submenu--buy-now
+    {% endif %}
+    ff-body
+    fs-body-100
+    {% if settings.enable_section_animations %}
+      animation
+      animation--dropdown
+    {% endif %}
+  "
+  id="{{ menu_id }}"
+  data-submenu
+  data-depth="{{ depth }}"
+  aria-hidden="true"
+>
+  <ul class="navigation__submenu-list{% if has_three_levels %} navigation__submenu-list--two-columns{% endif %}">
+    {%- for link in menu -%}
+      {%- if link.links.size > 0 -%}
+        {%- assign has_children = true -%}
+      {%- endif -%}
+
+      {%- liquid
+        assign link_title_lower = link.title | downcase
+        assign is_accessories = false
+        assign is_bundles = false
+        if link_title_lower contains 'accessories'
+          assign is_accessories = true
+        endif
+        if link_title_lower contains 'bundles'
+          assign is_bundles = true
+        endif
+      -%}
+      <li class="navigation__submenu-item {% if has_children %}has-sublinks{% endif %}{% if is_accessories %} navigation__submenu-item--accessories{% endif %}{% if is_bundles %} navigation__submenu-item--bundles{% endif %}">
+        {%- liquid
+          assign child_is_active = false
+          if has_children
+            for child_link in link.links
+              if child_link.active
+                assign child_is_active = true
+                break
+              endif
+            endfor
+          elsif link.active
+            assign child_is_active = true
+          endif
+        -%}
+
+        <a
+          class="navigation__submenu-parent no-transition{% if child_is_active %} active{% endif %}"
+          data-link
+          href="{{ link.url }}"
+        >
+          {{ link.title }}
+        </a>
+
+        {%- comment -%} Display 3rd level items directly below their parent {%- endcomment -%}
+        {%- if has_children -%}
+          <ul class="navigation__submenu-children">
+            {%- for child_link in link.links -%}
+              <li class="navigation__submenu-child-item">
+                <a
+                  href="{{ child_link.url }}"
+                  class="{% if child_link.active %}active{% endif %}"
+                  {% if child_link.active %}
+                    aria-current="page"
+                  {% endif %}
+                  data-link
+                >
+                  {{ child_link.title }}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </li>
+
+      {%- assign has_children = false -%}
+    {%- endfor -%}
+  </ul>
+</div>

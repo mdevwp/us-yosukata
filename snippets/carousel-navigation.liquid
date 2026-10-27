@@ -1,0 +1,36 @@
+<div
+  class="carousel__navigation-buttons {{ wrapper_class }}"
+  {% if data_attribute %}
+    {{ data_attribute }}
+  {% endif %}
+>
+  <button
+    type="button"
+    class="carousel__navigation-button carousel__navigation-button--back"
+    data-prev
+    aria-label="{{ 'general.accessibility.carousel_previous' | t }}"
+  >
+    {%- render 'icon' with icon, icon: 'arrow-long' -%}
+  </button>
+  <button
+    type="button"
+    class="carousel__navigation-button carousel__navigation-button--forward"
+    data-next
+    aria-label="{{ 'general.accessibility.carousel_next' | t }}"
+  >
+    {%- render 'icon' with icon, icon: 'arrow-long' -%}
+  </button>
+</div>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- render 'icon' with icon: 'arrow-long' -%}"
+  to: "{%- render 'icon' with icon, icon: 'arrow-long' -%}"
+  position: 324..375
+- from: "{%- render 'icon' with icon: 'arrow-long' -%}"
+  to: "{%- render 'icon' with icon, icon: 'arrow-long' -%}"
+  position: 580..631
+{% endcomment %}
