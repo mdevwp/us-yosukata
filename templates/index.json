@@ -171,6 +171,7 @@
         "column_alignment_mobile": "center",
         "content_vertical_alignment": "center",
         "background_color": "#f5f5f5",
+        "enable_animation": false,
         "section_padding": "section--vertical-padding-top-bottom"
       }
     }
