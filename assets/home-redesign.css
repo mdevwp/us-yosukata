@@ -375,3 +375,90 @@
   .yk-benefits__desktop { display: inline; }
   .yk-benefits__mobile { display: none; }
 }
+
+/* FAQ */
+.yk-faq {
+  padding: 50px var(--yk-gutter);
+  background: #fff;
+  color: var(--yk-ink);
+  font-family: var(--yk-font-body);
+}
+.yk-faq__inner { max-width: var(--yk-max); margin: 0 auto; }
+.yk-faq__title {
+  margin: 0 0 24px;
+  color: var(--yk-black);
+  font-family: var(--yk-font-heading);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 36px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.yk-faq__list { display: flex; flex-direction: column; gap: 4px; }
+.yk-faq__item {
+  border-radius: 16px;
+  background: var(--yk-grey-bg);
+}
+.yk-faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+  padding: 16px;
+  box-sizing: border-box;
+  color: var(--yk-black);
+  cursor: pointer;
+  font-family: var(--yk-font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  list-style: none;
+}
+.yk-faq__question::-webkit-details-marker { display: none; }
+.yk-faq__question:focus-visible { outline: 2px solid var(--yk-red); outline-offset: -2px; border-radius: 16px; }
+.yk-faq__toggle {
+  position: relative;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.yk-faq__toggle::before,
+.yk-faq__toggle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 1.5px;
+  background: var(--yk-black);
+  transform: translate(-50%, -50%);
+}
+.yk-faq__toggle::after { transform: translate(-50%, -50%) rotate(90deg); transition: opacity .2s ease; }
+.yk-faq__item[open] .yk-faq__toggle::after { opacity: 0; }
+.yk-faq__answer {
+  padding: 4px 16px 16px;
+  font-size: 14px;
+  line-height: 22px;
+}
+.yk-faq__answer > :first-child { margin-top: 0; }
+.yk-faq__answer > :last-child { margin-bottom: 0; }
+.yk-faq__answer p { margin: 0 0 22px; }
+
+@media (min-width: 960px) {
+  .yk-faq { padding: 72px var(--yk-gutter) 75px; }
+  .yk-faq__title { margin-bottom: 78px; font-size: 48px; line-height: 56px; }
+  .yk-faq__list { gap: 8px; }
+  .yk-faq__item { border-radius: 24px; }
+  .yk-faq__question {
+    min-height: 104px;
+    padding: 24px;
+    font-size: 24px;
+    line-height: 32px;
+  }
+  .yk-faq__question:focus-visible { border-radius: 24px; }
+  .yk-faq__toggle { width: 56px; height: 56px; background: #fff; }
+  .yk-faq__answer { padding: 13px 24px 22px; font-size: 16px; line-height: 24px; }
+  .yk-faq__answer p { margin-bottom: 24px; }
+}

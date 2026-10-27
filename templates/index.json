@@ -197,11 +197,87 @@
       "settings": {
         "aria_label": "Why shop with us"
       }
+    },
+    "yk_faq": {
+      "type": "yk-faq",
+      "blocks": {
+        "faq_item_k9DbgQ": {
+          "type": "question",
+          "settings": {
+            "question": "How to choose a Yosukata pan?",
+            "answer": "<p>There are several things to pay attention to when choosing a professional wok. First of all, be aware of the thickness. A thicker skillet will heat up more slowly but will hold the heat better and be less likely to warp. Second, consider the size and shape of the wok. A 14-inch wok is a good size for most kitchens, but if you have a lot of space, you might want a bigger wok to buy. Next, pay attention to the size or style of the handle — you want one that will be comfortable to use. Another important feature is the material your pan is made of. The most popular choice is carbon steel, which heats up quickly and evenly. <a href=\"/collections/black-carbon-steel-skillets\" title=\"Black Carbon Steel Skillets\">Carbon-steel skillets</a> are durable and can be used for a variety of cooking methods.</p><p>Finally, decide whether you want to choose among the <a href=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Flat+Bottom\" title=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Flat+Bottom\">flat bottom woks</a> or <a href=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Round+Bottom\" title=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Round+Bottom\">round bottom</a> units. A round-bottomed wok is best for authentic stir-frying, but a flat-bottomed alternative will work fine if you only have an electric stove. If you already have a round-bottomed wok, think of purchasing a special ring among other <a href=\"/collections/accessories\" title=\"Accessories\">skillet & wok accessories</a>.</p><p>Now that you know how to choose the <a href=\"/collections/blue-carbon-stell-woks\" title=\"Blue Carbon Stell Woks\">best carbon steel wok</a>, it’s time to look for some tasty recipes!</p>"
+          }
+        },
+        "faq_item_ADM9y8": {
+          "type": "question",
+          "settings": {
+            "question": "Where are Yosukata woks made?",
+            "answer": "<p>Our woks are authentically crafted in China using exclusive designs created specifically for Yosukata. The raw materials for our products are sourced from reputable suppliers to ensure only the best-quality products are used in manufacturing. Our design is created for everyone who loves to cook, from beginners to experienced chefs.</p>"
+          }
+        },
+        "faq_item_rgXqTA": {
+          "type": "question",
+          "settings": {
+            "question": "How to season new cookware?",
+            "answer": "<p>Before you start cooking with your new wok, it’s important to season it properly. This will help prevent food from sticking and make the pan easier to clean. To season yourpan, heat it over high heat until it is very hot. Then, add a tablespoon of vegetable oil and swirl it around the pan. Remove the pan from the heat and rinse it with hot water. Now yourcookwareis ready to use! We also recommend you watch our video about<a href=\"/blogs/video/how-to-season-a-wok-basic-oil-method\" title=\"How to season a WOK (basic oil method)\">Yosukata wok seasoning</a>with detailed instructions on the whole process.</p>"
+          }
+        },
+        "faq_item_F4mhw9": {
+          "type": "question",
+          "settings": {
+            "question": "Can I use a Yosukata skillet with an induction cooker?",
+            "answer": "<p>Yes, you can! Yosukata flat-bottom woks are made of a special kind of carbon steel that is compatible with all types of cooktops, including induction ones.</p>"
+          }
+        },
+        "faq_item_LBp4tE": {
+          "type": "question",
+          "settings": {
+            "question": "Can I clean my Asian skillet in a dishwasher?",
+            "answer": "<p>No, we do not recommend cleaning your Yosukatacookwarein the dishwasher. The harsh chemicals and heat can damage the pan and ruin the seasoning. Instead, clean your wok by hand using hot water and without detergent. If food is stuck to the pan, you can use a little bit of vegetable oil to help loosen it.</p>"
+          }
+        },
+        "faq_item_EeW4q9": {
+          "type": "question",
+          "settings": {
+            "question": "Do I need to season my wok, skillet before use?",
+            "answer": "<p>We recommend seasoning your wok before the first use because it is necessary to carefully clean the pan after you receive it from the store to get rid of any residue from the manufacturing process. Seasoning your wok will also help prevent food from sticking and make the pan easier to clean. Before seasoning your pan, use mild detergent and hot water to clean the surface, then dry it with a kitchen towel. Using a large lid, put the pan on high heat until it becomes quite hot. Then add a little vegetable oil. Swirl the pan to coat it, then remove it from the heat and wash it with hot water without detergent.</p>"
+          }
+        },
+        "faq_item_NAxUGb": {
+          "type": "question",
+          "settings": {
+            "question": "What can I cook in an Asian skillet?",
+            "answer": "<p>The possibilities are endless! You can use your wok to stir-fry vegetables, meat, seafood, rice, noodles, and so much more. The key to success is using the right ingredients and cooking methods. For example, you can use a marinade to pre-season your food, or you can add a sauce to your stir-fry to give it more flavor. You can also experiment with different cooking techniques such as steaming, deep-frying, or braising. However, try to avoid overcrowding as this will make it harder to cook your food evenly.</p>"
+          }
+        },
+        "faq_item_hiiXmB": {
+          "type": "question",
+          "settings": {
+            "question": "Yosukata cookware reviews",
+            "answer": "<p>If you are interested in reviews from people who’ve already purchased our woks, check them on the product pages. Thus, you can find out more about a certain pan. We are confident that you will be happy with your purchase, but if for any reason you’re not satisfied, please feel free to reach out to us and we will be happy to help.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_item_k9DbgQ",
+        "faq_item_ADM9y8",
+        "faq_item_rgXqTA",
+        "faq_item_F4mhw9",
+        "faq_item_LBp4tE",
+        "faq_item_EeW4q9",
+        "faq_item_NAxUGb",
+        "faq_item_hiiXmB"
+      ],
+      "settings": {
+        "title": "FAQs",
+        "first_open": true
+      }
     }
   },
   "order": [
     "yk_hero",
     "home_categories",
-    "yk_benefits"
+    "yk_benefits",
+    "yk_faq"
   ]
 }

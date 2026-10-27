@@ -1,0 +1,129 @@
+{%- comment -%}
+  Redesign 2026 footer. Rendered by sections/footer.liquid when the redesign is active.
+  Reuses the footer section's blocks: the first image is the logo, "links" blocks become columns,
+  the newsletter block enables the signup form.
+  Usage: render 'yk-footer', section: section
+{%- endcomment -%}
+{%- liquid
+  assign logo_block = section.blocks | where: 'type', 'text' | first
+  assign link_blocks = section.blocks | where: 'type', 'links'
+  assign newsletter_block = section.blocks | where: 'type', 'newsletter' | first
+  assign socials = 'instagram,twitter,threads,facebook,tiktok,youtube,pinterest' | split: ','
+-%}
+<footer class="yk-footer" data-section-id="{{ section.id }}" data-section-type="footer">
+  <div class="yk-footer__inner">
+    <div class="yk-footer__top">
+      <div class="yk-footer__brand">
+        <a class="yk-footer__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+          {%- if logo_block.settings.image != blank -%}
+            {{ logo_block.settings.image | image_url: width: 540 | image_tag: width: 266, alt: shop.name, loading: 'lazy' }}
+          {%- else -%}
+            {{ shop.name }}
+          {%- endif -%}
+        </a>
+
+        {%- if newsletter_block -%}
+          <div class="yk-footer__newsletter" {{ newsletter_block.shopify_attributes }}>
+            {%- if section.settings.yk_newsletter_heading != blank -%}
+              <h2 class="yk-footer__newsletter-title">{{ section.settings.yk_newsletter_heading | escape }}</h2>
+            {%- endif -%}
+            {%- form 'customer', class: 'yk-footer__form', id: 'yk-footer-subscribe' -%}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              {%- if form.posted_successfully? -%}
+                <p class="yk-footer__form-status" role="status">{{ 'general.newsletter_form.confirmation' | t }}</p>
+              {%- else -%}
+                {%- if form.errors -%}
+                  <p class="yk-footer__form-status" role="alert">{{ form.errors.messages.email | default: form.errors.messages.form }}</p>
+                {%- endif -%}
+                <label class="visually-hidden" for="yk-footer-subscribe-email">{{ 'general.newsletter_form.email_placeholder' | t }}</label>
+                <input
+                  class="yk-footer__input"
+                  id="yk-footer-subscribe-email"
+                  type="email"
+                  name="contact[email]"
+                  autocomplete="email"
+                  autocapitalize="off"
+                  placeholder="{{ section.settings.yk_email_placeholder | escape }}"
+                  required
+                >
+                <button class="yk-footer__submit" type="submit">{{ section.settings.yk_button_label | escape }}</button>
+              {%- endif -%}
+            {%- endform -%}
+            {%- if section.settings.yk_newsletter_note != blank -%}
+              <div class="yk-footer__note">{{ section.settings.yk_newsletter_note }}</div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- for block in link_blocks -%}
+        {%- assign menu = linklists[block.settings.link_list] -%}
+        {%- liquid
+          assign column_title = block.settings.title
+          if column_title == blank
+            if forloop.first
+              assign column_title = section.settings.yk_column_1_title
+            elsif forloop.index == 2
+              assign column_title = section.settings.yk_column_2_title
+            endif
+          endif
+          assign column_title = column_title | default: menu.title
+        -%}
+        <details class="yk-footer__column" data-yk-footer-column {% if forloop.first %}data-mobile-open{% endif %} open {{ block.shopify_attributes }}>
+          <summary class="yk-footer__column-title">
+            <span>{{ column_title | escape }}</span>
+            <span class="yk-footer__column-toggle" aria-hidden="true"></span>
+          </summary>
+          {%- if menu.links.size > 0 -%}
+            <ul class="yk-footer__links" role="list">
+              {%- for link in menu.links -%}
+                <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </details>
+      {%- endfor -%}
+    </div>
+
+    <div class="yk-footer__bottom">
+      <div class="yk-footer__copyright">
+        <p>Copyright &copy; {{ 'now' | date: '%Y' }}, {{ shop.name }}. {{ section.settings.yk_copyright | remove: '<p>' | remove: '</p>' }}</p>
+      </div>
+
+      <ul class="yk-footer__social" role="list">
+        {%- for social in socials -%}
+          {%- capture social_setting -%}social_{{ social }}_link{%- endcapture -%}
+          {%- if settings[social_setting] != blank -%}
+            <li>
+              <a href="{{ settings[social_setting] }}" target="_blank" rel="noopener" aria-label="{{ social | replace: 'twitter', 'X' | capitalize }}">
+                {% render 'icon' with icon, icon: social %}
+              </a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+
+      <div class="yk-footer__powered">{{ powered_by_link }}</div>
+
+      {%- if section.settings.yk_show_payment_icons and shop.enabled_payment_types != empty -%}
+        <ul class="yk-footer__payments" role="list">
+          {%- for type in shop.enabled_payment_types -%}
+            <li>{{ type | payment_type_svg_tag: class: 'yk-footer__payment-icon' }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+<script>
+  (() => {
+    const mobile = window.matchMedia('(max-width: 959px)');
+    const columns = document.querySelectorAll('[data-yk-footer-column]');
+    const sync = () => columns.forEach((column) => {
+      column.open = !mobile.matches || column.hasAttribute('data-mobile-open');
+    });
+    sync();
+    mobile.addEventListener('change', sync);
+  })();
+</script>

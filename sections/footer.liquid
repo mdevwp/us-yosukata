@@ -19,12 +19,19 @@
   if show_payment_icons and shop.enabled_payment_types != empty
     assign payment_icons = true
   endif
+
+  capture yk_redesign
+    render 'yk-redesign-active'
+  endcapture
 -%}
 
 <style>
   #shopify-section-{{ section.id }} {
+    {% if yk_redesign == 'true' %}
+      background-color: #121212;
+    {% endif %}
     {% if section.settings.background_image != blank %}
-      background-image: url('{{ section.settings.background_image | image_url }}');
+      background-image: {% if yk_redesign == 'true' %}linear-gradient(rgba(18, 18, 18, .55), rgba(18, 18, 18, .92) 70%), {% endif %}url('{{ section.settings.background_image | image_url }}');
       background-size: {{ section.settings.background_size | default: 'cover' }};
       background-position: {{ section.settings.background_position | default: 'center center' }};
       background-repeat: {% if section.settings.background_repeat %}repeat{% else %}no-repeat{% endif %};
@@ -32,6 +39,9 @@
   }
 </style>
 
+{%- if yk_redesign == 'true' -%}
+  {% render 'yk-footer', section: section %}
+{%- else -%}
 <div
   class="footer section"
   data-section-id="{{ section.id }}"
@@ -178,6 +188,7 @@
     </div>
   </div>
 </div>
+{%- endif -%}
 
 {% schema %}
 {
@@ -289,6 +300,60 @@
       "type": "richtext",
       "id": "additional_copyright_text",
       "label": "t:sections.footer.settings.additional_content.additional_copyright_text.label"
+    },
+    {
+      "type": "header",
+      "content": "Redesign 2026"
+    },
+    {
+      "type": "text",
+      "id": "yk_column_1_title",
+      "label": "First links column heading",
+      "info": "Used when the links block has no heading",
+      "default": "Support"
+    },
+    {
+      "type": "text",
+      "id": "yk_column_2_title",
+      "label": "Second links column heading",
+      "default": "Company"
+    },
+    {
+      "type": "text",
+      "id": "yk_newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "Sign up and save on your first order"
+    },
+    {
+      "type": "text",
+      "id": "yk_email_placeholder",
+      "label": "Email placeholder",
+      "default": "Your Email"
+    },
+    {
+      "type": "text",
+      "id": "yk_button_label",
+      "label": "Button label",
+      "default": "Sign up"
+    },
+    {
+      "type": "richtext",
+      "id": "yk_newsletter_note",
+      "label": "Newsletter note",
+      "default": "<p>By signing up you are agreeing to the terms and conditions. <a href=\"/policies/privacy-policy\" title=\"Privacy Policy\">Read our Privacy Policy.</a></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "yk_copyright",
+      "label": "Copyright text",
+      "info": "Shown after \"Copyright © year, store name.\"",
+      "default": "<p>All rights reserved. See our terms of use and privacy notice.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "yk_show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
     }
   ],
   "blocks": [

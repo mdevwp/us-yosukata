@@ -1,0 +1,60 @@
+<section class="yk-faq" aria-labelledby="YkFaqTitle-{{ section.id }}">
+  <div class="yk-faq__inner">
+    {%- if section.settings.title != blank -%}
+      <h2 class="yk-faq__title" id="YkFaqTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+    <div class="yk-faq__list">
+      {%- for block in section.blocks -%}
+        <details class="yk-faq__item" {% if forloop.first and section.settings.first_open %}open{% endif %} {{ block.shopify_attributes }}>
+          <summary class="yk-faq__question">
+            <span>{{ block.settings.question | escape }}</span>
+            <span class="yk-faq__toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="yk-faq__answer">{{ block.settings.answer }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{%- if section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in section.blocks -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | json }},
+            "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | json }} }
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ (Redesign 2026)",
+  "class": "yk-faq-section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "FAQs" },
+    { "type": "checkbox", "id": "first_open", "label": "Open first question", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How to choose a Yosukata pan?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Answer text</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "FAQ (Redesign 2026)", "blocks": [ { "type": "question" } ] }
+  ]
+}
+{% endschema %}
