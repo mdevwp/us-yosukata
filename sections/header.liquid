@@ -423,48 +423,28 @@
       {%- elsif logo_position == 'center' and navigation_position == 'left' -%}
         {{ header_logo }}
       {%- elsif logo_position == 'left' and navigation_position == 'center' -%}
-        {%- if request.page_type == 'index' -%}
-          <nav class="home-header-nav" aria-label="Main navigation">
-            <a href="{{ routes.root_url }}" aria-current="page">Home</a>
-            <a href="{{ routes.all_products_collection_url }}">Catalog</a>
-            <a href="/pages/contact">Contact</a>
-          </nav>
-        {%- else -%}
-          {{ primary_nav }}
-        {%- endif -%}
+        {{ primary_nav }}
       {%- endif -%}
 
       <div class="header__row-segment header__row-segment-desktop right">
-        {%- if request.page_type == 'index' -%}
-          {{ search_icon }}
-          {{ account_icon }}
-        {%- else -%}
-          {%- unless logo_position == 'center' and navigation_position == 'below' -%}
-            {%- if section.settings.enable_custom_header_links -%}
-              {{ register_link }}
-            {%- else -%}
-              {{ search_icon }}
-            {%- endif -%}
-          {%- endunless -%}
-          {%- if shop.customer_accounts_enabled -%}
-            {%- if section.settings.enable_custom_header_links -%}
-              {{ contact_link }}
-            {%- else -%}
-              {{ account_icon }}
-            {%- endif -%}
+        {%- unless logo_position == 'center' and navigation_position == 'below' -%}
+          {%- if section.settings.enable_custom_header_links -%}
+            {{ register_link }}
+          {%- else -%}
+            {{ search_icon }}
+          {%- endif -%}
+        {%- endunless -%}
+        {%- if shop.customer_accounts_enabled -%}
+          {%- if section.settings.enable_custom_header_links -%}
+            {{ contact_link }}
+          {%- else -%}
+            {{ account_icon }}
           {%- endif -%}
         {%- endif -%}
         {{ cart_icon }}
       </div>
     </div>
 
-    {%- if request.page_type == 'index' -%}
-      <div class="home-header-mobile">
-        {{ menu_icon }}
-        {{ header_logo_secondary }}
-        <div class="home-header-mobile__actions">{{ search_icon }}{{ cart_icon }}</div>
-      </div>
-    {%- endif -%}
     <div class="header__row header__row-mobile {% if logo_position == 'center' %}three-segment{% endif %}">
       {%- if logo_position == 'center' -%}
         <div class="header__row-segment left">

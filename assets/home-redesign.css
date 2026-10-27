@@ -28,21 +28,10 @@ body.template-index header.header [data-js-cart-count] {
   color: #fff !important;
   box-shadow: 0 0 0 1px #1b1b1b !important;
 }
-body.template-index .home-header-nav { display: flex; justify-content: center; align-items: center; gap: 30px; }
-body.template-index .home-header-nav a { color: inherit; font-weight: 600; text-decoration: none; }
-body.template-index .home-header-nav a:hover { color: #bf0036 !important; }
-body.template-index .home-header-mobile { display: none; }
 @media (min-width: 960px) {
   body.template-index header.header { padding-top: 0; }
   body.template-index header.header .header__row-desktop.upper { display: none; }
   body.template-index header.header .header__row-desktop.lower { margin-top: 0 !important; }
-}
-@media (max-width: 959px) {
-  body.template-index header.header .header__row-mobile { display: none; }
-  body.template-index .home-header-mobile { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; min-height: 64px; }
-  body.template-index .home-header-mobile .header__logo { justify-self: center; }
-  body.template-index .home-header-mobile__actions { display: flex; justify-content: flex-end; align-items: center; }
-  body.template-index .home-header-mobile .header__menu-icon { justify-self: start; }
 }
 body.template-index .slideshow-slide[data-slide="1"] .slideshow-slide__image-container {
   background: var(--home-hero) center center / cover no-repeat;
