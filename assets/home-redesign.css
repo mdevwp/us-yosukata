@@ -1,4 +1,23 @@
 /* Homepage-only presentation. The slideshow and benefits remain native Stiletto sections. */
+body.template-index header.header:not(.is-sticky) {
+  background: #fff !important;
+  color: #1b1b1b !important;
+  --color-background-header: #fff !important;
+  --color-text-header: #1b1b1b !important;
+}
+body.template-index header.header:not(.is-sticky) .header__inner,
+body.template-index header.header:not(.is-sticky) .header__inner a,
+body.template-index header.header:not(.is-sticky) .header__inner button {
+  color: #1b1b1b !important;
+}
+body.template-index header.header:not(.is-sticky) .header__logo img {
+  filter: brightness(0);
+}
+@media (min-width: 960px) {
+  body.template-index header.header { padding-top: 0; }
+  body.template-index header.header .header__row-desktop.upper { display: none; }
+  body.template-index header.header .header__row-desktop.lower { margin-top: 0 !important; }
+}
 body.template-index .slideshow-slide[data-slide="1"] .slideshow-slide__image-container {
   background: var(--home-hero) center center / cover no-repeat;
 }
