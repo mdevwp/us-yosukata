@@ -66,14 +66,17 @@
     {%- render 'theme-globals' -%}
 
     {{ content_for_header }}
+    {%- capture yk_redesign -%}{% render 'yk-redesign-active' %}{%- endcapture -%}
+    {%- if yk_redesign == 'true' or request.page_type == 'index' -%}
+      {% render 'yk-redesign-assets' %}
+    {%- endif -%}
     {%- if request.page_type == 'index' -%}
-      {% render 'home-redesign-assets' %}
       {{ 'home-redesign.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'home-redesign.js' | asset_url }}" defer></script>
     {%- endif -%}
   </head>
 
-  <body class="template-{{ request.page_type | handle }}">
+  <body class="template-{{ request.page_type | handle }}{% if yk_redesign == 'true' %} yk-redesign{% endif %}">
     <div class="page">
       {% if settings.enable_page_transitions %}
         {% render 'page-transition-overlay' %}

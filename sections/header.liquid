@@ -23,7 +23,11 @@
       break
     endif
   endfor
-  if template.name == 'index'
+
+  capture yk_redesign
+    render 'yk-redesign-active'
+  endcapture
+  if yk_redesign == 'true'
     assign transparent_header_enabled = false
   endif
 -%}
@@ -165,7 +169,11 @@
     aria-controls="MainQuickSearch"
     aria-expanded="false"
   >
-    {% render 'icon-button' with icon, icon: 'header-search' %}
+    {%- if yk_redesign == 'true' -%}
+      <span class="icon-button icon-button-header-search"><span class="icon-button__icon">{% render 'yk-icon', icon: 'search' %}</span></span>
+    {%- else -%}
+      {% render 'icon-button' with icon, icon: 'header-search' %}
+    {%- endif -%}
     {% render 'icon-button' with icon, icon: 'header-menu-close' %}
   </a>
 {%- endcapture -%}
@@ -176,7 +184,11 @@
     href="{{ routes.account_url }}"
     aria-label="{{ 'general.accessibility.go_account' | t }}"
   >
-    {% render 'icon-button' with icon, icon: 'header-account' %}
+    {%- if yk_redesign == 'true' -%}
+      <span class="icon-button icon-button-header-account"><span class="icon-button__icon">{% render 'yk-icon', icon: 'account' %}</span></span>
+    {%- else -%}
+      {% render 'icon-button' with icon, icon: 'header-account' %}
+    {%- endif -%}
   </a>
 {%- endcapture -%}
 
@@ -188,7 +200,11 @@
     data-js-cart-icon="{{ section.settings.cart_icon }}"
   >
     {% assign cart_icon_name = 'header-shopping-[[ci]]' | replace: '[[ci]]', section.settings.cart_icon %}
-    {% render 'icon-button', icon: cart_icon_name %}
+    {%- if yk_redesign == 'true' -%}
+      <span class="icon-button icon-button-header-shopping"><span class="icon-button__icon">{% render 'yk-icon', icon: 'cart' %}</span></span>
+    {%- else -%}
+      {% render 'icon-button', icon: cart_icon_name %}
+    {%- endif -%}
 
     <span data-js-cart-count>{{ cart.item_count }}</span>
   </a>
@@ -275,9 +291,40 @@
     data-aria-label-opened="{{ 'general.accessibility.close_menu' | t }}"
     data-js-menu-button
   >
-    {% render 'icon-button' with icon, icon: 'header-menu' %}
+    {%- if yk_redesign == 'true' -%}
+      <span class="icon-button icon-button-header-menu"><span class="icon-button__icon">{% render 'yk-icon', icon: 'burger' %}</span></span>
+    {%- else -%}
+      {% render 'icon-button' with icon, icon: 'header-menu' %}
+    {%- endif -%}
     {% render 'icon-button' with icon, icon: 'header-menu-close' %}
   </button>
+{%- endcapture -%}
+
+{%- capture yk_locale_pill -%}
+  {%- if yk_redesign == 'true' and section.settings.yk_show_locale_pill -%}
+    {%- liquid
+      assign yk_lang = localization.language.iso_code | default: request.locale.iso_code | split: '-' | first | downcase
+      case yk_lang
+        when 'en'
+          assign yk_lang_label = 'ENG'
+        when 'uk'
+          assign yk_lang_label = 'UKR'
+        when 'de'
+          assign yk_lang_label = 'DEU'
+        when 'fr'
+          assign yk_lang_label = 'FRA'
+        when 'es'
+          assign yk_lang_label = 'ESP'
+        else
+          assign yk_lang_label = yk_lang | upcase
+      endcase
+    -%}
+    <div class="yk-locale-pill" aria-label="Language and currency">
+      <span class="yk-locale-pill__item">{{ yk_lang_label }}</span>
+      <span class="yk-locale-pill__divider" aria-hidden="true"></span>
+      <span class="yk-locale-pill__item">{{ cart.currency.iso_code | default: localization.country.currency.iso_code }}</span>
+    </div>
+  {%- endif -%}
 {%- endcapture -%}
 
 {%- capture filler -%}<div class="header__filler"></div>{%- endcapture -%}
@@ -319,6 +366,9 @@
   class="
     header
     header--layout-{{ layout | replace: "_", "-" }}
+    {% if yk_redesign == 'true' %}
+      yk-header
+    {% endif %}
     {% if logo != blank -%}
       header--has-logo
     {%- endif %}
@@ -427,6 +477,12 @@
       {%- endif -%}
 
       <div class="header__row-segment header__row-segment-desktop right">
+        {%- if yk_redesign == 'true' -%}
+          {{ search_icon }}
+          {%- if shop.customer_accounts_enabled -%}{{ account_icon }}{%- endif -%}
+          {{ cart_icon }}
+          {{ yk_locale_pill }}
+        {%- else -%}
         {%- unless logo_position == 'center' and navigation_position == 'below' -%}
           {%- if section.settings.enable_custom_header_links -%}
             {{ register_link }}
@@ -442,11 +498,23 @@
           {%- endif -%}
         {%- endif -%}
         {{ cart_icon }}
+        {%- endif -%}
       </div>
     </div>
 
-    <div class="header__row header__row-mobile {% if logo_position == 'center' %}three-segment{% endif %}">
-      {%- if logo_position == 'center' -%}
+    <div class="header__row header__row-mobile {% if logo_position == 'center' or yk_redesign == 'true' %}three-segment{% endif %}">
+      {%- if yk_redesign == 'true' -%}
+        <div class="header__row-segment left">
+          {{ menu_icon }}
+        </div>
+
+        {{ header_logo_secondary }}
+
+        <div class="header__row-segment right">
+          {{ search_icon }}
+          {{ cart_icon }}
+        </div>
+      {%- elsif logo_position == 'center' -%}
         <div class="header__row-segment left">
           {{ menu_icon }}
         </div>
@@ -499,6 +567,19 @@
     social_icons_mobile: social_icons_mobile
   %}
 </header>
+
+{%- if yk_redesign == 'true' -%}
+  <script>
+    (() => {
+      const header = document.querySelector('.yk-header');
+      const sync = () => header.querySelectorAll('[data-js-cart-count]').forEach((count) => {
+        count.classList.toggle('yk-is-empty', count.textContent.trim() === '0');
+      });
+      sync();
+      new MutationObserver(sync).observe(header, { subtree: true, childList: true, characterData: true });
+    })();
+  </script>
+{%- endif -%}
 
 <script>
   // Set heading height at component level
@@ -744,6 +825,12 @@
       "label": "t:sections.header.settings.custom_links.enable_custom_header_links.label",
       "default": false,
       "info": "t:sections.header.settings.custom_links.enable_custom_header_links.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "yk_show_locale_pill",
+      "label": "Redesign 2026: show language / currency pill",
+      "default": true
     }
   ],
   "blocks": [

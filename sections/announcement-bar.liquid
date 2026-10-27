@@ -3,6 +3,7 @@
   document.documentElement.setAttribute("data-enable-sticky-announcement-bar", "{{ section.settings.sticky_enabled }}");
 </script>
 
+{%- capture yk_redesign -%}{% render 'yk-redesign-active' %}{%- endcapture -%}
 {%- if section.blocks.size -%}
   {%- capture items -%}
     {%- for block in section.blocks -%}
@@ -15,10 +16,16 @@
         {{ block.shopify_attributes }}
         data-index="{{ forloop.index0 }}"
       >
+        {%- capture yk_item_icon -%}
+          {%- if yk_redesign == 'true' and block.settings.icon != 'none' -%}
+            <span class="yk-announcement__icon">{% render 'yk-icon', icon: block.settings.icon %}</span>
+          {%- endif -%}
+        {%- endcapture -%}
         {%- assign has_mobile_text = false -%}
         {%- if block.settings.title_mobile != blank and block.settings.title_mobile != block.settings.title -%}
           {%- assign has_mobile_text = true -%}
           <div class="announcement-bar__item-inner announcement-bar__item-inner-mobile-only">
+            {{ yk_item_icon }}
             {%- if block.settings.link != blank -%}
               <a class="announcement-bar__link color-inherit" href="{{ block.settings.link }}">
                 {{ block.settings.title_mobile | replace: '<a ', '<span class="fake-link" ' | replace: '</a>', '</span>' }}
@@ -29,6 +36,7 @@
           </div>
         {%- endif -%}
         <div class="announcement-bar__item-inner{% if has_mobile_text %} announcement-bar__item-inner-desktop-only{% endif %}">
+          {{ yk_item_icon }}
           {%- if block.settings.link != blank -%}
             <a class="announcement-bar__link color-inherit" href="{{ block.settings.link }}">
               {{ block.settings.title | replace: '<a ', '<span class="fake-link" ' | replace: '</a>', '</span>' }}
@@ -44,7 +52,7 @@
     {% if section.blocks.size == 0 %}
       hidden
     {% endif %}
-    class="announcement-bar{% if section.blocks.size == 0 %} hidden{% endif %}"
+    class="announcement-bar{% if section.blocks.size == 0 %} hidden{% endif %}{% if yk_redesign == 'true' %} yk-announcement{% endif %}"
     data-section-id="{{ section.id }}"
     data-section-type="announcement-bar"
     data-enable-sticky-announcement-bar="{{ section.settings.enable_sticky_announcement_bar }}"
@@ -60,7 +68,7 @@
       <div class="ui-overlap">
         <div class="fader left">
           <button class="slider-nav-button slider-nav-button-prev" title="{{ 'general.accessibility.previous' | t }}">
-            {% render 'icon' with icon, icon: 'chevron' %}
+            {%- if yk_redesign == 'true' -%}{% render 'yk-icon', icon: 'chevron-left' %}{%- else -%}{% render 'icon' with icon, icon: 'chevron' %}{%- endif -%}
           </button>
         </div>
         <div class="ui-overlap-item-clones" aria-hidden="true">
@@ -68,11 +76,29 @@
         </div>
         <div class="fader right">
           <button class="slider-nav-button slider-nav-button-next" title="{{ 'general.accessibility.next' | t }}">
-            {% render 'icon' with icon, icon: 'chevron' %}
+            {%- if yk_redesign == 'true' -%}{% render 'yk-icon', icon: 'chevron-right' %}{%- else -%}{% render 'icon' with icon, icon: 'chevron' %}{%- endif -%}
           </button>
         </div>
       </div>
     </div>
+    {%- if yk_redesign == 'true' -%}
+      <div class="yk-announcement__inline">
+        {%- for block in section.blocks -%}
+          <div class="yk-announcement__item ff-body">
+            {%- if block.settings.icon != 'none' -%}
+              <span class="yk-announcement__icon">{% render 'yk-icon', icon: block.settings.icon %}</span>
+            {%- endif -%}
+            {%- if block.settings.link != blank -%}
+              <a class="announcement-bar__link color-inherit" href="{{ block.settings.link }}">
+                {{ block.settings.title | replace: '<a ', '<span class="fake-link" ' | replace: '</a>', '</span>' }}
+              </a>
+            {%- else -%}
+              {{ block.settings.title }}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
     <div
       class="swiper"
       data-slider
@@ -167,6 +193,18 @@
           "id": "link",
           "label": "t:sections.announcement_bar.blocks.announcement.settings.link.label",
           "info": "t:sections.announcement_bar.blocks.announcement.settings.link.info"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Redesign 2026: icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "returns", "label": "Returns" },
+            { "value": "truck", "label": "Delivery truck" },
+            { "value": "leaf", "label": "Leaf" }
+          ],
+          "default": "none"
         }
       ]
     }

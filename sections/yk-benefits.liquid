@@ -1,0 +1,66 @@
+<section class="yk-benefits" aria-label="{{ section.settings.aria_label | escape }}">
+  <ul class="yk-benefits__list" role="list">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign title_mobile = block.settings.title_mobile | default: block.settings.title
+        assign text_mobile = block.settings.text_mobile | default: block.settings.text
+      -%}
+      <li class="yk-benefits__item" {{ block.shopify_attributes }}>
+        <span class="yk-benefits__icon">
+          {%- if block.settings.custom_icon != blank -%}
+            {{ block.settings.custom_icon | image_url: width: 80 | image_tag: width: 32, height: 32, alt: '' }}
+          {%- else -%}
+            {% render 'yk-icon', icon: block.settings.icon %}
+          {%- endif -%}
+        </span>
+        <h3 class="yk-benefits__title">
+          <span class="yk-benefits__desktop">{{ block.settings.title | escape }}</span>
+          <span class="yk-benefits__mobile">{{ title_mobile | escape }}</span>
+        </h3>
+        <div class="yk-benefits__text">
+          <span class="yk-benefits__desktop">{{ block.settings.text | escape | newline_to_br }}</span>
+          <span class="yk-benefits__mobile">{{ text_mobile | escape | newline_to_br }}</span>
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+</section>
+
+{% schema %}
+{
+  "name": "Benefits (Redesign 2026)",
+  "class": "yk-benefits-section",
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "Accessible label", "default": "Why shop with us" }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "benefit-returns", "label": "Returns" },
+            { "value": "benefit-globe", "label": "Globe" },
+            { "value": "benefit-non-toxic", "label": "Non-toxic" },
+            { "value": "benefit-pay-later", "label": "Pay later" }
+          ],
+          "default": "benefit-returns"
+        },
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon", "info": "Overrides the icon above" },
+        { "type": "text", "id": "title", "label": "Heading", "default": "Easy Returns" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Free returning of your order\nwithin 30 days of purchase." },
+        { "type": "text", "id": "title_mobile", "label": "Mobile heading", "info": "Leave empty to use the heading" },
+        { "type": "textarea", "id": "text_mobile", "label": "Mobile text", "info": "Leave empty to use the text" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    { "name": "Benefits (Redesign 2026)", "blocks": [ { "type": "benefit" } ] }
+  ]
+}
+{% endschema %}

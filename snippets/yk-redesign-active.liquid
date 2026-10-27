@@ -1,0 +1,31 @@
+{%- comment -%}
+  Prints "true" when the 2026 header/announcement/footer design applies to the current template.
+  Controlled by Theme settings > Redesign 2026.
+  Usage: capture yk_redesign / render 'yk-redesign-active' / endcapture
+{%- endcomment -%}
+{%- liquid
+  assign yk_scope = settings.yk_redesign_scope | default: 'home'
+  assign yk_on = false
+
+  case yk_scope
+    when 'all'
+      assign yk_on = true
+    when 'templates'
+      assign yk_full_template = template | append: ''
+      assign yk_templates = settings.yk_redesign_templates | remove: ' ' | downcase | split: ','
+      for yk_template in yk_templates
+        if yk_template == template.name or yk_template == yk_full_template
+          assign yk_on = true
+          break
+        endif
+      endfor
+    else
+      if template.name == 'index'
+        assign yk_on = true
+      endif
+  endcase
+
+  if yk_on
+    echo 'true'
+  endif
+-%}

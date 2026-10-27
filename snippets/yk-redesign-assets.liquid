@@ -1,0 +1,25 @@
+{%- comment -%}
+  Fonts and shared tokens for the 2026 redesign. Rendered in <head> when the redesign is active
+  or on the homepage (whose sections are built in the new design).
+{%- endcomment -%}
+{%- liquid
+  assign yk_heading = settings.yk_font_heading
+  assign yk_body = settings.yk_font_body
+  assign yk_heading_600 = yk_heading | font_modify: 'weight', '600'
+  assign yk_heading_800 = yk_heading | font_modify: 'weight', '800'
+  assign yk_body_500 = yk_body | font_modify: 'weight', '500'
+  assign yk_body_700 = yk_body | font_modify: 'weight', 'bold'
+-%}
+<style>
+  {{ yk_heading | font_face: font_display: 'swap' }}
+  {{ yk_heading_600 | font_face: font_display: 'swap' }}
+  {{ yk_heading_800 | font_face: font_display: 'swap' }}
+  {{ yk_body | font_face: font_display: 'swap' }}
+  {{ yk_body_500 | font_face: font_display: 'swap' }}
+  {{ yk_body_700 | font_face: font_display: 'swap' }}
+  :root {
+    --yk-font-heading: {{ yk_heading.family }}, {{ yk_heading.fallback_families }};
+    --yk-font-body: {{ yk_body.family }}, {{ yk_body.fallback_families }};
+  }
+</style>
+{{ 'yk-redesign.css' | asset_url | stylesheet_tag }}

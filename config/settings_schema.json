@@ -8,6 +8,45 @@
     "theme_support_url": "https:\/\/fluorescent.co\/help\/contact"
   },
   {
+    "name": "Redesign 2026",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "New header, announcement bar and footer design. Homepage sections from the redesign always use it."
+      },
+      {
+        "type": "select",
+        "id": "yk_redesign_scope",
+        "label": "Use new header design on",
+        "options": [
+          { "value": "home", "label": "Homepage only" },
+          { "value": "all", "label": "All pages" },
+          { "value": "templates", "label": "Selected templates" }
+        ],
+        "default": "home"
+      },
+      {
+        "type": "text",
+        "id": "yk_redesign_templates",
+        "label": "Selected templates",
+        "info": "Comma separated template names, e.g. index, product, collection, page.contact",
+        "default": "index"
+      },
+      {
+        "type": "font_picker",
+        "id": "yk_font_heading",
+        "label": "Heading font",
+        "default": "montserrat_n7"
+      },
+      {
+        "type": "font_picker",
+        "id": "yk_font_body",
+        "label": "Body font",
+        "default": "ibm_plex_sans_n4"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.blog.name",
     "settings": [
       {

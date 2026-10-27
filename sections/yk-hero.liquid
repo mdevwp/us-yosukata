@@ -1,0 +1,147 @@
+{%- liquid
+  assign slides = section.blocks | where: 'type', 'slide'
+  assign badges = section.blocks | where: 'type', 'badge'
+  assign proofs = section.blocks | where: 'type', 'proof'
+-%}
+{%- capture badges_html -%}
+  {%- if badges.size > 0 -%}
+    <div class="yk-hero__badges">
+      {%- for block in badges -%}
+        <div class="yk-hero__badge" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 200 | image_tag: width: 100, height: 100, alt: block.settings.alt }}
+          {%- elsif block.settings.fallback != 'none' -%}
+            <img src="{{ block.settings.fallback | prepend: 'home-badge-' | append: '.png' | asset_url }}" width="100" height="100" alt="{{ block.settings.alt | escape }}">
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+<section class="yk-hero" data-yk-hero style="--yk-proofs: {{ proofs.size }};" data-autoplay="{{ section.settings.autoplay }}" data-autoplay-delay="{{ section.settings.autoplay_delay | times: 1000 }}" aria-roledescription="carousel" aria-label="{{ section.settings.aria_label | escape }}">
+  <div class="yk-hero__slides">
+    {%- for block in slides -%}
+      <div
+        class="yk-hero__slide{% if forloop.first %} is-active{% endif %}"
+        data-yk-hero-slide
+        role="group"
+        aria-roledescription="slide"
+        aria-label="{{ forloop.index }} / {{ slides.size }}"
+        {% unless forloop.first %}aria-hidden="true" inert{% endunless %}
+        {{ block.shopify_attributes }}
+      >
+        <picture class="yk-hero__media">
+          {%- if block.settings.image_mobile != blank -%}
+            <source media="(max-width: 719px)" srcset="{{ block.settings.image_mobile | image_url: width: 780 }} 780w, {{ block.settings.image_mobile | image_url: width: 1080 }} 1080w">
+          {%- elsif forloop.first -%}
+            <source media="(max-width: 719px)" srcset="{{ 'home-hero-mobile.jpg' | asset_url }}">
+          {%- endif -%}
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 2400 | image_tag: widths: '960, 1440, 1920, 2400', sizes: '100vw', class: 'yk-hero__image', loading: 'eager', fetchpriority: 'high', alt: block.settings.title }}
+          {%- else -%}
+            <img class="yk-hero__image" src="{{ 'home-hero.jpg' | asset_url }}" width="1534" height="1080" alt="{{ block.settings.title | strip_html | escape }}" fetchpriority="high">
+          {%- endif -%}
+        </picture>
+
+        <div class="yk-hero__content">
+          {{ badges_html }}
+          {%- if block.settings.promo != blank -%}
+            <div class="yk-hero__promo">{{ block.settings.promo }}</div>
+          {%- endif -%}
+          {%- if block.settings.title != blank -%}
+            <h2 class="yk-hero__title">{{ block.settings.title | escape | newline_to_br }}</h2>
+          {%- endif -%}
+          {%- if block.settings.button_label != blank -%}
+            <a class="yk-hero__button" href="{{ block.settings.button_link | default: routes.all_products_collection_url }}">{{ block.settings.button_label | escape }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if proofs.size > 0 -%}
+    <ul class="yk-hero__proofs" role="list">
+      {%- for block in proofs -%}
+        <li class="yk-hero__proof" {{ block.shopify_attributes }}>
+          <span class="yk-hero__proof-label">{{ block.settings.label | escape }}</span>
+          <span class="yk-hero__proof-quote">{{ block.settings.quote | escape }}</span>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  {%- if slides.size > 1 -%}
+    <div class="yk-hero__nav">
+      <button class="yk-hero__arrow" type="button" data-yk-hero-prev aria-label="{{ 'general.accessibility.previous' | t }}">{% render 'yk-icon', icon: 'arrow-left' %}</button>
+      <span class="yk-hero__counter" aria-live="polite"><span data-yk-hero-current>1</span>/{{ slides.size }}</span>
+      <button class="yk-hero__arrow" type="button" data-yk-hero-next aria-label="{{ 'general.accessibility.next' | t }}">{% render 'yk-icon', icon: 'arrow-right' %}</button>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero (Redesign 2026)",
+  "class": "yk-hero-section",
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "Accessible label", "default": "Featured products" },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay slides", "default": false },
+    { "type": "range", "id": "autoplay_delay", "label": "Autoplay delay", "min": 3, "max": 12, "step": 1, "unit": "s", "default": 6 }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "1600 x 744 or larger" },
+        { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "780 x 1500 or larger" },
+        { "type": "richtext", "id": "promo", "label": "Promo label", "default": "<p>Get additional -10% with a promo code: <strong>Extra10</strong></p>" },
+        { "type": "textarea", "id": "title", "label": "Heading", "default": "Black Carbon Steel Wok 13,5-inch" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop Now" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    },
+    {
+      "type": "badge",
+      "name": "Award badge",
+      "limit": 3,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        {
+          "type": "select",
+          "id": "fallback",
+          "label": "Built-in badge (used without image)",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "good", "label": "Seriously Good" },
+            { "value": "seen", "label": "As Seen On Serious Eats" }
+          ],
+          "default": "none"
+        },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    },
+    {
+      "type": "proof",
+      "name": "Award card",
+      "limit": 2,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "The winner at the category" },
+        { "type": "text", "id": "quote", "label": "Award", "default": "“The Best Flat-Bottomed Wok”" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero (Redesign 2026)",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "badge", "settings": { "fallback": "good", "alt": "Seriously Good" } },
+        { "type": "badge", "settings": { "fallback": "seen", "alt": "As Seen On Serious Eats" } },
+        { "type": "proof" },
+        { "type": "proof", "settings": { "label": "In the List of", "quote": "“The Best Cookware for Glass Stovetop”" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
