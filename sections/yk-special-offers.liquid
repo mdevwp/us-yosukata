@@ -1,0 +1,175 @@
+{%- liquid
+  assign products_source = section.settings.product_list
+  if products_source == blank or products_source.size == 0
+    assign products_source = section.settings.collection.products
+  endif
+  assign product_limit = section.settings.limit
+  assign badge_1_tag = section.settings.badge_1_tag | downcase | strip
+  assign badge_2_tag = section.settings.badge_2_tag | downcase | strip
+-%}
+
+<section
+  class="yk-offers"
+  aria-labelledby="YkOffersTitle-{{ section.id }}"
+  style="--yk-badge-1-bg: {{ section.settings.badge_1_color }}; --yk-badge-1-text: {{ section.settings.badge_1_text_color }}; --yk-badge-2-bg: {{ section.settings.badge_2_color }}; --yk-badge-2-text: {{ section.settings.badge_2_text_color }};"
+  data-yk-offers
+>
+  <div class="yk-offers__inner">
+    <div class="yk-offers__header">
+      {%- if section.settings.title != blank -%}
+        <h2 class="yk-offers__title" id="YkOffersTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+      {%- endif -%}
+      <div class="yk-offers__nav" data-yk-offers-nav hidden>
+        <button class="yk-offers__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t | default: 'Previous' }}" data-yk-offers-prev>
+          {% render 'yk-icon', icon: 'arrow-left' %}
+        </button>
+        <span class="yk-offers__counter" aria-live="polite"><span data-yk-offers-current>1</span>/<span data-yk-offers-total>1</span></span>
+        <button class="yk-offers__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t | default: 'Next' }}" data-yk-offers-next>
+          {% render 'yk-icon', icon: 'arrow-right' %}
+        </button>
+      </div>
+    </div>
+
+    <ul class="yk-offers__track" role="list" data-yk-offers-track>
+      {%- for product in products_source limit: product_limit -%}
+        {%- liquid
+          assign product_tags = product.tags | join: '|' | downcase | split: '|'
+          assign variant = product.selected_or_first_available_variant
+          assign subtitle = product.metafields.custom.card_subtitle.value | default: product.metafields.custom.subtitle.value
+          assign card_title = product.metafields.custom.card_title.value | default: product.title
+          assign card_image = product.metafields.custom.card_image.value | default: product.featured_media
+          assign rating = product.metafields.reviews.rating.value
+          assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+          assign has_badge_1 = false
+          assign has_badge_2 = false
+          if badge_1_tag != blank and product_tags contains badge_1_tag
+            assign has_badge_1 = true
+          endif
+          if badge_2_tag != blank and product_tags contains badge_2_tag
+            assign has_badge_2 = true
+          endif
+        -%}
+        <li class="yk-card">
+          <div class="yk-card__media">
+            <a class="yk-card__image-link" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+              {%- if card_image -%}
+                {{
+                  card_image
+                  | image_url: width: 960
+                  | image_tag:
+                    class: 'yk-card__image',
+                    loading: 'lazy',
+                    widths: '360, 480, 640, 960',
+                    sizes: '(min-width: 960px) 30vw, 75vw',
+                    alt: card_image.alt
+                    | default: product.title
+                }}
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'yk-card__image yk-card__image--placeholder' }}
+              {%- endif -%}
+            </a>
+
+            {%- if has_badge_1 or has_badge_2 -%}
+              <div class="yk-card__badges">
+                {%- if has_badge_1 -%}
+                  <span class="yk-card__badge yk-card__badge--1">{{ section.settings.badge_1_label | default: section.settings.badge_1_tag | escape }}</span>
+                {%- endif -%}
+                {%- if has_badge_2 -%}
+                  <span class="yk-card__badge yk-card__badge--2">{{ section.settings.badge_2_label | default: section.settings.badge_2_tag | escape }}</span>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.show_rating and rating_count > 0 -%}
+              {%- assign rating_value = rating.rating | times: 5.0 | divided_by: rating.scale_max | round -%}
+              <div class="yk-card__rating" role="img" aria-label="{{ rating.rating | round: 1 }} / {{ rating.scale_max }}">
+                {%- for i in (1..5) -%}
+                  <span class="yk-card__star{% if i > rating_value %} yk-card__star--empty{% endif %}">{% render 'yk-icon', icon: 'star' %}</span>
+                {%- endfor -%}
+                <span class="yk-card__rating-count">({{ rating_count }})</span>
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.show_quick_add -%}
+              {%- if product.available and product.has_only_default_variant -%}
+                <form class="yk-card__quick-form" action="{{ routes.cart_add_url }}" method="post" data-yk-quick-add>
+                  <input type="hidden" name="id" value="{{ variant.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button class="yk-card__quick" type="submit" aria-label="{{ section.settings.quick_add_label | escape }}: {{ product.title | escape }}">
+                    <span class="yk-card__quick-label">{{ section.settings.quick_add_label | escape }}</span>
+                    {% render 'yk-icon', icon: 'plus' %}
+                  </button>
+                </form>
+              {%- elsif product.available -%}
+                <a class="yk-card__quick" href="{{ product.url }}" aria-label="{{ section.settings.choose_options_label | escape }}: {{ product.title | escape }}">
+                  <span class="yk-card__quick-label">{{ section.settings.choose_options_label | escape }}</span>
+                  {% render 'yk-icon', icon: 'plus' %}
+                </a>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+
+          <div class="yk-card__info">
+            {%- if subtitle != blank -%}
+              <p class="yk-card__subtitle">{{ subtitle | escape }}</p>
+            {%- endif -%}
+            <h3 class="yk-card__title"><a href="{{ product.url }}">{{ card_title | escape }}</a></h3>
+            <p class="yk-card__price">
+              {%- if section.settings.show_compare_price and product.compare_at_price > product.price -%}
+                <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+              {%- endif -%}
+              {{ product.price | money }}
+              {%- if section.settings.show_compare_price and product.compare_at_price > product.price -%}
+                <s class="yk-card__compare">{{ product.compare_at_price | money }}</s>
+              {%- endif -%}
+            </p>
+          </div>
+        </li>
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <li class="yk-card">
+            <div class="yk-card__media">{{ 'product-1' | placeholder_svg_tag: 'yk-card__image yk-card__image--placeholder' }}</div>
+            <div class="yk-card__info">
+              <h3 class="yk-card__title">Product title</h3>
+              <p class="yk-card__price">{{ 6299 | money }}</p>
+            </div>
+          </li>
+        {%- endfor -%}
+      {%- endfor -%}
+    </ul>
+
+    <div class="yk-offers__progress" aria-hidden="true">
+      <span class="yk-offers__progress-thumb" data-yk-offers-thumb></span>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Special offers",
+  "class": "yk-offers-section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Special offers" },
+    { "type": "product_list", "id": "product_list", "label": "Products", "limit": 12 },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Used when no products are selected" },
+    { "type": "range", "id": "limit", "label": "Maximum products", "min": 2, "max": 12, "step": 1, "default": 8 },
+    { "type": "checkbox", "id": "show_rating", "label": "Show rating", "default": true },
+    { "type": "checkbox", "id": "show_compare_price", "label": "Show compare-at price", "default": false },
+    { "type": "checkbox", "id": "show_quick_add", "label": "Show quick add", "default": true },
+    { "type": "text", "id": "quick_add_label", "label": "Quick add label", "default": "Quick Add" },
+    { "type": "text", "id": "choose_options_label", "label": "Label for products with options", "default": "Choose options" },
+    { "type": "header", "content": "Badges", "info": "Shown on products that have the matching tag" },
+    { "type": "text", "id": "badge_1_tag", "label": "Badge 1 product tag", "default": "Pre-Seasoned" },
+    { "type": "text", "id": "badge_1_label", "label": "Badge 1 label", "default": "Pre-Seasoned" },
+    { "type": "color", "id": "badge_1_color", "label": "Badge 1 background", "default": "#235fa3" },
+    { "type": "color", "id": "badge_1_text_color", "label": "Badge 1 text", "default": "#ffffff" },
+    { "type": "text", "id": "badge_2_tag", "label": "Badge 2 product tag", "default": "Bestseller" },
+    { "type": "text", "id": "badge_2_label", "label": "Badge 2 label", "default": "Best Seller" },
+    { "type": "color", "id": "badge_2_color", "label": "Badge 2 background", "default": "#eecaa1" },
+    { "type": "color", "id": "badge_2_text_color", "label": "Badge 2 text", "default": "#000000" }
+  ],
+  "presets": [
+    { "name": "YK Special offers" }
+  ]
+}
+{% endschema %}

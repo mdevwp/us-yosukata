@@ -272,12 +272,39 @@
         "title": "FAQs",
         "first_open": true
       }
+    },
+    "yk_special_offers": {
+      "type": "yk-special-offers",
+      "settings": {
+        "title": "Special offers",
+        "product_list": [
+          "13-5-inch-pre-seasoned-black-carbon-steel-wok-flat-bottomed-wooden-wok-lid-spatula-and-ladle-set",
+          "13-5-inch-pre-seasoned-blue-carbon-steel-wok-flat-bottomed",
+          "stainless-steel-cutting-board-14-6x10-inch",
+          "black-carbon-steel-wok-3-5-inch-wooden-wok-lid"
+        ],
+        "limit": 8,
+        "show_rating": true,
+        "show_compare_price": false,
+        "show_quick_add": true,
+        "quick_add_label": "Quick Add",
+        "choose_options_label": "Choose options",
+        "badge_1_tag": "Pre-Seasoned",
+        "badge_1_label": "Pre-Seasoned",
+        "badge_1_color": "#235fa3",
+        "badge_1_text_color": "#ffffff",
+        "badge_2_tag": "Bestseller",
+        "badge_2_label": "Best Seller",
+        "badge_2_color": "#eecaa1",
+        "badge_2_text_color": "#000000"
+      }
     }
   },
   "order": [
     "yk_hero",
     "home_categories",
     "yk_benefits",
+    "yk_special_offers",
     "yk_faq"
   ]
 }

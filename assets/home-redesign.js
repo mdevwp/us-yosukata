@@ -73,3 +73,74 @@ document.querySelectorAll('[data-yk-hero]').forEach(initYkHero);
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-hero]').forEach(initYkHero);
 });
+
+function initYkOffers(section) {
+  const track = section.querySelector('[data-yk-offers-track]');
+  if (!track || track.dataset.ready) return;
+  track.dataset.ready = 'true';
+
+  const cards = Array.from(track.children);
+  const nav = section.querySelector('[data-yk-offers-nav]');
+  const prev = section.querySelector('[data-yk-offers-prev]');
+  const next = section.querySelector('[data-yk-offers-next]');
+  const current = section.querySelector('[data-yk-offers-current]');
+  const total = section.querySelector('[data-yk-offers-total]');
+  const thumb = section.querySelector('[data-yk-offers-thumb]');
+  const step = () => (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth);
+
+  const update = () => {
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    const atEnd = track.scrollLeft >= maxScroll - 2;
+    const index = atEnd ? cards.length - 1 : Math.round(track.scrollLeft / step());
+    nav.hidden = maxScroll <= 2;
+    current.textContent = index + 1;
+    total.textContent = cards.length;
+    prev.disabled = track.scrollLeft <= 2;
+    next.disabled = atEnd;
+    if (thumb) {
+      thumb.style.width = `${100 / cards.length}%`;
+      thumb.style.transform = `translateX(${index * 100}%)`;
+    }
+  };
+
+  const goTo = (direction) => {
+    const index = Math.round(track.scrollLeft / step()) + direction;
+    track.scrollTo({ left: Math.max(0, index) * step(), behavior: 'smooth' });
+  };
+
+  prev.addEventListener('click', () => goTo(-1));
+  next.addEventListener('click', () => goTo(1));
+  track.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+
+  section.querySelectorAll('[data-yk-quick-add]').forEach((form) => {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const button = form.querySelector('button');
+      button.classList.add('is-loading');
+      fetch(`${window.Shopify?.routes?.root || '/'}cart/add.js`, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form),
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error('Add to cart failed');
+          document.dispatchEvent(new CustomEvent('apps:product-added-to-cart'));
+          const cartIcon = Array.from(document.querySelectorAll('[data-js-cart-icon]')).find((icon) => icon.offsetParent);
+          if (document.querySelector('.quick-cart') && cartIcon) {
+            window.setTimeout(() => cartIcon.click(), 300);
+          } else {
+            window.location.href = `${window.Shopify?.routes?.root || '/'}cart`;
+          }
+        })
+        .catch(() => form.submit())
+        .finally(() => button.classList.remove('is-loading'));
+    });
+  });
+}
+
+document.querySelectorAll('[data-yk-offers]').forEach(initYkOffers);
+document.addEventListener('shopify:section:load', (event) => {
+  event.target.querySelectorAll('[data-yk-offers]').forEach(initYkOffers);
+});
