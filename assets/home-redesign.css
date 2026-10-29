@@ -700,9 +700,9 @@
   .yk-card__quick-label { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
   .yk-card__media:hover .yk-card__quick,
   .yk-card__quick:focus-visible { opacity: 1; }
-  .yk-card__media:hover .yk-card__image,
-  .yk-card__media:hover .yk-card__badges,
-  .yk-card__media:hover .yk-card__rating { filter: blur(8px); opacity: .6; }
+  .yk-card__media:has(.yk-card__quick):hover .yk-card__image,
+  .yk-card__media:has(.yk-card__quick):hover .yk-card__badges,
+  .yk-card__media:has(.yk-card__quick):hover .yk-card__rating { filter: blur(8px); opacity: .7; }
   .yk-card__info { padding-top: 14px; }
   .yk-card__subtitle { margin-bottom: 7px; font-size: 16px; line-height: 24px; }
   .yk-card__title { font-size: 20px; line-height: 28px; }
