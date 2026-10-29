@@ -709,3 +709,85 @@
   .yk-card__price { margin-top: 8px; font-size: 20px; line-height: 28px; }
   .yk-offers__progress { width: 536px; max-width: 100%; margin: 52px auto 0; }
 }
+
+/* Features */
+.yk-features {
+  padding: 50px var(--yk-gutter);
+  background: #fff;
+  color: var(--yk-black);
+  font-family: var(--yk-font-heading);
+}
+.yk-features__inner { max-width: var(--yk-max); margin: 0 auto; }
+.yk-features__title {
+  margin: 0 0 24px;
+  color: var(--yk-black);
+  font-family: var(--yk-font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: none;
+}
+.yk-features__title br { display: none; }
+.yk-features__grid { display: grid; gap: 8px; }
+.yk-feature {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border-radius: 24px;
+  background: #a7a7a7;
+  color: #fff;
+}
+.yk-feature__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--yk-feature-x, 50%) 50%;
+}
+.yk-feature::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .68) 0%, rgba(0, 0, 0, .45) 35%, rgba(0, 0, 0, .4) 62%, rgba(0, 0, 0, .62) 100%);
+}
+.yk-feature__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  width: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+}
+.yk-feature__title {
+  margin: 0;
+  color: #fff;
+  font-family: var(--yk-font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 28px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.yk-feature__text { font-size: 14px; font-weight: 500; line-height: 22px; }
+.yk-feature__text p { margin: 0; }
+
+@media (min-width: 600px) and (max-width: 959px) {
+  .yk-features__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 960px) {
+  .yk-features { padding: 76px var(--yk-gutter) 75px; }
+  .yk-features__title { margin-bottom: 49px; font-size: 48px; line-height: 56px; text-align: left; }
+  .yk-features__title br { display: inline; }
+  .yk-features__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .yk-feature { aspect-ratio: 474.67 / 612; }
+  .yk-feature__title { font-size: 32px; line-height: 40px; }
+  .yk-feature__text { font-size: 16px; line-height: 24px; }
+}

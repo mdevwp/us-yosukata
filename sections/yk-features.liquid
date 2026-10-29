@@ -1,0 +1,95 @@
+<section class="yk-features" aria-labelledby="YkFeaturesTitle-{{ section.id }}">
+  <div class="yk-features__inner">
+    {%- if section.settings.title != blank -%}
+      <h2 class="yk-features__title" id="YkFeaturesTitle-{{ section.id }}">{{ section.settings.title | escape | newline_to_br }}</h2>
+    {%- endif -%}
+
+    <div class="yk-features__grid">
+      {%- for block in section.blocks -%}
+        <article class="yk-feature" style="--yk-feature-x: {{ block.settings.image_position_x }}%;" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 1200
+              | image_tag:
+                class: 'yk-feature__image',
+                loading: 'lazy',
+                widths: '400, 600, 800, 1200',
+                sizes: '(min-width: 960px) 30vw, 92vw',
+                alt: block.settings.image.alt
+                | default: block.settings.title
+            }}
+          {%- elsif block.settings.fallback_image != 'none' -%}
+            <img
+              class="yk-feature__image"
+              src="{{ block.settings.fallback_image | append: '.jpg' | asset_url }}"
+              alt="{{ block.settings.title | escape }}"
+              width="1080"
+              height="1080"
+              loading="lazy"
+            >
+          {%- endif -%}
+          <div class="yk-feature__content">
+            {%- if block.settings.title != blank -%}
+              <h3 class="yk-feature__title">{{ block.settings.title | escape }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <div class="yk-feature__text">{{ block.settings.text }}</div>
+            {%- endif -%}
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Features",
+  "class": "yk-features-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Heading",
+      "default": "Easier Cooking Experience with Yosukata Professional Wok & Skillet"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        {
+          "type": "select",
+          "id": "fallback_image",
+          "label": "Default image",
+          "info": "Used when no image is selected",
+          "default": "yk-feature-heat",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "yk-feature-heat", "label": "Skillet with eggs" },
+            { "value": "yk-feature-maintenance", "label": "Hanging wok" },
+            { "value": "yk-feature-options", "label": "Wok outdoors" }
+          ]
+        },
+        { "type": "range", "id": "image_position_x", "label": "Image horizontal position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "text", "id": "title", "label": "Title", "default": "Heat and Seasoning Retention" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Yosukata’s skillet pans stay hot for longer, cook your food evenly, and suck up seasoning from everything sizzled on it.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "YK Features",
+      "blocks": [
+        { "type": "feature" },
+        { "type": "feature" },
+        { "type": "feature" }
+      ]
+    }
+  ]
+}
+{% endschema %}

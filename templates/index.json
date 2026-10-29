@@ -298,6 +298,46 @@
         "badge_2_color": "#eecaa1",
         "badge_2_text_color": "#000000"
       }
+    },
+    "yk_features": {
+      "type": "yk-features",
+      "blocks": {
+        "feature_heat": {
+          "type": "feature",
+          "settings": {
+            "fallback_image": "yk-feature-heat",
+            "title": "Heat and Seasoning Retention",
+            "text": "<p>Yosukata’s skillet pans stay hot for longer, cook your food evenly, and suck up seasoning from everything sizzled on it.</p>",
+            "image_position_x": 50
+          }
+        },
+        "feature_maintenance": {
+          "type": "feature",
+          "settings": {
+            "fallback_image": "yk-feature-maintenance",
+            "title": "Easy Maintenance",
+            "text": "<p>Say goodbye to scrubbing burnt pots and frying pans. These skillets and wok pans can be cleaned just by wiping with a wet cloth and drying.</p>",
+            "image_position_x": 91
+          }
+        },
+        "feature_options": {
+          "type": "feature",
+          "settings": {
+            "fallback_image": "yk-feature-options",
+            "title": "Endless Options",
+            "text": "<p>In addition to using your skillet on the stovetop, you can place them in the oven for baking and serve in them directly for a professional look.</p>",
+            "image_position_x": 50
+          }
+        }
+      },
+      "block_order": [
+        "feature_heat",
+        "feature_maintenance",
+        "feature_options"
+      ],
+      "settings": {
+        "title": "Easier Cooking Experience with\nYosukata Professional Wok & Skillet"
+      }
     }
   },
   "order": [
@@ -305,6 +345,7 @@
     "home_categories",
     "yk_benefits",
     "yk_special_offers",
+    "yk_features",
     "yk_faq"
   ]
 }
