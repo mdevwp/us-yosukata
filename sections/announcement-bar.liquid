@@ -4,9 +4,20 @@
 </script>
 
 {%- capture yk_redesign -%}{% render 'yk-redesign-active' %}{%- endcapture -%}
+{%- comment -%}[free_shipping_threshold] in announcement text shows Theme settings > Cart > Free shipping threshold{%- endcomment -%}
+{%- liquid
+  assign yk_free_shipping = ''
+  if settings.free_shipping_threshold != blank
+    assign yk_free_shipping = settings.free_shipping_threshold | times: 100 | money_without_trailing_zeros
+  endif
+-%}
 {%- if section.blocks.size -%}
   {%- capture items -%}
     {%- for block in section.blocks -%}
+      {%- liquid
+        assign yk_title = block.settings.title | replace: '[free_shipping_threshold]', yk_free_shipping
+        assign yk_title_mobile = block.settings.title_mobile | replace: '[free_shipping_threshold]', yk_free_shipping
+      -%}
       <div
         class="announcement-bar__item ff-body fs-body-50 swiper-slide"
         {% unless forloop.first %}
@@ -28,10 +39,10 @@
             {{ yk_item_icon }}
             {%- if block.settings.link != blank -%}
               <a class="announcement-bar__link color-inherit" href="{{ block.settings.link }}">
-                {{ block.settings.title_mobile | replace: '<a ', '<span class="fake-link" ' | replace: '</a>', '</span>' }}
+                {{ yk_title_mobile | replace: '<a ', '<span class="fake-link" ' | replace: '</a>', '</span>' }}
               </a>
             {%- else -%}
-              {{ block.settings.title_mobile }}
+              {{ yk_title_mobile }}
             {%- endif -%}
           </div>
         {%- endif -%}
@@ -39,10 +50,10 @@
           {{ yk_item_icon }}
           {%- if block.settings.link != blank -%}
             <a class="announcement-bar__link color-inherit" href="{{ block.settings.link }}">
-              {{ block.settings.title | replace: '<a ', '<span class="fake-link" ' | replace: '</a>', '</span>' }}
+              {{ yk_title | replace: '<a ', '<span class="fake-link" ' | replace: '</a>', '</span>' }}
             </a>
           {%- else -%}
-            {{ block.settings.title }}
+            {{ yk_title }}
           {%- endif -%}
         </div>
       </div>
@@ -84,16 +95,20 @@
     {%- if yk_redesign == 'true' -%}
       <div class="yk-announcement__inline">
         {%- for block in section.blocks -%}
+      {%- liquid
+        assign yk_title = block.settings.title | replace: '[free_shipping_threshold]', yk_free_shipping
+        assign yk_title_mobile = block.settings.title_mobile | replace: '[free_shipping_threshold]', yk_free_shipping
+      -%}
           <div class="yk-announcement__item ff-body">
             {%- if block.settings.icon != 'none' -%}
               <span class="yk-announcement__icon">{% render 'yk-icon', icon: block.settings.icon %}</span>
             {%- endif -%}
             {%- if block.settings.link != blank -%}
               <a class="announcement-bar__link color-inherit" href="{{ block.settings.link }}">
-                {{ block.settings.title | replace: '<a ', '<span class="fake-link" ' | replace: '</a>', '</span>' }}
+                {{ yk_title | replace: '<a ', '<span class="fake-link" ' | replace: '</a>', '</span>' }}
               </a>
             {%- else -%}
-              {{ block.settings.title }}
+              {{ yk_title }}
             {%- endif -%}
           </div>
         {%- endfor -%}
@@ -181,7 +196,8 @@
           "type": "richtext",
           "id": "title",
           "default": "<p>Free standard shipping and returns on all orders</p>",
-          "label": "t:sections.announcement_bar.blocks.announcement.settings.title.label"
+          "label": "t:sections.announcement_bar.blocks.announcement.settings.title.label",
+          "info": "Use [free_shipping_threshold] to show the amount from Theme settings > Cart > Free shipping threshold"
         },
         {
           "type": "richtext",
