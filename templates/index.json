@@ -410,6 +410,77 @@
         "intro": "<p>Pan seasoning can also be referred to as “curing.” The name seasoning can be misleading to some, and it means flavoring in most contexts. However, here, it really means protecting. The curing process serves two primary purposes.</p>",
         "subheading": "Some of the benefits of purchasing carbon steel cookware are as follows:"
       }
+    },
+    "yk_reviews": {
+      "type": "yk-reviews",
+      "blocks": {
+        "review_1": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "My First Wok Seasoning Adventure",
+            "text": "<p>Seasoned it myself in about 15 minutes. Super easy and very satisfying. Made a small mistake at first and had to re-season, but now it's perfect. Great for high heat and I love that it's PFAS-free.</p>",
+            "author": "David"
+          }
+        },
+        "review_2": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "",
+            "text": "<p>Very pleased with my Pre-Seasoned Blue Carbon Steel Wok. Followed the season instructions and first cook was excellent, stick free and cleaned up well. I am glad I went with the Blue Carbon seasoned wok. A little thicker for heat retention and I like the hand-hammered look.</p>",
+            "author": "Scott Ottens"
+          }
+        },
+        "review_3": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Love this Wok!!!!",
+            "text": "<p>Absolutely love this wok. Came pre-seasoned, feels very high quality, and cooks incredibly well. Definitely a forever piece in my kitchen.</p>",
+            "author": "Aboffroad101"
+          }
+        },
+        "review_4": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "",
+            "text": "<p>My new wok isn't just beautiful and the perfect size, the instructions for using the first time were clear and easy to follow. The stir spicy eggplant dish and the chard in mushroom garlic sauce came out as if I were cooking on a wok I'd built up for more than a year - and that was just the first use!</p>",
+            "author": "Darcie"
+          }
+        },
+        "review_5": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "",
+            "text": "<p>We Love this WOK!! Follow directions properly to rinse/dry and season before cooking. It cooks beautifully, even heat and super easy to clean. It will only get even better with time. Buy it and you will be super happy!</p>",
+            "author": "CC Basile"
+          }
+        },
+        "review_6": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Great Quality Carbon Steel!",
+            "text": "<p>The wok feels solid, sturdy, and well made. I really like the blue carbon steel finish, and the pre-seasoned surface makes it easy to start cooking right away.</p>",
+            "author": "Daniil"
+          }
+        }
+      },
+      "block_order": [
+        "review_1",
+        "review_2",
+        "review_3",
+        "review_4",
+        "review_5",
+        "review_6"
+      ],
+      "settings": {
+        "title": "What Customers say about us",
+        "subtitle": "13,000+ five-star reviews from real working professionals."
+      }
     }
   },
   "order": [
@@ -419,6 +490,7 @@
     "yk_special_offers",
     "yk_features",
     "yk_season",
+    "yk_reviews",
     "yk_faq"
   ]
 }

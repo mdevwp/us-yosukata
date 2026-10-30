@@ -1,0 +1,88 @@
+<section
+  class="yk-reviews"
+  aria-labelledby="YkReviewsTitle-{{ section.id }}"
+  style="--yk-reviews-bg: url('{% if section.settings.background != blank %}{{ section.settings.background | image_url: width: 1600 }}{% else %}{{ 'yk-reviews-bg.jpg' | asset_url }}{% endif %}');"
+  data-yk-reviews
+>
+  <div class="yk-reviews__inner">
+    <div class="yk-reviews__header">
+      {%- if section.settings.title != blank -%}
+        <h2 class="yk-reviews__title" id="YkReviewsTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subtitle != blank -%}
+        <p class="yk-reviews__subtitle">{{ section.settings.subtitle | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <ul class="yk-reviews__track" role="list" data-yk-reviews-track>
+      {%- for block in section.blocks -%}
+        <li class="yk-review" {{ block.shopify_attributes }}>
+          <div class="yk-review__stars" role="img" aria-label="{{ block.settings.rating }} / 5">
+            {%- for i in (1..5) -%}
+              <span class="yk-review__star{% if i > block.settings.rating %} yk-review__star--empty{% endif %}">{% render 'yk-icon', icon: 'star' %}</span>
+            {%- endfor -%}
+          </div>
+          {%- if block.settings.title != blank -%}
+            <h3 class="yk-review__title">{{ block.settings.title | escape }}</h3>
+          {%- endif -%}
+          <div class="yk-review__text">{{ block.settings.text }}</div>
+          {%- if block.settings.author != blank -%}
+            <p class="yk-review__author">{{ block.settings.author | escape }}</p>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- if section.blocks.size > 1 -%}
+      <div class="yk-reviews__nav" data-yk-reviews-nav>
+        <button class="yk-reviews__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t | default: 'Previous' }}" data-yk-reviews-prev>
+          {% render 'yk-icon', icon: 'arrow-left' %}
+        </button>
+        <span class="yk-reviews__counter" aria-live="polite"><span data-yk-reviews-current>1</span>/<span data-yk-reviews-total>{{ section.blocks.size }}</span></span>
+        <button class="yk-reviews__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t | default: 'Next' }}" data-yk-reviews-next>
+          {% render 'yk-icon', icon: 'arrow-right' %}
+        </button>
+      </div>
+      <div class="yk-reviews__dots" aria-hidden="true">
+        {%- for block in section.blocks -%}
+          <span class="yk-reviews__dot{% if forloop.first %} is-active{% endif %}"></span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Reviews",
+  "class": "yk-reviews-section",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "What Customers say about us" },
+    { "type": "text", "id": "subtitle", "label": "Subheading" },
+    { "type": "image_picker", "id": "background", "label": "Background image", "info": "Use a blurred, dark image. Defaults to the flaming wok background." }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "richtext", "id": "text", "label": "Review", "default": "<p>Review text</p>" },
+        { "type": "text", "id": "author", "label": "Author", "default": "Customer name" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "YK Reviews",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}

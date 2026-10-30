@@ -161,3 +161,41 @@ document.querySelectorAll('[data-yk-season]').forEach(initYkSeason);
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-season]').forEach(initYkSeason);
 });
+
+function initYkReviews(section) {
+  const track = section.querySelector('[data-yk-reviews-track]');
+  if (!track || track.dataset.ready) return;
+  track.dataset.ready = 'true';
+
+  const cards = Array.from(track.children);
+  const dots = section.querySelectorAll('.yk-reviews__dot');
+  const prev = section.querySelector('[data-yk-reviews-prev]');
+  const next = section.querySelector('[data-yk-reviews-next]');
+  const current = section.querySelector('[data-yk-reviews-current]');
+  const step = () => (cards[1] ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth);
+
+  const update = () => {
+    const atEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+    const index = atEnd ? cards.length - 1 : Math.round(track.scrollLeft / step());
+    if (current) current.textContent = index + 1;
+    if (prev) prev.disabled = track.scrollLeft <= 2;
+    if (next) next.disabled = atEnd;
+    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+  };
+
+  const goTo = (direction) => {
+    const index = Math.round(track.scrollLeft / step()) + direction;
+    track.scrollTo({ left: Math.max(0, index) * step(), behavior: 'smooth' });
+  };
+
+  if (prev) prev.addEventListener('click', () => goTo(-1));
+  if (next) next.addEventListener('click', () => goTo(1));
+  track.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+}
+
+document.querySelectorAll('[data-yk-reviews]').forEach(initYkReviews);
+document.addEventListener('shopify:section:load', (event) => {
+  event.target.querySelectorAll('[data-yk-reviews]').forEach(initYkReviews);
+});
