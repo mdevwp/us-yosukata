@@ -607,6 +607,16 @@
         "quote_2"
       ],
       "disabled": true
+    },
+    "yk_social": {
+      "type": "yk-social",
+      "settings": {
+        "show_logo": true,
+        "title": "Follow us\non social media",
+        "text": "Join our social media to explore delicious wok recipes and share your culinary creations.",
+        "networks": "instagram, twitter, youtube",
+        "image_position_y": 64
+      }
     }
   },
   "order": [
@@ -621,6 +631,7 @@
     "yk_community",
     "yk_brand",
     "yk_chefs",
+    "yk_social",
     "yk_faq"
   ]
 }

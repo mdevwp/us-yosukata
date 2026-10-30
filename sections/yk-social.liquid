@@ -1,0 +1,56 @@
+{%- assign networks = section.settings.networks | remove: ' ' | split: ',' -%}
+<section
+  class="yk-social"
+  aria-labelledby="YkSocialTitle-{{ section.id }}"
+  style="--yk-social-bg: url('{% if section.settings.background != blank %}{{ section.settings.background | image_url: width: 1800 }}{% else %}{{ 'yk-social-bg.jpg' | asset_url }}{% endif %}'); --yk-social-y: {{ section.settings.image_position_y }}%;"
+>
+  {%- if section.settings.show_logo -%}
+    <span class="yk-social__logo">{% render 'yk-icon', icon: 'logo-mark' %}</span>
+  {%- endif -%}
+
+  <div class="yk-social__content">
+    {%- if section.settings.title != blank -%}
+      <h2 class="yk-social__title" id="YkSocialTitle-{{ section.id }}">{{ section.settings.title | escape | newline_to_br }}</h2>
+    {%- endif -%}
+    {%- if section.settings.text != blank -%}
+      <p class="yk-social__text">{{ section.settings.text | escape }}</p>
+    {%- endif -%}
+
+    <ul class="yk-social__links" role="list">
+      {%- for social in networks -%}
+        {%- capture social_setting -%}social_{{ social }}_link{%- endcapture -%}
+        {%- if settings[social_setting] != blank -%}
+          <li>
+            <a href="{{ settings[social_setting] }}" target="_blank" rel="noopener" aria-label="{{ social | replace: 'twitter', 'X' | capitalize }}">
+              {% render 'icon' with icon, icon: social %}
+            </a>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Social",
+  "class": "yk-social-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_logo", "label": "Show logo mark", "default": true },
+    { "type": "textarea", "id": "title", "label": "Heading", "default": "Follow us on social media" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Join our social media to explore delicious wok recipes and share your culinary creations." },
+    {
+      "type": "text",
+      "id": "networks",
+      "label": "Networks",
+      "default": "instagram, twitter, youtube",
+      "info": "Comma-separated: instagram, twitter, threads, facebook, tiktok, youtube, pinterest. Links come from Theme settings > Social media."
+    },
+    { "type": "image_picker", "id": "background", "label": "Background image", "info": "Use a darkened image so the white text stays readable" },
+    { "type": "range", "id": "image_position_y", "label": "Image vertical position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 64 }
+  ],
+  "presets": [
+    { "name": "YK Social" }
+  ]
+}
+{% endschema %}
