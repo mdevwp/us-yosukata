@@ -254,3 +254,38 @@ document.querySelectorAll('[data-yk-community]').forEach(initYkCommunity);
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-community]').forEach(initYkCommunity);
 });
+
+function initYkChefs(section) {
+  const track = section.querySelector('[data-yk-chefs-track]');
+  if (!track || track.dataset.ready) return;
+  track.dataset.ready = 'true';
+
+  const slides = Array.from(track.children);
+  const dots = section.querySelectorAll('.yk-chefs__dot');
+  const prev = section.querySelector('[data-yk-chefs-prev]');
+  const next = section.querySelector('[data-yk-chefs-next]');
+  const current = section.querySelector('[data-yk-chefs-current]');
+  const step = () => (slides[1] ? slides[1].offsetLeft - slides[0].offsetLeft : track.clientWidth);
+
+  const setActive = (index) => {
+    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+    if (current) current.textContent = index + 1;
+    if (prev) prev.disabled = index === 0;
+    if (next) next.disabled = index === slides.length - 1;
+  };
+  const goTo = (index) => {
+    const target = Math.max(0, Math.min(slides.length - 1, index));
+    track.scrollTo({ left: target * step(), behavior: 'smooth' });
+    setActive(target);
+  };
+
+  if (prev) prev.addEventListener('click', () => goTo(Math.round(track.scrollLeft / step()) - 1));
+  if (next) next.addEventListener('click', () => goTo(Math.round(track.scrollLeft / step()) + 1));
+  track.addEventListener('scroll', () => setActive(Math.round(track.scrollLeft / step())), { passive: true });
+  setActive(0);
+}
+
+document.querySelectorAll('[data-yk-chefs]').forEach(initYkChefs);
+document.addEventListener('shopify:section:load', (event) => {
+  event.target.querySelectorAll('[data-yk-chefs]').forEach(initYkChefs);
+});

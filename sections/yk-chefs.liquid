@@ -1,0 +1,90 @@
+{%- comment -%}
+  Chef testimonials. Only publish quotes from real, named chefs who agreed to be quoted:
+  the name, role and verified mark render only when filled in.
+{%- endcomment -%}
+<section class="yk-chefs" aria-labelledby="YkChefsTitle-{{ section.id }}" data-yk-chefs>
+  <div class="yk-chefs__inner">
+    {%- if section.settings.title != blank -%}
+      <h2 class="yk-chefs__title" id="YkChefsTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+
+    <ul class="yk-chefs__track" role="list" data-yk-chefs-track>
+      {%- for block in section.blocks -%}
+        <li class="yk-chefs__slide" {{ block.shopify_attributes }}>
+          <div class="yk-chefs__media">
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 1500
+                | image_tag:
+                  class: 'yk-chefs__image',
+                  loading: 'lazy',
+                  widths: '400, 750, 1100, 1500',
+                  sizes: '(min-width: 960px) 47vw, 92vw',
+                  alt: block.settings.image.alt
+              }}
+            {%- else -%}
+              <img class="yk-chefs__image" src="{{ 'yk-chefs.jpg' | asset_url }}" alt="" width="1123" height="1401" loading="lazy">
+            {%- endif -%}
+          </div>
+          <figure class="yk-chefs__quote">
+            <blockquote class="yk-chefs__text">{{ block.settings.quote | escape | newline_to_br }}</blockquote>
+            {%- if block.settings.name != blank -%}
+              <figcaption class="yk-chefs__author">
+                {%- if block.settings.role != blank -%}
+                  <span class="yk-chefs__role">{{ block.settings.role | escape }}</span>
+                {%- endif -%}
+                <span class="yk-chefs__name">{{ block.settings.name | escape }}</span>
+                {%- if block.settings.verified -%}{% render 'yk-icon', icon: 'verified' %}{%- endif -%}
+              </figcaption>
+            {%- endif -%}
+          </figure>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- if section.blocks.size > 1 -%}
+      <div class="yk-chefs__nav">
+        <button class="yk-chefs__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t | default: 'Previous' }}" data-yk-chefs-prev>
+          {% render 'yk-icon', icon: 'arrow-left' %}
+        </button>
+        <span class="yk-chefs__counter" aria-live="polite"><span data-yk-chefs-current>1</span>/{{ section.blocks.size }}</span>
+        <button class="yk-chefs__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t | default: 'Next' }}" data-yk-chefs-next>
+          {% render 'yk-icon', icon: 'arrow-right' %}
+        </button>
+      </div>
+      <div class="yk-chefs__dots" aria-hidden="true">
+        {%- for block in section.blocks -%}
+          <span class="yk-chefs__dot{% if forloop.first %} is-active{% endif %}"></span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Chef quotes",
+  "class": "yk-chefs-section",
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "What Chefs say about Us" }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Chef quote",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "textarea", "id": "quote", "label": "Quote" },
+        { "type": "text", "id": "role", "label": "Role", "info": "For example: Chef" },
+        { "type": "text", "id": "name", "label": "Chef name", "info": "Only use real chefs who agreed to be quoted" },
+        { "type": "checkbox", "id": "verified", "label": "Show verified mark", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "YK Chef quotes", "blocks": [ { "type": "quote" } ] }
+  ]
+}
+{% endschema %}

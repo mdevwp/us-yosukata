@@ -576,6 +576,37 @@
         "quote_author": "",
         "title_mobile": "Behind the Yosukata Brand"
       }
+    },
+    "yk_chefs": {
+      "type": "yk-chefs",
+      "settings": {
+        "title": "What Chefs say about Us"
+      },
+      "blocks": {
+        "quote_1": {
+          "type": "quote",
+          "settings": {
+            "quote": "“Believe us when we say — you will\nbe able to taste the difference.”",
+            "role": "",
+            "name": "",
+            "verified": false
+          }
+        },
+        "quote_2": {
+          "type": "quote",
+          "settings": {
+            "quote": "“Believe us when we say — you will\nbe able to taste the difference.”",
+            "role": "",
+            "name": "",
+            "verified": false
+          }
+        }
+      },
+      "block_order": [
+        "quote_1",
+        "quote_2"
+      ],
+      "disabled": true
     }
   },
   "order": [
@@ -589,6 +620,7 @@
     "yk_set_of_day",
     "yk_community",
     "yk_brand",
+    "yk_chefs",
     "yk_faq"
   ]
 }
