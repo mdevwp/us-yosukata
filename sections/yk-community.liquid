@@ -1,0 +1,95 @@
+<section class="yk-community" aria-labelledby="YkCommunityTitle-{{ section.id }}" data-yk-community>
+  <div class="yk-community__inner">
+    {%- if section.settings.title != blank -%}
+      <h2 class="yk-community__title" id="YkCommunityTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+
+    <div class="yk-community__slider">
+      <ul class="yk-community__grid" role="list" data-yk-community-track>
+        {%- for block in section.blocks -%}
+          <li class="yk-community__item" {{ block.shopify_attributes }}>
+            <a class="yk-community__tile" href="{{ block.settings.link | default: '#' }}" style="--yk-tile-y: {{ block.settings.image_position_y }}%;">
+              {%- if block.settings.image != blank -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 1400
+                  | image_tag:
+                    class: 'yk-community__image',
+                    loading: 'lazy',
+                    widths: '400, 700, 1000, 1400',
+                    sizes: '(min-width: 960px) 45vw, 92vw',
+                    alt: ''
+                }}
+              {%- elsif block.settings.fallback_image != 'none' -%}
+                <img
+                  class="yk-community__image"
+                  src="{{ block.settings.fallback_image | append: '.jpg' | asset_url }}"
+                  alt=""
+                  width="1080"
+                  height="1080"
+                  loading="lazy"
+                >
+              {%- endif -%}
+              {%- if block.settings.label != blank -%}
+                <span class="yk-community__label">{{ block.settings.label | escape }}</span>
+              {%- endif -%}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+      {%- if section.blocks.size > 1 -%}
+        <div class="yk-community__dots" aria-hidden="true">
+          {%- for block in section.blocks -%}
+            <span class="yk-community__dot{% if forloop.first %} is-active{% endif %}"></span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Community",
+  "class": "yk-community-section",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Follow our Community" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        {
+          "type": "select",
+          "id": "fallback_image",
+          "label": "Default image",
+          "info": "Used when no image is selected",
+          "default": "yk-community-video",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "yk-community-video", "label": "Wok with vegetables" },
+            { "value": "yk-community-recipes", "label": "Cooking at the stove" },
+            { "value": "yk-community-articles", "label": "Wok over a campfire" }
+          ]
+        },
+        { "type": "range", "id": "image_position_y", "label": "Image vertical position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "text", "id": "label", "label": "Button label", "default": "Video" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "YK Community",
+      "blocks": [
+        { "type": "tile" },
+        { "type": "tile", "settings": { "fallback_image": "yk-community-recipes", "label": "Recipes" } },
+        { "type": "tile", "settings": { "fallback_image": "yk-community-articles", "label": "Articles" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

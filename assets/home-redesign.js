@@ -237,3 +237,20 @@ document.querySelectorAll('[data-yk-set]').forEach(initYkSet);
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-set]').forEach(initYkSet);
 });
+
+function initYkCommunity(section) {
+  const track = section.querySelector('[data-yk-community-track]');
+  const dots = section.querySelectorAll('.yk-community__dot');
+  if (!track || !dots.length || track.dataset.ready) return;
+  track.dataset.ready = 'true';
+  const update = () => {
+    const index = Math.round(track.scrollLeft / (track.clientWidth || 1));
+    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+  };
+  track.addEventListener('scroll', update, { passive: true });
+}
+
+document.querySelectorAll('[data-yk-community]').forEach(initYkCommunity);
+document.addEventListener('shopify:section:load', (event) => {
+  event.target.querySelectorAll('[data-yk-community]').forEach(initYkCommunity);
+});

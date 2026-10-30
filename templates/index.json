@@ -522,6 +522,46 @@
         "badge_2_color": "#eecaa1",
         "badge_2_text_color": "#000000"
       }
+    },
+    "yk_community": {
+      "type": "yk-community",
+      "blocks": {
+        "tile_video": {
+          "type": "tile",
+          "settings": {
+            "fallback_image": "yk-community-video",
+            "image_position_y": 50,
+            "label": "Video",
+            "link": "/blogs/video"
+          }
+        },
+        "tile_recipes": {
+          "type": "tile",
+          "settings": {
+            "fallback_image": "yk-community-recipes",
+            "image_position_y": 50,
+            "label": "Recipes",
+            "link": "/blogs/recipes"
+          }
+        },
+        "tile_articles": {
+          "type": "tile",
+          "settings": {
+            "fallback_image": "yk-community-articles",
+            "image_position_y": 92,
+            "label": "Articles",
+            "link": "/blogs/articles"
+          }
+        }
+      },
+      "block_order": [
+        "tile_video",
+        "tile_recipes",
+        "tile_articles"
+      ],
+      "settings": {
+        "title": "Follow our Community"
+      }
     }
   },
   "order": [
@@ -533,6 +573,7 @@
     "yk_season",
     "yk_reviews",
     "yk_set_of_day",
+    "yk_community",
     "yk_faq"
   ]
 }
