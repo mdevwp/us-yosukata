@@ -338,6 +338,78 @@
       "settings": {
         "title": "Easier Cooking Experience with\nYosukata Professional Wok & Skillet"
       }
+    },
+    "yk_season": {
+      "type": "yk-season",
+      "blocks": {
+        "card_rust": {
+          "type": "card",
+          "settings": {
+            "fallback_image": "yk-season-stone",
+            "overlay": 30,
+            "text": "<p>First, it protects the steel on your cookware from rust, which could flake off into your food and potentially harm you.</p>"
+          }
+        },
+        "card_nonstick": {
+          "type": "card",
+          "settings": {
+            "fallback_image": "yk-season-wood",
+            "overlay": 50,
+            "text": "<p>Second, it creates a nonstick layer in your cookware. This means that you will not have to spend an extensive period of frustrated time attempting to scrub black marks off of your cookware in the sink.</p>"
+          }
+        },
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "text": "It’s a natural alternative to cheap\ncarcinogenic cookware;"
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "text": "The material lasts way longer\nthan other types of cookware;"
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "text": "It’s super versatile;"
+          }
+        },
+        "benefit_4": {
+          "type": "benefit",
+          "settings": {
+            "text": "It heats food more evenly, resulting\nin better-cooked food;"
+          }
+        },
+        "benefit_5": {
+          "type": "benefit",
+          "settings": {
+            "text": "Carbon steel is what the most successful\nprofessional chefs use;"
+          }
+        },
+        "benefit_6": {
+          "type": "benefit",
+          "settings": {
+            "text": "And more!"
+          }
+        }
+      },
+      "block_order": [
+        "card_rust",
+        "card_nonstick",
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4",
+        "benefit_5",
+        "benefit_6"
+      ],
+      "settings": {
+        "title": "Why do you need\nto Season?",
+        "intro": "<p>Pan seasoning can also be referred to as “curing.” The name seasoning can be misleading to some, and it means flavoring in most contexts. However, here, it really means protecting. The curing process serves two primary purposes.</p>",
+        "subheading": "Some of the benefits of purchasing carbon steel cookware are as follows:"
+      }
     }
   },
   "order": [
@@ -346,6 +418,7 @@
     "yk_benefits",
     "yk_special_offers",
     "yk_features",
+    "yk_season",
     "yk_faq"
   ]
 }

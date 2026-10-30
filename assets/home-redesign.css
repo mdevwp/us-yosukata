@@ -791,3 +791,149 @@
   .yk-feature__title { font-size: 32px; line-height: 40px; }
   .yk-feature__text { font-size: 16px; line-height: 24px; }
 }
+
+/* Season */
+.yk-season {
+  padding: 50px var(--yk-gutter);
+  background: #fff;
+  color: var(--yk-ink);
+  font-family: var(--yk-font-body);
+}
+.yk-season__inner { max-width: var(--yk-max); margin: 0 auto; }
+.yk-season__title {
+  margin: 0;
+  color: var(--yk-black);
+  font-family: var(--yk-font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.yk-season__intro { margin-top: 16px; font-size: 14px; line-height: 22px; }
+.yk-season__intro p { margin: 0; }
+.yk-season__cards {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.yk-season__cards::-webkit-scrollbar { display: none; }
+.yk-season__card {
+  position: relative;
+  display: flex;
+  flex: 0 0 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  aspect-ratio: 1;
+  border-radius: 24px;
+  background: #1d1d1b;
+  scroll-snap-align: start;
+}
+.yk-season__card-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.yk-season__card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--yk-overlay, .3));
+}
+.yk-season__card-text {
+  position: relative;
+  z-index: 1;
+  max-width: 556px;
+  padding: 0 24px;
+  color: #fff;
+  font-family: var(--yk-font-heading);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+  text-align: center;
+}
+.yk-season__card-text p { margin: 0; }
+.yk-season__dots {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  height: 0;
+  transform: translateY(-30px);
+}
+.yk-season__dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.yk-season__dot.is-active { background: #fff; }
+.yk-season__subheading {
+  margin: 24px 0 0;
+  color: var(--yk-black);
+  font-family: var(--yk-font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.yk-season__benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.yk-season__benefit { display: flex; align-items: center; gap: 16px; }
+.yk-season__number {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--yk-ink);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+}
+.yk-season__benefit-text { max-width: 232px; font-size: 14px; line-height: 22px; }
+.yk-season__benefit-text br { display: none; }
+
+@media (min-width: 960px) {
+  .yk-season { padding: 76px var(--yk-gutter) 75px; }
+  .yk-season__header {
+    display: grid;
+    grid-template-columns: minmax(0, 905fr) minmax(0, 535fr);
+    align-items: start;
+  }
+  .yk-season__title { font-size: 48px; line-height: 56px; }
+  .yk-season__intro { max-width: 512px; margin-top: 9px; font-size: 16px; line-height: 24px; }
+  .yk-season__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 49px; overflow: visible; }
+  .yk-season__card { aspect-ratio: 716 / 508; }
+  .yk-season__card-text { max-width: 620px; padding: 0 32px; box-sizing: border-box; font-size: 16px; line-height: 24px; }
+  .yk-season__dots { display: none; }
+  .yk-season__subheading { margin-top: 72px; font-size: 20px; line-height: 28px; text-align: center; }
+  .yk-season__benefits {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 56px 8px;
+    margin-top: 75px;
+  }
+  .yk-season__benefit { flex-direction: column; gap: 16px; text-align: center; }
+  .yk-season__number { width: 40px; height: 40px; font-size: 16px; }
+  .yk-season__benefit-text { max-width: none; font-size: 16px; line-height: 24px; }
+  .yk-season__benefit-text br { display: inline; }
+}

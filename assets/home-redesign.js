@@ -144,3 +144,20 @@ document.querySelectorAll('[data-yk-offers]').forEach(initYkOffers);
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-offers]').forEach(initYkOffers);
 });
+
+function initYkSeason(section) {
+  const track = section.querySelector('[data-yk-season-track]');
+  const dots = section.querySelectorAll('.yk-season__dot');
+  if (!track || !dots.length || track.dataset.ready) return;
+  track.dataset.ready = 'true';
+  const update = () => {
+    const index = Math.round(track.scrollLeft / (track.clientWidth || 1));
+    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+  };
+  track.addEventListener('scroll', update, { passive: true });
+}
+
+document.querySelectorAll('[data-yk-season]').forEach(initYkSeason);
+document.addEventListener('shopify:section:load', (event) => {
+  event.target.querySelectorAll('[data-yk-season]').forEach(initYkSeason);
+});
