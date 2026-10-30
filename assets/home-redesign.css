@@ -1352,3 +1352,134 @@
   .yk-community__label { width: 150px; height: 56px; margin: 0; font-size: 14px; }
   .yk-community__dots { display: none; }
 }
+
+/* Brand story */
+.yk-brand {
+  position: relative;
+  padding: 50px var(--yk-gutter) 0;
+  overflow: hidden;
+  background: #1d1d1b var(--yk-brand-bg) center / cover no-repeat;
+  color: #fff;
+  font-family: var(--yk-font-body);
+}
+.yk-brand__inner { position: relative; max-width: var(--yk-max); margin: 0 auto; }
+.yk-brand__content { position: relative; z-index: 1; }
+.yk-brand__title {
+  margin: 0;
+  color: #fff;
+  font-family: var(--yk-font-heading);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 32px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.yk-brand__text { margin-top: 18px; font-size: 14px; line-height: 22px; }
+.yk-brand__title-desktop { display: none; }
+.yk-brand__text p { margin: 0 0 22px; }
+.yk-brand__text p:last-child { margin-bottom: 0; }
+.yk-brand__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  margin-top: 26px;
+  border-radius: 28px;
+  background: var(--yk-red);
+  color: #fff;
+  font-family: var(--yk-font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color .2s ease;
+}
+.yk-brand__button:hover { background: #8f001f; }
+.yk-brand__badges-heading {
+  margin: 24px 0 0;
+  font-family: var(--yk-font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+}
+.yk-brand__badges { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+.yk-brand__badges:empty { display: none; }
+.yk-brand__badge { display: block; width: 75px; height: 75px; object-fit: contain; }
+.yk-brand__visual { position: relative; height: 556px; margin-top: 23px; }
+.yk-brand__portrait {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 219px);
+  width: 414px;
+  max-width: none;
+  height: auto;
+}
+.yk-brand__quote {
+  position: absolute;
+  right: 0;
+  bottom: 24px;
+  left: 0;
+  margin: 0;
+  padding: 28px 24px 27px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, .25);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  text-align: center;
+}
+.yk-brand__quote .yk-icon { display: block; width: 22px; height: 16px; margin: 0 auto; }
+.yk-brand__quote-text {
+  margin: 18px 0 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--yk-font-heading);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px;
+}
+.yk-brand__quote-text p { margin: 0; }
+.yk-brand__quote-author {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, .5);
+  font-family: var(--yk-font-heading);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+@media (min-width: 960px) {
+  .yk-brand { padding: 76px var(--yk-gutter) 75px; }
+  .yk-brand__inner {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .yk-brand__text { max-width: 532px; }
+  .yk-brand__title { font-size: 48px; line-height: 56px; }
+  .yk-brand__title-desktop { display: inline; }
+  .yk-brand__title-mobile { display: none; }
+  .yk-brand__text { margin-top: 21px; font-size: 16px; line-height: 24px; }
+  .yk-brand__text p { margin-bottom: 24px; }
+  .yk-brand__button { display: inline-flex; width: 256px; height: 56px; margin-top: 52px; font-size: 14px; }
+  .yk-brand__badges-heading { margin-top: 94px; text-align: left; }
+  .yk-brand__badges { justify-content: flex-start; margin-top: 26px; }
+  .yk-brand__badge { width: 100px; height: 100px; }
+  .yk-brand__visual { position: static; display: flex; align-items: flex-end; height: auto; margin: 0; }
+  .yk-brand__portrait { top: 0; right: 0; left: auto; width: 40.5625%; }
+  .yk-brand__quote {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 535px;
+    max-width: 100%;
+    margin-bottom: 2px;
+    padding: 28px 24px 30px 25px;
+    text-align: left;
+  }
+  .yk-brand__quote .yk-icon { margin: 0; }
+  .yk-brand__quote-text { max-width: 445px; font-size: 16px; line-height: 24px; }
+  .yk-brand__quote-author { font-size: 16px; line-height: 24px; }
+}

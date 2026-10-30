@@ -562,6 +562,20 @@
       "settings": {
         "title": "Follow our Community"
       }
+    },
+    "yk_brand": {
+      "type": "yk-brand",
+      "settings": {
+        "title": "Behind the Yosukata",
+        "text": "<p>When it comes to dish excellence, there is never a detail that we overlook. More and more of us care about organic, healthy ingredients that are rich in taste and flavors but forget to pay attention to kitchen cooking utensils. Nature has provided us with a solution that has been forgotten in the pursuit of convenience: fire and iron.</p><p>We are chefs who care about flavor and can distinguish between a high-quality pan and one that is cheap tin. We are constantly sourcing and testing to distill the pans that make it possible to create culinary masterpieces.</p>",
+        "button_label": "Find out more",
+        "button_link": "/pages/about",
+        "badges_heading": "Our quality has been proven over the years.",
+        "show_default_badges": true,
+        "quote": "<p>We founded the Yosukata company to help consumers revitalize the benefits of natural cooking ware.</p>",
+        "quote_author": "",
+        "title_mobile": "Behind the Yosukata Brand"
+      }
     }
   },
   "order": [
@@ -574,6 +588,7 @@
     "yk_reviews",
     "yk_set_of_day",
     "yk_community",
+    "yk_brand",
     "yk_faq"
   ]
 }

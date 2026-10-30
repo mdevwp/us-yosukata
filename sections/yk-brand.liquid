@@ -1,0 +1,92 @@
+<section
+  class="yk-brand"
+  aria-labelledby="YkBrandTitle-{{ section.id }}"
+  style="--yk-brand-bg: url('{% if section.settings.background != blank %}{{ section.settings.background | image_url: width: 1600 }}{% else %}{{ 'yk-brand-bg.jpg' | asset_url }}{% endif %}');"
+>
+  <div class="yk-brand__inner">
+    <div class="yk-brand__content">
+      {%- if section.settings.title != blank -%}
+        <h2 class="yk-brand__title" id="YkBrandTitle-{{ section.id }}">
+          {%- if section.settings.title_mobile != blank -%}
+            <span class="yk-brand__title-desktop">{{ section.settings.title | escape }}</span>
+            <span class="yk-brand__title-mobile">{{ section.settings.title_mobile | escape }}</span>
+          {%- else -%}
+            {{ section.settings.title | escape }}
+          {%- endif -%}
+        </h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="yk-brand__text">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a class="yk-brand__button" href="{{ section.settings.button_link | default: '#' }}">{{ section.settings.button_label | escape }}</a>
+      {%- endif -%}
+
+      {%- if section.settings.badges_heading != blank -%}
+        <p class="yk-brand__badges-heading">{{ section.settings.badges_heading | escape }}</p>
+      {%- endif -%}
+      <div class="yk-brand__badges">
+        {%- for i in (1..2) -%}
+          {%- liquid
+            assign badge_key = 'badge_' | append: i
+            assign badge = section.settings[badge_key]
+            if i == 1
+              assign fallback = 'home-badge-good.png'
+              assign fallback_alt = 'Seriously Good'
+            else
+              assign fallback = 'home-badge-seen.png'
+              assign fallback_alt = 'As seen on Serious Eats'
+            endif
+          -%}
+          {%- if badge != blank -%}
+            {{ badge | image_url: width: 200 | image_tag: class: 'yk-brand__badge', loading: 'lazy', alt: badge.alt }}
+          {%- elsif section.settings.show_default_badges -%}
+            <img class="yk-brand__badge" src="{{ fallback | asset_url }}" alt="{{ fallback_alt }}" width="200" height="200" loading="lazy">
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div class="yk-brand__visual">
+      {%- if section.settings.portrait != blank -%}
+        {{ section.settings.portrait | image_url: width: 1000 | image_tag: class: 'yk-brand__portrait', loading: 'lazy', widths: '500, 750, 1000', sizes: '(min-width: 960px) 41vw, 106vw', alt: section.settings.portrait.alt }}
+      {%- else -%}
+        <img class="yk-brand__portrait" src="{{ 'yk-brand-chef.webp' | asset_url }}" alt="" width="941" height="1672" loading="lazy">
+      {%- endif -%}
+      {%- if section.settings.quote != blank -%}
+        <figure class="yk-brand__quote">
+          {% render 'yk-icon', icon: 'quote' %}
+          <blockquote class="yk-brand__quote-text">{{ section.settings.quote }}</blockquote>
+          {%- if section.settings.quote_author != blank -%}
+            <figcaption class="yk-brand__quote-author">{{ section.settings.quote_author | escape }}</figcaption>
+          {%- endif -%}
+        </figure>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Brand story",
+  "class": "yk-brand-section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Behind the Yosukata" },
+    { "type": "text", "id": "title_mobile", "label": "Heading on mobile", "info": "Optional" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Find out more" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "badges_heading", "label": "Badges heading", "default": "Our quality has been proven over the years." },
+    { "type": "image_picker", "id": "badge_1", "label": "Badge 1" },
+    { "type": "image_picker", "id": "badge_2", "label": "Badge 2" },
+    { "type": "checkbox", "id": "show_default_badges", "label": "Show default award badges when none are selected", "default": true },
+    { "type": "image_picker", "id": "portrait", "label": "Portrait", "info": "Use a cut-out image on a transparent background" },
+    { "type": "image_picker", "id": "background", "label": "Background image" },
+    { "type": "richtext", "id": "quote", "label": "Quote" },
+    { "type": "text", "id": "quote_author", "label": "Quote author", "info": "Name and position of the person quoted" }
+  ],
+  "presets": [
+    { "name": "YK Brand story" }
+  ]
+}
+{% endschema %}
