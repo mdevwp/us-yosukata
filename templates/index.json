@@ -481,6 +481,47 @@
         "title": "What Customers say about us",
         "subtitle": "13,000+ five-star reviews from real working professionals."
       }
+    },
+    "yk_set_of_day": {
+      "type": "yk-set-of-day",
+      "blocks": {
+        "hotspot_wok": {
+          "type": "hotspot",
+          "settings": {
+            "product": "black-carbon-steel-wok-3-5-inch-wooden-wok-lid",
+            "x": 58,
+            "y": 59,
+            "x_mobile": 55,
+            "y_mobile": 60
+          }
+        },
+        "hotspot_utensils": {
+          "type": "hotspot",
+          "settings": {
+            "product": "utensils-set-17-inch-stainless-steel-wok-spatula-and-ladle-set",
+            "x": 93,
+            "y": 71,
+            "x_mobile": 92,
+            "y_mobile": 78
+          }
+        }
+      },
+      "block_order": [
+        "hotspot_wok",
+        "hotspot_utensils"
+      ],
+      "settings": {
+        "title": "Set of the Day",
+        "subtitle": "Everything you need for better wok cooking, brought together in one carefully selected set.",
+        "badge_1_tag": "Pre-Seasoned",
+        "badge_1_label": "Pre-Seasoned",
+        "badge_1_color": "#235fa3",
+        "badge_1_text_color": "#ffffff",
+        "badge_2_tag": "Bestseller",
+        "badge_2_label": "Best Seller",
+        "badge_2_color": "#eecaa1",
+        "badge_2_text_color": "#000000"
+      }
     }
   },
   "order": [
@@ -491,6 +532,7 @@
     "yk_features",
     "yk_season",
     "yk_reviews",
+    "yk_set_of_day",
     "yk_faq"
   ]
 }

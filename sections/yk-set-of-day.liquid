@@ -1,0 +1,170 @@
+{%- liquid
+  assign badge_1_tag = section.settings.badge_1_tag | downcase | strip
+  assign badge_2_tag = section.settings.badge_2_tag | downcase | strip
+-%}
+
+<section
+  class="yk-set"
+  aria-labelledby="YkSetTitle-{{ section.id }}"
+  style="--yk-badge-1-bg: {{ section.settings.badge_1_color }}; --yk-badge-1-text: {{ section.settings.badge_1_text_color }}; --yk-badge-2-bg: {{ section.settings.badge_2_color }}; --yk-badge-2-text: {{ section.settings.badge_2_text_color }};"
+  data-yk-set
+>
+  <div class="yk-set__header">
+    {%- if section.settings.title != blank -%}
+      <h2 class="yk-set__title" id="YkSetTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtitle != blank -%}
+      <p class="yk-set__subtitle">{{ section.settings.subtitle | escape }}</p>
+    {%- endif -%}
+  </div>
+
+  <div class="yk-set__layout">
+    <div class="yk-set__media">
+      <div class="yk-set__frame">
+        <div class="yk-set__canvas">
+        {%- if section.settings.image != blank -%}
+          {{
+            section.settings.image
+            | image_url: width: 1600
+            | image_tag:
+              class: 'yk-set__image',
+              loading: 'lazy',
+              widths: '600, 900, 1200, 1600',
+              sizes: '(min-width: 960px) 56vw, 92vw',
+              alt: section.settings.image.alt
+              | default: section.settings.title
+          }}
+        {%- else -%}
+          <img class="yk-set__image" src="{{ 'yk-set-day.jpg' | asset_url }}" alt="{{ section.settings.title | escape }}" width="1080" height="1080" loading="lazy">
+        {%- endif -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.product != blank -%}
+            <button
+              class="yk-set__hotspot{% if forloop.first %} is-active{% endif %}"
+              type="button"
+              style="--x: {{ block.settings.x }}%; --y: {{ block.settings.y }}%; --xm: {{ block.settings.x_mobile | default: block.settings.x }}%; --ym: {{ block.settings.y_mobile | default: block.settings.y }}%;"
+              aria-label="{{ block.settings.product.title | escape }}"
+              data-yk-set-hotspot="{{ forloop.index0 }}"
+              {{ block.shopify_attributes }}
+            ></button>
+          {%- endif -%}
+        {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="yk-set__products">
+      <ul class="yk-set__track" role="list" data-yk-set-track>
+        {%- for block in section.blocks -%}
+          {%- assign product = block.settings.product -%}
+          {%- if product != blank -%}
+            {%- liquid
+              assign product_tags = product.tags | join: '|' | downcase | split: '|'
+              assign subtitle = product.metafields.custom.card_subtitle.value | default: product.metafields.custom.subtitle.value
+              assign card_title = product.metafields.custom.card_title.value | default: product.title
+              assign card_image = product.metafields.custom.card_image.value | default: product.featured_media
+              assign rating = product.metafields.reviews.rating.value
+              assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+              assign has_badge_1 = false
+              assign has_badge_2 = false
+              if badge_1_tag != blank and product_tags contains badge_1_tag
+                assign has_badge_1 = true
+              endif
+              if badge_2_tag != blank and product_tags contains badge_2_tag
+                assign has_badge_2 = true
+              endif
+            -%}
+            <li class="yk-set__product">
+              <a class="yk-set__card" href="{{ product.url }}">
+                {%- if has_badge_1 or has_badge_2 -%}
+                  <span class="yk-card__badges">
+                    {%- if has_badge_1 -%}<span class="yk-card__badge yk-card__badge--1">{{ section.settings.badge_1_label | default: section.settings.badge_1_tag | escape }}</span>{%- endif -%}
+                    {%- if has_badge_2 -%}<span class="yk-card__badge yk-card__badge--2">{{ section.settings.badge_2_label | default: section.settings.badge_2_tag | escape }}</span>{%- endif -%}
+                  </span>
+                {%- endif -%}
+                {%- if card_image -%}
+                  {{
+                    card_image
+                    | image_url: width: 900
+                    | image_tag: class: 'yk-set__product-image', loading: 'lazy', widths: '360, 600, 900', sizes: '(min-width: 960px) 30vw, 92vw', alt: product.title
+                  }}
+                {%- endif -%}
+                {%- if rating_count > 0 -%}
+                  {%- assign rating_value = rating.rating | times: 5.0 | divided_by: rating.scale_max | round -%}
+                  <span class="yk-card__rating yk-set__rating" role="img" aria-label="{{ rating.rating | round: 1 }} / {{ rating.scale_max }}">
+                    {%- for i in (1..5) -%}
+                      <span class="yk-card__star{% if i > rating_value %} yk-card__star--empty{% endif %}">{% render 'yk-icon', icon: 'star' %}</span>
+                    {%- endfor -%}
+                    <span class="yk-card__rating-count">({{ rating_count }})</span>
+                  </span>
+                {%- endif -%}
+              </a>
+              <div class="yk-set__info">
+                {%- if subtitle != blank -%}
+                  <p class="yk-set__product-subtitle">{{ subtitle | escape }}</p>
+                {%- endif -%}
+                <h3 class="yk-set__product-title"><a href="{{ product.url }}">{{ card_title | escape }}</a></h3>
+                <p class="yk-set__price">{{ product.price | money }}</p>
+              </div>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+
+      {%- if section.blocks.size > 1 -%}
+        <div class="yk-set__nav">
+          <button class="yk-set__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t | default: 'Previous' }}" data-yk-set-prev>
+            {% render 'yk-icon', icon: 'arrow-left' %}
+          </button>
+          <span class="yk-set__counter" aria-live="polite"><span data-yk-set-current>1</span>/{{ section.blocks.size }}</span>
+          <button class="yk-set__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t | default: 'Next' }}" data-yk-set-next>
+            {% render 'yk-icon', icon: 'arrow-right' %}
+          </button>
+        </div>
+        <div class="yk-set__dots" aria-hidden="true">
+          {%- for block in section.blocks -%}
+            <span class="yk-set__dot{% if forloop.first %} is-active{% endif %}"></span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Set of the Day",
+  "class": "yk-set-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "Set of the Day" },
+    { "type": "text", "id": "subtitle", "label": "Subheading" },
+    { "type": "image_picker", "id": "image", "label": "Image", "info": "Square image works best. Hotspot positions are percentages of the image." },
+    { "type": "header", "content": "Badges", "info": "Shown on products that have the matching tag" },
+    { "type": "text", "id": "badge_1_tag", "label": "Badge 1 product tag", "default": "Pre-Seasoned" },
+    { "type": "text", "id": "badge_1_label", "label": "Badge 1 label", "default": "Pre-Seasoned" },
+    { "type": "color", "id": "badge_1_color", "label": "Badge 1 background", "default": "#235fa3" },
+    { "type": "color", "id": "badge_1_text_color", "label": "Badge 1 text", "default": "#ffffff" },
+    { "type": "text", "id": "badge_2_tag", "label": "Badge 2 product tag", "default": "Bestseller" },
+    { "type": "text", "id": "badge_2_label", "label": "Badge 2 label", "default": "Best Seller" },
+    { "type": "color", "id": "badge_2_color", "label": "Badge 2 background", "default": "#eecaa1" },
+    { "type": "color", "id": "badge_2_text_color", "label": "Badge 2 text", "default": "#000000" }
+  ],
+  "blocks": [
+    {
+      "type": "hotspot",
+      "name": "Product hotspot",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "range", "id": "x", "label": "Horizontal position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "range", "id": "y", "label": "Vertical position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "range", "id": "x_mobile", "label": "Horizontal position on mobile", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        { "type": "range", "id": "y_mobile", "label": "Vertical position on mobile", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "YK Set of the Day", "blocks": [ { "type": "hotspot" }, { "type": "hotspot" } ] }
+  ]
+}
+{% endschema %}

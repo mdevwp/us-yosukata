@@ -199,3 +199,41 @@ document.querySelectorAll('[data-yk-reviews]').forEach(initYkReviews);
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-reviews]').forEach(initYkReviews);
 });
+
+function initYkSet(section) {
+  const track = section.querySelector('[data-yk-set-track]');
+  if (!track || track.dataset.ready) return;
+  track.dataset.ready = 'true';
+
+  const items = Array.from(track.children);
+  const hotspots = section.querySelectorAll('[data-yk-set-hotspot]');
+  const dots = section.querySelectorAll('.yk-set__dot');
+  const prev = section.querySelector('[data-yk-set-prev]');
+  const next = section.querySelector('[data-yk-set-next]');
+  const current = section.querySelector('[data-yk-set-current]');
+  const step = () => (items[1] ? items[1].offsetLeft - items[0].offsetLeft : track.clientWidth);
+
+  const setActive = (index) => {
+    hotspots.forEach((hotspot, i) => hotspot.classList.toggle('is-active', i === index));
+    dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
+    if (current) current.textContent = index + 1;
+    if (prev) prev.disabled = index === 0;
+    if (next) next.disabled = index === items.length - 1;
+  };
+  const goTo = (index) => {
+    const target = Math.max(0, Math.min(items.length - 1, index));
+    track.scrollTo({ left: target * step(), behavior: 'smooth' });
+    setActive(target);
+  };
+
+  hotspots.forEach((hotspot) => hotspot.addEventListener('click', () => goTo(Number(hotspot.dataset.ykSetHotspot))));
+  if (prev) prev.addEventListener('click', () => goTo(Math.round(track.scrollLeft / step()) - 1));
+  if (next) next.addEventListener('click', () => goTo(Math.round(track.scrollLeft / step()) + 1));
+  track.addEventListener('scroll', () => setActive(Math.round(track.scrollLeft / step())), { passive: true });
+  setActive(0);
+}
+
+document.querySelectorAll('[data-yk-set]').forEach(initYkSet);
+document.addEventListener('shopify:section:load', (event) => {
+  event.target.querySelectorAll('[data-yk-set]').forEach(initYkSet);
+});
