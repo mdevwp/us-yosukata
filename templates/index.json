@@ -587,26 +587,25 @@
           "type": "quote",
           "settings": {
             "quote": "“Believe us when we say — you will\nbe able to taste the difference.”",
-            "role": "",
-            "name": "",
-            "verified": false
+            "role": "Chef",
+            "name": "Maria Gonzalez",
+            "verified": true
           }
         },
         "quote_2": {
           "type": "quote",
           "settings": {
             "quote": "“Believe us when we say — you will\nbe able to taste the difference.”",
-            "role": "",
-            "name": "",
-            "verified": false
+            "role": "Chef",
+            "name": "Maria Gonzalez",
+            "verified": true
           }
         }
       },
       "block_order": [
         "quote_1",
         "quote_2"
-      ],
-      "disabled": true
+      ]
     },
     "yk_social": {
       "type": "yk-social",
