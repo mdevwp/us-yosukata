@@ -5,7 +5,7 @@
     {%- endif -%}
     <div class="yk-faq__list">
       {%- for block in section.blocks -%}
-        <details class="yk-faq__item" {% if forloop.first and section.settings.first_open %}open{% endif %} {{ block.shopify_attributes }}>
+        <details class="yk-faq__item" name="yk-faq-{{ section.id }}" {% if forloop.first and section.settings.first_open %}open{% endif %} {{ block.shopify_attributes }}>
           <summary class="yk-faq__question">
             <span>{{ block.settings.question | escape }}</span>
             <span class="yk-faq__toggle" aria-hidden="true"></span>

@@ -289,3 +289,12 @@ document.querySelectorAll('[data-yk-chefs]').forEach(initYkChefs);
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-chefs]').forEach(initYkChefs);
 });
+
+// FAQ: keep one answer open. Details with a shared name do this natively; this covers older browsers
+document.addEventListener('toggle', (event) => {
+  const item = event.target;
+  if (!item.matches || !item.matches('.yk-faq__item') || !item.open) return;
+  item.closest('.yk-faq__list').querySelectorAll('.yk-faq__item[open]').forEach((other) => {
+    if (other !== item) other.open = false;
+  });
+}, true);
