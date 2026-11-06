@@ -376,6 +376,11 @@
   .yk-benefits__desktop { display: inline; }
   .yk-benefits__mobile { display: none; }
 }
+/* Line breaks from the admin text are set for wide screens; narrower columns wrap naturally */
+@media (min-width: 960px) and (max-width: 1199px) {
+  .yk-benefits__desktop br { display: none; }
+  .yk-benefits__text { max-width: 240px; }
+}
 
 /* FAQ */
 .yk-faq {
