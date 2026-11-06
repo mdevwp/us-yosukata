@@ -1,0 +1,28 @@
+{%- comment -%}
+  Theme preview links geolocate the visitor by IP and can keep a country the store does not sell to
+  (for example UA). Products then show as unavailable and buy buttons disappear. If the visitor's
+  country is not one of the store's selling countries, switch to the first selling country once and
+  reload. On the live domain the country is always a selling country, so this does nothing.
+{%- endcomment -%}
+{%- capture yk_countries -%}{% for yk_country in localization.available_countries %}{{ yk_country.iso_code }}{% unless forloop.last %},{% endunless %}{% endfor %}{%- endcapture -%}
+{%- if yk_countries != blank -%}
+  <script>
+    (function () {
+      var countries = '{{ yk_countries }}'.split(',');
+      var current = window.Shopify && window.Shopify.country;
+      if (!current || countries.indexOf(current) !== -1) return;
+      try {
+        if (sessionStorage.getItem('ykCountryFallback')) return;
+        sessionStorage.setItem('ykCountryFallback', '1');
+      } catch (error) { /* storage unavailable: still try once */ }
+      var data = new FormData();
+      data.append('form_type', 'localization');
+      data.append('utf8', '✓');
+      data.append('_method', 'put');
+      data.append('return_to', location.pathname + location.search);
+      data.append('country_code', countries[0]);
+      fetch('{{ routes.root_url | append: '/localization' | replace: '//', '/' }}', { method: 'POST', body: data, credentials: 'same-origin' })
+        .then(function () { location.reload(); });
+    })();
+  </script>
+{%- endif -%}
