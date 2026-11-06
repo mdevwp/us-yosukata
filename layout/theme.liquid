@@ -70,9 +70,13 @@
     {%- if yk_redesign == 'true' or request.page_type == 'index' -%}
       {% render 'yk-redesign-assets' %}
     {%- endif -%}
-    {%- if request.page_type == 'index' -%}
+    {%- if request.page_type == 'index' or request.page_type == 'product' -%}
       {{ 'home-redesign.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'home-redesign.js' | asset_url }}" defer></script>
+    {%- endif -%}
+    {%- if request.page_type == 'product' -%}
+      {{ 'product-redesign.css' | asset_url | stylesheet_tag }}
+      <script src="{{ 'product-redesign.js' | asset_url }}" defer></script>
     {%- endif -%}
   </head>
 

@@ -1,0 +1,124 @@
+{%- comment -%}
+  "You may also like": Shopify product recommendations in the homepage offers slider style.
+  The page renders an empty shell; the script loads the products from the recommendations endpoint.
+{%- endcomment -%}
+{%- liquid
+  assign badge_1_tag = section.settings.badge_1_tag | downcase | strip
+  assign badge_2_tag = section.settings.badge_2_tag | downcase | strip
+  assign source_products = recommendations.products
+-%}
+
+<section
+  class="yk-offers yk-recs"
+  aria-labelledby="YkRecsTitle-{{ section.id }}"
+  style="--yk-badge-1-bg: {{ section.settings.badge_1_color }}; --yk-badge-1-text: {{ section.settings.badge_1_text_color }}; --yk-badge-2-bg: {{ section.settings.badge_2_color }}; --yk-badge-2-text: {{ section.settings.badge_2_text_color }};"
+  data-yk-recs
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}&intent={{ section.settings.intent }}"
+  {% if recommendations.performed? %}data-yk-offers{% endif %}
+>
+  {%- if recommendations.performed? and source_products.size > 0 -%}
+    {%- assign exclude_id = 0 -%}
+    {%- capture recs_markup -%}
+    <div class="yk-offers__inner">
+      <div class="yk-offers__header">
+        {%- if section.settings.title != blank -%}
+          <h2 class="yk-offers__title" id="YkRecsTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+        <div class="yk-offers__nav" data-yk-offers-nav hidden>
+          <button class="yk-offers__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t }}" data-yk-offers-prev>
+            {% render 'yk-icon', icon: 'arrow-left' %}
+          </button>
+          <span class="yk-offers__counter" aria-live="polite"><span data-yk-offers-current>1</span>/<span data-yk-offers-total>1</span></span>
+          <button class="yk-offers__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t }}" data-yk-offers-next>
+            {% render 'yk-icon', icon: 'arrow-right' %}
+          </button>
+        </div>
+      </div>
+
+      <ul class="yk-offers__track" role="list" data-yk-offers-track>
+        {%- for card_product in source_products limit: section.settings.limit -%}
+          {%- unless card_product.id == exclude_id -%}
+            {%- render 'yk-product-card', product: card_product, card_settings: section.settings, badge_1_tag: badge_1_tag, badge_2_tag: badge_2_tag -%}
+          {%- endunless -%}
+        {%- endfor -%}
+      </ul>
+
+      <div class="yk-offers__progress" aria-hidden="true">
+        <span class="yk-offers__progress-thumb" data-yk-offers-thumb></span>
+      </div>
+    </div>
+    {%- endcapture -%}
+    {{ recs_markup }}
+  {%- elsif recommendations.performed? == false and section.settings.fallback_collection != blank -%}
+    {%- assign source_products = section.settings.fallback_collection.products -%}
+    {%- assign exclude_id = product.id -%}
+    {%- capture recs_markup -%}
+    <div class="yk-offers__inner">
+      <div class="yk-offers__header">
+        {%- if section.settings.title != blank -%}
+          <h2 class="yk-offers__title" id="YkRecsTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+        <div class="yk-offers__nav" data-yk-offers-nav hidden>
+          <button class="yk-offers__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t }}" data-yk-offers-prev>
+            {% render 'yk-icon', icon: 'arrow-left' %}
+          </button>
+          <span class="yk-offers__counter" aria-live="polite"><span data-yk-offers-current>1</span>/<span data-yk-offers-total>1</span></span>
+          <button class="yk-offers__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t }}" data-yk-offers-next>
+            {% render 'yk-icon', icon: 'arrow-right' %}
+          </button>
+        </div>
+      </div>
+
+      <ul class="yk-offers__track" role="list" data-yk-offers-track>
+        {%- for card_product in source_products limit: section.settings.limit -%}
+          {%- unless card_product.id == exclude_id -%}
+            {%- render 'yk-product-card', product: card_product, card_settings: section.settings, badge_1_tag: badge_1_tag, badge_2_tag: badge_2_tag -%}
+          {%- endunless -%}
+        {%- endfor -%}
+      </ul>
+
+      <div class="yk-offers__progress" aria-hidden="true">
+        <span class="yk-offers__progress-thumb" data-yk-offers-thumb></span>
+      </div>
+    </div>
+    {%- endcapture -%}
+    <template data-yk-recs-fallback>{{ recs_markup }}</template>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "YK You may also like",
+  "class": "yk-recs-section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "You may also like" },
+    {
+      "type": "select",
+      "id": "intent",
+      "label": "Recommendations",
+      "options": [
+        { "value": "related", "label": "Related products" },
+        { "value": "complementary", "label": "Complementary products" }
+      ],
+      "default": "related",
+      "info": "Complementary products are set up in the Search & Discovery app"
+    },
+    { "type": "collection", "id": "fallback_collection", "label": "Fallback collection", "info": "Shown when Shopify has no recommendations for a product" },
+    { "type": "range", "id": "limit", "label": "Maximum products", "min": 2, "max": 10, "step": 1, "default": 8 },
+    { "type": "checkbox", "id": "show_rating", "label": "Show rating", "default": true },
+    { "type": "checkbox", "id": "show_compare_price", "label": "Show compare-at price", "default": false },
+    { "type": "checkbox", "id": "show_quick_add", "label": "Show quick add", "default": true },
+    { "type": "text", "id": "quick_add_label", "label": "Quick add label", "default": "Quick Add" },
+    { "type": "text", "id": "choose_options_label", "label": "Label for products with options", "default": "Choose options" },
+    { "type": "header", "content": "Badges", "info": "Shown on products that have the matching tag" },
+    { "type": "text", "id": "badge_1_tag", "label": "Badge 1 product tag", "default": "Pre-Seasoned" },
+    { "type": "text", "id": "badge_1_label", "label": "Badge 1 label", "default": "Pre-Seasoned" },
+    { "type": "color", "id": "badge_1_color", "label": "Badge 1 background", "default": "#235fa3" },
+    { "type": "color", "id": "badge_1_text_color", "label": "Badge 1 text", "default": "#ffffff" },
+    { "type": "text", "id": "badge_2_tag", "label": "Badge 2 product tag", "default": "Bestseller" },
+    { "type": "text", "id": "badge_2_label", "label": "Badge 2 label", "default": "Best Seller" },
+    { "type": "color", "id": "badge_2_color", "label": "Badge 2 background", "default": "#eecaa1" },
+    { "type": "color", "id": "badge_2_text_color", "label": "Badge 2 text", "default": "#000000" }
+  ]
+}
+{% endschema %}

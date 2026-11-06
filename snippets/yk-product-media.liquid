@@ -1,0 +1,36 @@
+{%- comment -%}
+  Image or looping video for the product tabs.
+  Params: media_block (block with image, video, default_asset, width), class_name, attributes
+{%- endcomment -%}
+{%- liquid
+  assign media_settings = media_block.settings
+  assign media_width = media_settings.width | default: 'content'
+-%}
+{%- if media_settings.video != blank -%}
+  <div class="{{ class_name }} yk-details__media--{{ media_width }}" {{ attributes }} data-yk-video>
+    {{
+      media_settings.video
+      | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', class: 'yk-details__media-el'
+    }}
+    <button class="yk-details__media-toggle" type="button" aria-label="{{ 'general.accessibility.pause' | t }}" data-label-play="{{ 'general.accessibility.play' | t }}" data-label-pause="{{ 'general.accessibility.pause' | t }}" data-yk-video-toggle>
+      {% render 'yk-icon', icon: 'pause' %}
+      <svg class="yk-icon yk-icon--play" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+    </button>
+  </div>
+{%- elsif media_settings.image != blank -%}
+  <div class="{{ class_name }} yk-details__media--{{ media_width }}" {{ attributes }}>
+    {{
+      media_settings.image
+      | image_url: width: 2000
+      | image_tag:
+        class: 'yk-details__media-el',
+        loading: 'lazy',
+        widths: '600, 900, 1200, 1600, 2000',
+        sizes: '(min-width: 960px) 75vw, 92vw'
+    }}
+  </div>
+{%- elsif media_settings.default_asset != blank -%}
+  <div class="{{ class_name }} yk-details__media--{{ media_width }}" {{ attributes }}>
+    <img class="yk-details__media-el" src="{{ media_settings.default_asset | asset_url }}" alt="" loading="lazy" width="1600" height="1000">
+  </div>
+{%- endif -%}

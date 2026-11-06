@@ -1,0 +1,271 @@
+{%- comment -%}
+  Product tabs. A "Tab" block starts a tab; the blocks after it (until the next tab) are its content.
+{%- endcomment -%}
+{%- liquid
+  assign tab_count = 0
+  for block in section.blocks
+    if block.type == 'tab'
+      assign tab_count = tab_count | plus: 1
+    endif
+  endfor
+  assign yk_free_shipping = ''
+  if settings.free_shipping_threshold != blank
+    assign yk_free_shipping = settings.free_shipping_threshold | times: 100 | money_without_trailing_zeros
+  endif
+-%}
+
+<section class="yk-details" data-yk-details>
+  <div class="yk-details__inner">
+    {%- if tab_count > 1 -%}
+      <div class="yk-details__tabs" role="tablist">
+        {%- assign tab_index = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'tab' -%}
+            <button
+              class="yk-details__tab{% if tab_index == 0 %} is-active{% endif %}"
+              type="button"
+              role="tab"
+              id="YkTab-{{ block.id }}"
+              aria-controls="YkPanel-{{ block.id }}"
+              aria-selected="{% if tab_index == 0 %}true{% else %}false{% endif %}"
+              {% unless tab_index == 0 %}tabindex="-1"{% endunless %}
+              {{ block.shopify_attributes }}
+              data-yk-tab
+            >
+              {{- block.settings.title | escape -}}
+            </button>
+            {%- assign tab_index = tab_index | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- assign tab_index = 0 -%}
+    {%- assign panel_open = false -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'tab' -%}
+        {%- if panel_open -%}</div>{%- endif -%}
+        <div
+          class="yk-details__panel"
+          id="YkPanel-{{ block.id }}"
+          {% if tab_count > 1 %}role="tabpanel" aria-labelledby="YkTab-{{ block.id }}"{% endif %}
+          {% unless tab_index == 0 %}hidden{% endunless %}
+          data-yk-panel
+        >
+        {%- assign tab_index = tab_index | plus: 1 -%}
+        {%- assign panel_open = true -%}
+        {%- continue -%}
+      {%- endif -%}
+
+      {%- case block.type -%}
+        {%- when 'heading' -%}
+          {%- liquid
+            assign heading_accent = ''
+            if block.settings.append_product_title
+              assign heading_accent = product.metafields.custom.card_title.value | default: product.title
+            endif
+          -%}
+          <h2 class="yk-details__heading yk-details__heading--{{ block.settings.size }}" {{ block.shopify_attributes }}>
+            {{- block.settings.heading | escape -}}
+            {%- if heading_accent != blank %} <span class="yk-details__heading-accent">{{ heading_accent | escape }}</span>{%- endif -%}
+          </h2>
+
+        {%- when 'text' -%}
+          <div class="yk-details__rte" {{ block.shopify_attributes }}>{{ block.settings.text | replace: '[free_shipping_threshold]', yk_free_shipping }}</div>
+
+        {%- when 'description' -%}
+          {%- liquid
+            # List items that start with a bold label become titled features; drop the label's colon
+            assign description = ''
+            assign description_items = product.description | split: '<li>'
+            for item in description_items
+              assign item_start = item | strip | slice: 0, 8
+              if forloop.first
+                assign description = item
+              elsif item_start == '<strong>'
+                assign titled_item = item | replace_first: ':</strong>', '</strong>'
+                assign description = description | append: '<li>' | append: titled_item
+              else
+                assign description = description | append: '<li>' | append: item
+              endif
+            endfor
+            assign description_intro = ''
+            assign description_rest = description
+            if block.settings.split_after_intro and description contains '</p>'
+              assign description_parts = description | split: '</p>'
+              assign description_intro = description_parts.first | append: '</p>'
+              assign description_rest = description | remove_first: description_intro
+            endif
+          -%}
+          <div class="yk-details__description" {{ block.shopify_attributes }}>
+            {%- if description_intro != blank -%}
+              <div class="yk-details__rte">{{ description_intro }}</div>
+            {%- endif -%}
+            {%- if block.settings.split_after_intro -%}
+              {% render 'yk-product-media', media_block: block, class_name: 'yk-details__media yk-details__media--content' %}
+            {%- endif -%}
+            <div class="yk-details__rte yk-details__rte--features">{{ description_rest }}</div>
+          </div>
+
+        {%- when 'media' -%}
+          {% render 'yk-product-media', media_block: block, class_name: 'yk-details__media', attributes: block.shopify_attributes %}
+
+        {%- when 'specs' -%}
+          {%- liquid
+            assign spec_rows = block.settings.specs | newline_to_br | split: '<br />'
+          -%}
+          <div class="yk-details__specs" {{ block.shopify_attributes }}>
+            {%- for row in spec_rows -%}
+              {%- liquid
+                assign row_parts = row | strip | split: '|'
+                assign spec_label = row_parts[0] | strip
+                assign spec_path = row_parts[1] | strip | split: '.'
+                assign spec_value = ''
+                if spec_path.size == 2
+                  assign spec_value = product.metafields[spec_path[0]][spec_path[1]].value
+                endif
+              -%}
+              {%- if spec_value != blank -%}
+                <div class="yk-details__spec">
+                  <p class="yk-details__spec-label">{{ spec_label | escape }}</p>
+                  <p class="yk-details__spec-value">{{ spec_value | escape }}</p>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+
+        {%- when 'feature' -%}
+          <div class="yk-details__feature" {{ block.shopify_attributes }}>
+            {%- if block.settings.icon != 'none' -%}{% render 'yk-icon', icon: block.settings.icon %}{%- endif -%}
+            <div>
+              {%- if block.settings.title != blank -%}<p class="yk-details__feature-title">{{ block.settings.title | escape }}</p>{%- endif -%}
+              <div class="yk-details__feature-text">{{ block.settings.text | replace: '[free_shipping_threshold]', yk_free_shipping }}</div>
+            </div>
+          </div>
+
+        {%- when 'page' -%}
+          {%- if block.settings.page != blank -%}
+            <div class="yk-details__rte" {{ block.shopify_attributes }}>{{ block.settings.page.content }}</div>
+          {%- endif -%}
+
+        {%- when 'custom_liquid' -%}
+          <div {{ block.shopify_attributes }}>{{ block.settings.custom_liquid }}</div>
+      {%- endcase -%}
+    {%- endfor -%}
+    {%- if panel_open -%}</div>{%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Product tabs",
+  "class": "yk-details-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Tab title", "default": "Description" },
+        { "type": "paragraph", "content": "The blocks below this one, up to the next tab, make up its content" }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Product description" },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Size",
+          "options": [
+            { "value": "large", "label": "Large" },
+            { "value": "medium", "label": "Medium" },
+            { "value": "small", "label": "Small" }
+          ],
+          "default": "large"
+        },
+        { "type": "checkbox", "id": "append_product_title", "label": "Add product name in grey", "default": false }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Text</p>", "info": "Headings and lists are styled. [free_shipping_threshold] shows Theme settings > Cart > Free shipping threshold" }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Product description",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "Shows the product description. Bold text at the start of a list item becomes its title." },
+        { "type": "checkbox", "id": "split_after_intro", "label": "Show media after the first paragraph", "default": true },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "video", "id": "video", "label": "Video", "info": "Plays muted on loop, with a pause button" },
+        { "type": "text", "id": "default_asset", "label": "Default image file", "default": "yk-product-story.jpg", "info": "Theme asset used when no image or video is chosen. Leave empty to show nothing." }
+      ]
+    },
+    {
+      "type": "media",
+      "name": "Image or video",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "video", "id": "video", "label": "Video", "info": "Plays muted on loop, with a pause button" },
+        { "type": "text", "id": "default_asset", "label": "Default image file", "info": "Theme asset used when no image or video is chosen" },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "options": [
+            { "value": "content", "label": "Text width" },
+            { "value": "full", "label": "Full width" }
+          ],
+          "default": "full"
+        }
+      ]
+    },
+    {
+      "type": "specs",
+      "name": "Specification cards",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "specs",
+          "label": "Cards",
+          "default": "Material | custom.material\nHandle material | custom.handle_material\nDiameter | custom.diameter",
+          "info": "One card per line: Label | namespace.key of a product metafield. Cards without a value are hidden."
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Icon with text",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "benefit-returns", "label": "Returns" },
+            { "value": "question", "label": "Question" },
+            { "value": "check-square", "label": "Check" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "leaf", "label": "Leaf" }
+          ],
+          "default": "truck"
+        },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "richtext", "id": "text", "label": "Text" }
+      ]
+    },
+    { "type": "page", "name": "Page content", "settings": [ { "type": "page", "id": "page", "label": "Page" } ] },
+    { "type": "custom_liquid", "name": "Custom liquid", "settings": [ { "type": "liquid", "id": "custom_liquid", "label": "Custom liquid" } ] }
+  ]
+}
+{% endschema %}

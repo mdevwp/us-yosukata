@@ -1,0 +1,494 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign product_tags = product.tags | join: '|' | downcase | split: '|'
+  assign badge_1_tag = section.settings.badge_1_tag | downcase | strip
+  assign badge_2_tag = section.settings.badge_2_tag | downcase | strip
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign form_id = 'YkProductForm-' | append: section.id
+  assign yk_free_shipping = ''
+  if settings.free_shipping_threshold != blank
+    assign yk_free_shipping = settings.free_shipping_threshold | times: 100 | money_without_trailing_zeros
+  endif
+
+  assign low_stock = false
+  if current_variant.available and current_variant.inventory_management == 'shopify' and current_variant.inventory_policy == 'deny'
+    if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= section.settings.low_stock_threshold
+      assign low_stock = true
+    endif
+  endif
+
+  assign crumb_collection = collection
+  if crumb_collection == blank
+    for product_collection in product.collections
+      unless product_collection.handle == 'all' or product_collection.handle == 'frontpage'
+        assign crumb_collection = product_collection
+        break
+      endunless
+    endfor
+  endif
+-%}
+
+<section
+  class="yk-product{% unless product.available %} is-sold-out{% endunless %}"
+  style="--yk-badge-1-bg: {{ section.settings.badge_1_color }}; --yk-badge-1-text: {{ section.settings.badge_1_text_color }}; --yk-badge-2-bg: {{ section.settings.badge_2_color }}; --yk-badge-2-text: {{ section.settings.badge_2_text_color }};"
+  data-yk-product
+  data-section-id="{{ section.id }}"
+>
+  <div class="yk-product__inner">
+    {%- if section.settings.show_breadcrumbs -%}
+      <nav class="yk-product__crumbs" aria-label="Breadcrumbs">
+        <a href="{{ routes.root_url }}">{{ 'general.navigation.home' | t }}</a>
+        {%- if crumb_collection != blank -%}
+          <span aria-hidden="true">|</span>
+          <a href="{{ crumb_collection.url }}">{{ crumb_collection.title | escape }}</a>
+        {%- endif -%}
+        <span aria-hidden="true">|</span>
+        <span aria-current="page">{{ product.title | escape }}</span>
+      </nav>
+    {%- endif -%}
+
+    <div class="yk-product__gallery" data-yk-gallery>
+      <div class="yk-gallery__main" data-yk-gallery-main>
+        <ul class="yk-gallery__track" role="list" data-yk-gallery-track>
+          {%- for media in product.media -%}
+            <li
+              class="yk-gallery__slide yk-gallery__slide--{{ media.media_type }}"
+              data-media-id="{{ media.id }}"
+              {% unless forloop.first %}aria-hidden="true"{% endunless %}
+            >
+              {%- case media.media_type -%}
+                {%- when 'image' -%}
+                  {{
+                    media
+                    | image_url: width: 1600
+                    | image_tag:
+                      class: 'yk-gallery__image',
+                      loading: 'lazy',
+                      fetchpriority: 'auto',
+                      widths: '400, 720, 1000, 1400, 1600',
+                      sizes: '(min-width: 960px) 50vw, 92vw',
+                      alt: media.alt
+                      | default: product.title
+                  }}
+                {%- when 'video' -%}
+                  {{ media | video_tag: controls: true, preload: 'metadata', class: 'yk-gallery__video' }}
+                {%- when 'external_video' -%}
+                  {{ media | external_video_tag: class: 'yk-gallery__video' }}
+                {%- when 'model' -%}
+                  {{ media | model_viewer_tag: class: 'yk-gallery__model' }}
+              {%- endcase -%}
+            </li>
+          {%- else -%}
+            <li class="yk-gallery__slide">{{ 'product-1' | placeholder_svg_tag: 'yk-gallery__image yk-gallery__image--placeholder' }}</li>
+          {%- endfor -%}
+        </ul>
+
+        {%- if product.media.size > 0 -%}
+          <button class="yk-gallery__zoom" type="button" aria-label="{{ section.settings.zoom_label | escape }}" aria-pressed="false" data-yk-gallery-zoom>
+            {% render 'yk-icon', icon: 'zoom-in' %}
+          </button>
+          <span class="yk-gallery__lens" aria-hidden="true" data-yk-gallery-lens></span>
+        {%- endif -%}
+
+        {%- if product.media.size > 1 -%}
+          <div class="yk-gallery__nav">
+            <button class="yk-gallery__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t }}" data-yk-gallery-prev>
+              {% render 'yk-icon', icon: 'arrow-left' %}
+            </button>
+            <span class="yk-gallery__counter" aria-live="polite"><span data-yk-gallery-current>1</span>/{{ product.media.size }}</span>
+            <button class="yk-gallery__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t }}" data-yk-gallery-next>
+              {% render 'yk-icon', icon: 'arrow-right' %}
+            </button>
+          </div>
+          <div class="yk-gallery__dots" aria-hidden="true">
+            {%- for media in product.media -%}
+              <span class="yk-gallery__dot{% if forloop.first %} is-active{% endif %}"></span>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if product.media.size > 1 -%}
+        <ul class="yk-gallery__thumbs{% if product.media.size > 5 %} is-collapsed{% endif %}" role="list" data-yk-gallery-thumbs>
+          {%- for media in product.media -%}
+            <li class="yk-gallery__thumb-item">
+              <button
+                class="yk-gallery__thumb{% if forloop.first %} is-active{% endif %}"
+                type="button"
+                aria-label="{{ 'general.accessibility.image_thumbail' | t }} {{ forloop.index }}"
+                data-yk-gallery-thumb="{{ forloop.index0 }}"
+              >
+                {{ media.preview_image | image_url: width: 300 | image_tag: loading: 'lazy', alt: '', class: 'yk-gallery__thumb-image' }}
+              </button>
+            </li>
+          {%- endfor -%}
+          {%- if product.media.size > 5 -%}
+            <li class="yk-gallery__thumb-item yk-gallery__thumb-item--more">
+              <button class="yk-gallery__thumb yk-gallery__thumb--more" type="button" aria-label="{{ section.settings.more_media_label | escape }}" data-yk-gallery-more>
+                {% render 'yk-icon', icon: 'plus' %}
+              </button>
+            </li>
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <div class="yk-product__info">
+      {%- form 'product', product, id: form_id, class: 'yk-product__form', novalidate: 'novalidate', data-yk-product-form: '' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-yk-variant-id>
+      {%- endform -%}
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
+            <div class="yk-product__app">{% render block %}</div>
+
+          {%- when 'badges' -%}
+            {%- liquid
+              assign has_badge_1 = false
+              assign has_badge_2 = false
+              if badge_1_tag != blank and product_tags contains badge_1_tag
+                assign has_badge_1 = true
+              endif
+              if badge_2_tag != blank and product_tags contains badge_2_tag
+                assign has_badge_2 = true
+              endif
+            -%}
+            <div class="yk-product__badges" {{ block.shopify_attributes }}>
+              {%- if product.available -%}
+                {%- if has_badge_1 -%}
+                  <span class="yk-product__badge yk-product__badge--1">{{ section.settings.badge_1_label | default: section.settings.badge_1_tag | escape }}</span>
+                {%- endif -%}
+                {%- if has_badge_2 -%}
+                  <span class="yk-product__badge yk-product__badge--2">{{ section.settings.badge_2_label | default: section.settings.badge_2_tag | escape }}</span>
+                {%- endif -%}
+                {%- if low_stock -%}
+                  <span class="yk-product__stock">{{ block.settings.low_stock_text | escape }}</span>
+                {%- endif -%}
+              {%- else -%}
+                <span class="yk-product__badge yk-product__badge--sold-out">{{ block.settings.sold_out_text | escape }}</span>
+              {%- endif -%}
+            </div>
+
+          {%- when 'title' -%}
+            <h1 class="yk-product__title" {{ block.shopify_attributes }}>{{ product.title | escape }}</h1>
+
+          {%- when 'price' -%}
+            <div class="yk-product__price-row" {{ block.shopify_attributes }}>
+              <p class="yk-product__price" data-yk-price>
+                {%- if current_variant.compare_at_price > current_variant.price and block.settings.show_compare_price -%}
+                  <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+                  {{ current_variant.price | money }}
+                  <s class="yk-product__compare">{{ current_variant.compare_at_price | money }}</s>
+                {%- else -%}
+                  {{ current_variant.price | money }}
+                {%- endif -%}
+              </p>
+              {%- if rating_count > 0 -%}
+                {%- assign rating_value = rating.rating | times: 5.0 | divided_by: rating.scale_max | round -%}
+                <a class="yk-product__rating" href="#{{ block.settings.reviews_anchor | default: 'judgeme_product_reviews' }}" aria-label="{{ rating.rating | round: 1 }} / {{ rating.scale_max }}, {{ rating_count }}">
+                  {%- for i in (1..5) -%}
+                    <span class="yk-product__star{% if i > rating_value %} yk-product__star--empty{% endif %}">{% render 'yk-icon', icon: 'star' %}</span>
+                  {%- endfor -%}
+                  <span class="yk-product__rating-count">({{ rating_count }})</span>
+                </a>
+              {%- endif -%}
+            </div>
+
+          {%- when 'text' -%}
+            {%- liquid
+              assign block_text = block.settings.text
+              if block.settings.metafield != blank
+                assign metafield_path = block.settings.metafield | strip | split: '.'
+                assign text_metafield = product.metafields[metafield_path[0]][metafield_path[1]]
+                if text_metafield != blank
+                  if text_metafield.type == 'rich_text_field'
+                    assign block_text = text_metafield | metafield_tag
+                  else
+                    assign block_text = text_metafield.value | escape | newline_to_br | prepend: '<p>' | append: '</p>'
+                  endif
+                endif
+              endif
+            -%}
+            {%- if block_text != blank -%}
+              <div class="yk-product__text yk-product__text--{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ block_text }}</div>
+            {%- endif -%}
+
+          {%- when 'callout' -%}
+            <div class="yk-product__callout" {{ block.shopify_attributes }}>
+              {%- if block.settings.icon != 'none' -%}{% render 'yk-icon', icon: block.settings.icon %}{%- endif -%}
+              <div class="yk-product__callout-text">{{ block.settings.text }}</div>
+            </div>
+
+          {%- when 'variant_picker' -%}
+            {%- unless product.has_only_default_variant -%}
+              <div class="yk-product__variants" {{ block.shopify_attributes }} data-yk-variant-picker>
+                {%- for option in product.options_with_values -%}
+                  <fieldset class="yk-product__option">
+                    <legend class="yk-product__option-name">{{ option.name | escape }}</legend>
+                    <div class="yk-product__option-values">
+                      {%- for value in option.values -%}
+                        <label class="yk-product__option-value{% unless value.available %} is-unavailable{% endunless %}">
+                          <input
+                            type="radio"
+                            name="{{ section.id }}-{{ option.position }}"
+                            value="{{ value | escape }}"
+                            {% if option.selected_value == value %}checked{% endif %}
+                            data-yk-option="{{ forloop.parentloop.index0 }}"
+                          >
+                          <span>{{ value | escape }}</span>
+                        </label>
+                      {%- endfor -%}
+                    </div>
+                  </fieldset>
+                {%- endfor -%}
+                <script type="application/json" data-yk-variants>{{ product.variants | json }}</script>
+              </div>
+            {%- endunless -%}
+
+          {%- when 'buy_buttons' -%}
+            <div class="yk-product__buy" {{ block.shopify_attributes }} data-yk-buy>
+              <div class="yk-product__buy-row" data-yk-buy-available{% unless current_variant.available %} hidden{% endunless %}>
+                {%- if block.settings.show_quantity -%}
+                  <div class="yk-product__qty" data-yk-qty>
+                    <button type="button" aria-label="{{ 'general.accessibility.quantity_subtract' | t }}" data-yk-qty-step="-1">−</button>
+                    <input type="number" name="quantity" value="1" min="1" form="{{ form_id }}" aria-label="{{ 'products.product.quantity' | t }}">
+                    <button type="button" aria-label="{{ 'general.accessibility.quantity_add' | t }}" data-yk-qty-step="1">+</button>
+                  </div>
+                {%- endif -%}
+                <button class="yk-product__button yk-product__button--primary" type="submit" form="{{ form_id }}" name="add" data-yk-add>
+                  {{ block.settings.add_label | escape }}
+                </button>
+              </div>
+              <p class="yk-product__buy-error" role="alert" hidden data-yk-buy-error></p>
+
+              {%- if block.settings.show_dynamic_checkout -%}
+                <div class="yk-product__dynamic" data-yk-buy-available{% unless current_variant.available %} hidden{% endunless %}>
+                  {%- form 'product', product, class: 'yk-product__dynamic-form' -%}
+                    <input type="hidden" name="id" value="{{ current_variant.id }}" data-yk-variant-id>
+                    {{ form | payment_button }}
+                  {%- endform -%}
+                </div>
+              {%- endif -%}
+
+              <button class="yk-product__button yk-product__button--outline" type="button" data-yk-notify-open data-yk-buy-sold-out{% if current_variant.available %} hidden{% endif %}>
+                {{ block.settings.notify_label | escape }}
+              </button>
+
+              {%- if block.settings.show_payment_terms -%}
+                <div class="yk-product__terms">
+                  {%- form 'product', product, class: 'yk-product__terms-form' -%}
+                    <input type="hidden" name="id" value="{{ current_variant.id }}" data-yk-variant-id>
+                    {{ form | payment_terms }}
+                  {%- endform -%}
+                </div>
+              {%- endif -%}
+            </div>
+
+            <dialog class="yk-notify" aria-labelledby="YkNotifyTitle-{{ section.id }}" data-yk-notify>
+              <div class="yk-notify__box">
+                <button class="yk-notify__close" type="button" aria-label="{{ 'general.accessibility.close_modal' | t }}" data-yk-notify-close>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                </button>
+                <h2 class="yk-notify__title" id="YkNotifyTitle-{{ section.id }}">{{ block.settings.notify_title | escape }}</h2>
+                {%- form 'contact', class: 'yk-notify__form', id: 'YkNotifyForm' -%}
+                  {%- if form.posted_successfully? -%}
+                    <p class="yk-notify__text" data-yk-notify-success>{{ block.settings.notify_success | escape }}</p>
+                  {%- else -%}
+                    <p class="yk-notify__text">{{ block.settings.notify_text | escape }}</p>
+                    {%- if form.errors -%}
+                      <p class="yk-notify__error" role="alert">{{ form.errors | default_errors }}</p>
+                    {%- endif -%}
+                    <label class="yk-notify__label" for="YkNotifyEmail-{{ section.id }}">{{ block.settings.notify_email_label | escape }}</label>
+                    <input class="yk-notify__input" id="YkNotifyEmail-{{ section.id }}" type="email" name="contact[email]" required autocomplete="email" placeholder="{{ block.settings.notify_placeholder | escape }}" data-yk-notify-email>
+                    <input type="hidden" name="contact[subject]" value="Back in stock request: {{ product.title | escape }}">
+                    <input type="hidden" name="contact[body]" value="Please let me know when {{ product.title | escape }} is available again. {{ shop.url }}{{ product.url }}" data-yk-notify-body>
+                    <input type="hidden" name="contact[tags]" value="back-in-stock">
+                    <button class="yk-product__button yk-product__button--primary yk-notify__submit" type="submit" disabled data-yk-notify-submit>{{ block.settings.notify_button | escape }}</button>
+                  {%- endif -%}
+                {%- endform -%}
+              </div>
+            </dialog>
+
+          {%- when 'promo' -%}
+            {%- if product.available or block.settings.show_when_sold_out -%}
+              <div
+                class="yk-product__promo"
+                style="--yk-promo-bg: url('{% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 1200 }}{% else %}{{ 'yk-product-promo.jpg' | asset_url }}{% endif %}');"
+                {{ block.shopify_attributes }}
+              >
+                {%- if block.settings.icon != 'none' -%}{% render 'yk-icon', icon: block.settings.icon %}{%- endif -%}
+                <div class="yk-product__promo-text">
+                  {%- if block.settings.title != blank -%}<p class="yk-product__promo-title">{{ block.settings.title | escape }}</p>{%- endif -%}
+                  {%- if block.settings.text != blank -%}<p>{{ block.settings.text | escape }}</p>{%- endif -%}
+                </div>
+                {%- if block.settings.link != blank -%}
+                  <a class="yk-product__promo-link" href="{{ block.settings.link }}"><span class="visually-hidden">{{ block.settings.title | escape }}</span></a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+          {%- when 'info_row' -%}
+            <div class="yk-product__row" {{ block.shopify_attributes }}>
+              {%- if block.settings.icon != 'none' -%}{% render 'yk-icon', icon: block.settings.icon %}{%- endif -%}
+              <div class="yk-product__row-text">{{ block.settings.text | replace: '[free_shipping_threshold]', yk_free_shipping }}</div>
+            </div>
+
+          {%- when 'custom_liquid' -%}
+            <div class="yk-product__liquid" {{ block.shopify_attributes }}>{{ block.settings.custom_liquid }}</div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Product",
+  "class": "yk-product-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_breadcrumbs", "label": "Show breadcrumbs", "default": true },
+    { "type": "text", "id": "zoom_label", "label": "Zoom button label", "default": "Zoom image" },
+    { "type": "text", "id": "more_media_label", "label": "More images button label", "default": "Show all images" },
+    { "type": "range", "id": "low_stock_threshold", "label": "Low stock threshold", "min": 1, "max": 50, "step": 1, "default": 10, "info": "Shows the low stock note when tracked inventory is at or below this number" },
+    { "type": "header", "content": "Badges", "info": "Shown on products that have the matching tag" },
+    { "type": "text", "id": "badge_1_tag", "label": "Badge 1 product tag", "default": "Pre-Seasoned" },
+    { "type": "text", "id": "badge_1_label", "label": "Badge 1 label", "default": "Pre-Seasoned" },
+    { "type": "color", "id": "badge_1_color", "label": "Badge 1 background", "default": "#235fa3" },
+    { "type": "color", "id": "badge_1_text_color", "label": "Badge 1 text", "default": "#ffffff" },
+    { "type": "text", "id": "badge_2_tag", "label": "Badge 2 product tag", "default": "Bestseller" },
+    { "type": "text", "id": "badge_2_label", "label": "Badge 2 label", "default": "Best Seller" },
+    { "type": "color", "id": "badge_2_color", "label": "Badge 2 background", "default": "#eecaa1" },
+    { "type": "color", "id": "badge_2_text_color", "label": "Badge 2 text", "default": "#000000" }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "badges",
+      "name": "Badges and stock",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "low_stock_text", "label": "Low stock text", "default": "Only a few left" },
+        { "type": "text", "id": "sold_out_text", "label": "Sold out badge", "default": "Sold Out" }
+      ]
+    },
+    { "type": "title", "name": "Title", "limit": 1, "settings": [] },
+    {
+      "type": "price",
+      "name": "Price and rating",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_compare_price", "label": "Show compare-at price", "default": true },
+        { "type": "text", "id": "reviews_anchor", "label": "Reviews anchor", "default": "judgeme_product_reviews", "info": "Id of the reviews block the stars link to" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "metafield", "label": "Product metafield", "info": "namespace.key, for example custom.card_subtitle. Used when the product has a value" },
+        { "type": "richtext", "id": "text", "label": "Fallback text" },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "options": [
+            { "value": "body", "label": "Body" },
+            { "value": "subtitle", "label": "Subtitle" }
+          ],
+          "default": "body"
+        }
+      ]
+    },
+    {
+      "type": "callout",
+      "name": "Callout",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "tag", "label": "Tag" }
+          ],
+          "default": "leaf"
+        },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Your order ships carbon neutral</p>" }
+      ]
+    },
+    { "type": "variant_picker", "name": "Variant picker", "limit": 1, "settings": [ { "type": "paragraph", "content": "Shown only for products with several variants" } ] },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "add_label", "label": "Add to cart label", "default": "Add to cart" },
+        { "type": "checkbox", "id": "show_quantity", "label": "Show quantity selector", "default": false },
+        { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show dynamic checkout button", "default": true },
+        { "type": "checkbox", "id": "show_payment_terms", "label": "Show installments message", "default": true, "info": "Shown when Shop Pay Installments is enabled in the store" },
+        { "type": "header", "content": "Sold out" },
+        { "type": "text", "id": "notify_label", "label": "Notify button", "default": "Notify Me When Available" },
+        { "type": "text", "id": "notify_title", "label": "Popup heading", "default": "Notify me when available" },
+        { "type": "textarea", "id": "notify_text", "label": "Popup text", "default": "This item is currently out of stock. Enter your email below and we’ll let you know as soon as it’s available again." },
+        { "type": "text", "id": "notify_email_label", "label": "Email label", "default": "Enter your email" },
+        { "type": "text", "id": "notify_placeholder", "label": "Email placeholder", "default": "Your Email" },
+        { "type": "text", "id": "notify_button", "label": "Submit button", "default": "Notify Me" },
+        { "type": "text", "id": "notify_success", "label": "Success message", "default": "Thanks! We’ll email you as soon as it’s back in stock." },
+        { "type": "paragraph", "content": "Requests are sent to the store email through the contact form, tagged back-in-stock." }
+      ]
+    },
+    {
+      "type": "promo",
+      "name": "Promo box",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "tag", "label": "Tag" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "leaf", "label": "Leaf" }
+          ],
+          "default": "tag"
+        },
+        { "type": "text", "id": "title", "label": "Heading", "default": "Bigger markdowns" },
+        { "type": "text", "id": "text", "label": "Text", "default": "We've refreshed our sale with discounts of up to 50% on select styles." },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "image_picker", "id": "image", "label": "Background image" },
+        { "type": "checkbox", "id": "show_when_sold_out", "label": "Show when sold out", "default": false }
+      ]
+    },
+    {
+      "type": "info_row",
+      "name": "Info row",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "returns-off", "label": "Returns" },
+            { "value": "handshake", "label": "Help" },
+            { "value": "question", "label": "Question" },
+            { "value": "truck", "label": "Shipping" },
+            { "value": "shield", "label": "Secure payment" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "tag", "label": "Tag" }
+          ],
+          "default": "truck"
+        },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Free shipping on orders over [free_shipping_threshold]</p>", "info": "[free_shipping_threshold] shows Theme settings > Cart > Free shipping threshold" }
+      ]
+    },
+    { "type": "custom_liquid", "name": "Custom liquid", "settings": [ { "type": "liquid", "id": "custom_liquid", "label": "Custom liquid" } ] }
+  ]
+}
+{% endschema %}
