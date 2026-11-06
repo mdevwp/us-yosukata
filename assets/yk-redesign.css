@@ -434,3 +434,66 @@ body.yk-redesign .yk-header .header__row-mobile .header__icon-touch--account { d
   -webkit-backdrop-filter: blur(12.5px);
   backdrop-filter: blur(12.5px);
 }
+
+/* Cart count: small badge on the top right corner of the cart icon, not over it */
+body.yk-redesign .yk-header [data-js-cart-count] {
+  top: -7px;
+  right: -9px;
+  left: auto;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-family: var(--yk-font-heading);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+}
+body.yk-redesign .yk-header .header__icon-touch:has([data-js-cart-count]) { position: relative; overflow: visible; }
+
+/* Empty cart: the button text was white on white */
+.yk-redesign .quick-cart__empty-state-promo-button .btn,
+.yk-redesign .cart__empty .btn {
+  border: 0;
+  border-radius: 28px;
+  background: var(--yk-red);
+  color: #fff;
+  transition: background-color .2s ease;
+}
+.yk-redesign .quick-cart__empty-state-promo-button .btn .btn-text,
+.yk-redesign .cart__empty .btn .btn-text { color: #fff; }
+.yk-redesign .quick-cart__empty-state-promo-button .btn .btn-borders,
+.yk-redesign .quick-cart__empty-state-promo-button .btn .btn-anim,
+.yk-redesign .cart__empty .btn .btn-borders,
+.yk-redesign .cart__empty .btn .btn-anim { display: none; }
+.yk-redesign .quick-cart__empty-state-promo-button .btn:hover,
+.yk-redesign .cart__empty .btn:hover { background: #8f001f; }
+
+/* Text cursor in our colours instead of the system blue */
+.yk-redesign input,
+.yk-redesign textarea { caret-color: var(--yk-black, #000); }
+.yk-redesign .yk-footer input,
+.yk-redesign .yk-footer textarea { caret-color: #fff; }
+
+/* Links with an underline lose it on hover */
+.yk-footer__note a,
+.yk-footer__powered a,
+.yk-footer__copyright a {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 2px;
+  transition: text-decoration-color .2s ease;
+}
+@media (hover: hover) {
+  .yk-footer__note a:hover,
+  .yk-footer__powered a:hover,
+  .yk-footer__copyright a:hover { text-decoration-color: transparent; }
+}
+
+/* Footer social icons: same zoom on hover as the social section above */
+.yk-footer__social a { transition: transform .2s ease; }
+@media (hover: hover) {
+  .yk-footer__social a:hover { transform: scale(1.06); }
+}

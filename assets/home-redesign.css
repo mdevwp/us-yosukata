@@ -1735,3 +1735,59 @@
   }
   .home-categories__panel a:focus-visible { outline: 2px solid var(--yk-red); outline-offset: -4px; }
 }
+
+/* Buttons and FAQ hover states */
+.yk-community__label { transition: background-color .2s ease, color .2s ease; }
+.yk-faq__question { transition: color .2s ease; }
+.yk-faq__toggle { transition: background-color .2s ease; }
+.yk-faq__toggle::before,
+.yk-faq__toggle::after { transition: background-color .2s ease, opacity .2s ease; }
+@media (hover: hover) {
+  .yk-community__tile:hover .yk-community__label { background: var(--yk-red); color: #fff; }
+  .yk-faq__question:hover { color: var(--yk-red); }
+  .yk-faq__question:hover .yk-faq__toggle::before,
+  .yk-faq__question:hover .yk-faq__toggle::after { background: var(--yk-red); }
+}
+@media (hover: hover) and (min-width: 960px) {
+  .yk-faq__question:hover { color: var(--yk-black); }
+  .yk-faq__question:hover .yk-faq__toggle { background: var(--yk-red); }
+  .yk-faq__question:hover .yk-faq__toggle::before,
+  .yk-faq__question:hover .yk-faq__toggle::after { background: #fff; }
+}
+
+/* Slider dots: active and inactive are the same 8px circle */
+.yk-season__dot,
+.yk-reviews__dot,
+.yk-set__dot,
+.yk-community__dot,
+.yk-chefs__dot {
+  width: 8px;
+  height: 8px;
+  border: 1px solid currentColor;
+  outline: 0;
+  transition: background-color .2s ease;
+}
+.yk-season__dot,
+.yk-reviews__dot,
+.yk-community__dot { color: #fff; }
+.yk-set__dot,
+.yk-chefs__dot { color: var(--yk-ink); }
+.yk-season__dot.is-active,
+.yk-reviews__dot.is-active,
+.yk-set__dot.is-active,
+.yk-community__dot.is-active,
+.yk-chefs__dot.is-active { background: currentColor; }
+
+/* Tablet: the third feature card sits in the middle, under the centred title */
+@media (min-width: 600px) and (max-width: 959px) {
+  .yk-features__grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc((100% - 8px) / 2);
+  }
+}
+
+/* Narrow phones: a manual line break in the chef quote leaves a single word on its own line */
+@media (max-width: 389px) {
+  .yk-chefs__text br { display: none; }
+}
