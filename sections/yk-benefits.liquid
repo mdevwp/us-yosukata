@@ -18,8 +18,8 @@
           <span class="yk-benefits__mobile">{{ title_mobile | escape }}</span>
         </h3>
         <div class="yk-benefits__text">
-          <span class="yk-benefits__desktop">{{ block.settings.text | escape | newline_to_br }}</span>
-          <span class="yk-benefits__mobile">{{ text_mobile | escape | newline_to_br }}</span>
+          <span class="yk-benefits__desktop">{% render 'yk-text-nowrap-numbers', text: block.settings.text %}</span>
+          <span class="yk-benefits__mobile">{% render 'yk-text-nowrap-numbers', text: text_mobile %}</span>
         </div>
       </li>
     {%- endfor -%}

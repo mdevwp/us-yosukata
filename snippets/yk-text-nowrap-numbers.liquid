@@ -1,0 +1,16 @@
+{%- comment -%}
+  Outputs plain text as HTML: escaped, line breaks kept as <br>, and a number (any word starting with a digit) glued to the word
+  after it with a non-breaking space, so "4 business days" never splits after the "4".
+  Usage: render 'yk-text-nowrap-numbers', text: block.settings.text
+{%- endcomment -%}
+{%- assign yk_lines = text | strip | newline_to_br | split: '<br />' -%}
+{%- for yk_line in yk_lines -%}
+  {%- assign yk_words = yk_line | strip | split: ' ' -%}
+  {%- for yk_word in yk_words -%}
+    {%- assign yk_first = yk_word | slice: 0 -%}
+    {{- yk_word | escape -}}
+    {%- unless forloop.last -%}{%- if yk_first != blank and '0123456789' contains yk_first -%}&nbsp;{%- else %} {% endif -%}{%- endunless -%}
+  {%- endfor -%}
+  {%- unless forloop.last -%}<br>
+{% endunless -%}
+{%- endfor -%}
