@@ -497,3 +497,13 @@ body.yk-redesign .yk-header .header__icon-touch:has([data-js-cart-count]) { posi
 @media (hover: hover) {
   .yk-footer__social a:hover { transform: scale(1.06); }
 }
+
+/* Shopify adds an invisible hCaptcha block to contact and newsletter forms on first focus.
+   Keep it out of the form layout, otherwise the form grows and the field jumps. */
+.yk-redesign form:has(> .h-captcha) { position: relative; }
+.yk-redesign form > .h-captcha {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
