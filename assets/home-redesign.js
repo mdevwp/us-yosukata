@@ -343,6 +343,7 @@ function initYkDragScroll(track) {
   let startScroll = 0;
   let pointerId = null;
   let moved = false;
+  let glide = 0;
 
   const snapToNearest = () => {
     const items = Array.from(track.children);
@@ -355,13 +356,29 @@ function initYkDragScroll(track) {
     index = Math.max(0, Math.min(items.length - 1, index));
     const target = index * step;
     track.classList.remove('yk-is-dragging');
-    track.scrollTo({ left: Math.min(target, track.scrollWidth - track.clientWidth), behavior: 'smooth' });
+    // Glide to the slide with snapping off, then turn snapping back on
+    const from = track.scrollLeft;
+    const to = Math.min(target, track.scrollWidth - track.clientWidth);
+    const started = performance.now();
+    const duration = 300;
+    const frame = (now) => {
+      const progress = Math.min(1, (now - started) / duration);
+      const eased = 1 - (1 - progress) ** 3;
+      track.scrollLeft = from + (to - from) * eased;
+      if (progress < 1) {
+        glide = window.requestAnimationFrame(frame);
+      } else {
+        track.classList.remove('yk-no-snap');
+      }
+    };
+    glide = window.requestAnimationFrame(frame);
   };
 
   track.addEventListener('pointerdown', (event) => {
     if (event.pointerType !== 'mouse' || event.button !== 0) return;
     if (track.scrollWidth <= track.clientWidth + 2) return;
     if (event.target.closest('button, input, select, textarea, form')) return;
+    window.cancelAnimationFrame(glide);
     pointerId = event.pointerId;
     startX = event.clientX;
     startScroll = track.scrollLeft;
@@ -373,6 +390,7 @@ function initYkDragScroll(track) {
     if (!moved && Math.abs(delta) < 6) return;
     if (!moved) {
       moved = true;
+      track.classList.add('yk-no-snap');
       try { track.setPointerCapture(pointerId); } catch (error) { /* pointer already released */ }
       track.classList.add('yk-is-dragging');
     }
@@ -382,6 +400,7 @@ function initYkDragScroll(track) {
     if (pointerId !== event.pointerId) return;
     pointerId = null;
     if (moved) snapToNearest();
+    else track.classList.remove('yk-no-snap');
   };
   track.addEventListener('pointerup', end);
   track.addEventListener('pointercancel', end);

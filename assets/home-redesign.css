@@ -1697,7 +1697,8 @@
 }
 
 /* Mouse drag on sliders */
-.yk-is-dragging { cursor: grabbing; scroll-snap-type: none !important; scroll-behavior: auto !important; user-select: none; }
+.yk-is-dragging { cursor: grabbing; scroll-behavior: auto !important; user-select: none; }
+.yk-no-snap { scroll-snap-type: none !important; }
 .yk-is-dragging * { pointer-events: none; }
 [data-yk-hero] .yk-hero__slides { touch-action: pan-y; }
 .yk-hero.yk-is-dragging { cursor: grabbing; }
