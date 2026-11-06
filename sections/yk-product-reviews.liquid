@@ -1,0 +1,74 @@
+{%- comment -%}
+  Reviews in the redesign style: our summary header around the Judge.me review widget (added as an app block).
+  The sort menu and "Write Review" button drive the controls inside the Judge.me widget.
+{%- endcomment -%}
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign rating_value = 0
+  if rating_count > 0
+    assign rating_value = rating.rating | times: 5.0 | divided_by: rating.scale_max
+  endif
+-%}
+
+<section class="yk-reviews-pdp" id="{{ section.settings.anchor | default: 'reviews' }}" aria-labelledby="YkReviewsTitle-{{ section.id }}" data-yk-pdp-reviews>
+  <div class="yk-reviews-pdp__inner">
+    <h2 class="visually-hidden" id="YkReviewsTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+
+    {%- if rating_count > 0 -%}
+      <div class="yk-reviews-pdp__header">
+        <div class="yk-reviews-pdp__summary">
+          <p class="yk-reviews-pdp__average">
+            <span class="yk-reviews-pdp__score">{{ rating_value | round: 2 }}</span>
+            <span class="yk-reviews-pdp__stars" role="img" aria-label="{{ rating_value | round: 1 }} / 5">
+              {%- for i in (1..5) -%}
+                {%- liquid
+                  assign star_fill = rating_value | minus: forloop.index0 | times: 100 | at_least: 0 | at_most: 100 | round
+                -%}
+                <span class="yk-reviews-pdp__star" style="--yk-star-fill: {{ star_fill }}%;">{% render 'yk-icon', icon: 'star' %}{% render 'yk-icon', icon: 'star' %}</span>
+              {%- endfor -%}
+            </span>
+          </p>
+          <p class="yk-reviews-pdp__count">{{ section.settings.count_text | replace: '[count]', rating_count }}</p>
+        </div>
+
+        <div class="yk-reviews-pdp__actions">
+          <div class="yk-reviews-pdp__sort" hidden data-yk-reviews-sort-wrap>
+            <label class="visually-hidden" for="YkReviewsSort-{{ section.id }}">{{ section.settings.sort_label | escape }}</label>
+            <select id="YkReviewsSort-{{ section.id }}" data-yk-reviews-sort>
+              <option value="" disabled selected hidden>{{ section.settings.sort_label | escape }}</option>
+            </select>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+          <button class="yk-reviews-pdp__write" type="button" hidden data-yk-reviews-write>{{ section.settings.write_label | escape }}</button>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="yk-reviews-pdp__widget">
+      {%- for block in section.blocks -%}
+        {% render block %}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "YK Product reviews",
+  "class": "yk-reviews-pdp-section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading (for screen readers)", "default": "Customer reviews" },
+    { "type": "text", "id": "count_text", "label": "Review count text", "default": "Based on [count] reviews" },
+    { "type": "text", "id": "sort_label", "label": "Sort label", "default": "Sort by" },
+    { "type": "text", "id": "write_label", "label": "Write review label", "default": "Write Review", "info": "Shown when the review app offers a write-a-review form" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "reviews" }
+  ],
+  "blocks": [
+    { "type": "@app" }
+  ],
+  "presets": [
+    { "name": "YK Product reviews" }
+  ]
+}
+{% endschema %}

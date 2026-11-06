@@ -378,20 +378,10 @@
             "custom_css": "",
             "text_color": "#333333"
           }
-        },
-        "judge_me_reviews_review_widget_8xLCek": {
-          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "settings": {
-            "review_data": "sample_data",
-            "max_width": 1200,
-            "show_shop_reviews": false,
-            "empty_state": "hide_widget"
-          }
         }
       },
       "block_order": [
-        "storerank_ai_faqs_f4WAtc",
-        "judge_me_reviews_review_widget_8xLCek"
+        "storerank_ai_faqs_f4WAtc"
       ],
       "settings": {
         "heading": "",
@@ -808,12 +798,37 @@
       "settings": {
         "aria_label": "Why shop with us"
       }
+    },
+    "yk_reviews": {
+      "type": "yk-product-reviews",
+      "blocks": {
+        "judge_me_reviews_review_widget_8xLCek": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "hide_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_8xLCek"
+      ],
+      "settings": {
+        "title": "Customer reviews",
+        "count_text": "Based on [count] reviews",
+        "sort_label": "Sort by",
+        "write_label": "Write Review",
+        "anchor": "reviews"
+      }
     }
   },
   "order": [
     "yk_product",
     "yk_details",
     "yk_recs",
+    "yk_reviews",
     "1763379844eb994b3c",
     "yk_benefits",
     "main",

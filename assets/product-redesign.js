@@ -281,3 +281,53 @@ document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-details]').forEach(initYkDetails);
   event.target.querySelectorAll('[data-yk-recs]').forEach(initYkRecs);
 });
+
+// Reviews: our sort menu and write button drive the matching controls inside the Judge.me widget
+function initYkPdpReviews(section) {
+  if (!section || section.dataset.ready) return;
+  section.dataset.ready = 'true';
+
+  const sortWrap = section.querySelector('[data-yk-reviews-sort-wrap]');
+  const sort = section.querySelector('[data-yk-reviews-sort]');
+  const write = section.querySelector('[data-yk-reviews-write]');
+  const widget = section.querySelector('.jdgm-widget');
+  if (!widget) return;
+
+  const findWrite = () => Array.from(widget.querySelectorAll('button, a')).find((el) => /write/i.test(`${el.className} ${el.textContent}`));
+
+  const connect = () => {
+    const source = widget.querySelector('.jm-sort-filter__select, .jdgm-sort-dropdown');
+    if (source && sort && !sort.dataset.ready) {
+      sort.dataset.ready = 'true';
+      Array.from(source.options).forEach((option) => sort.add(new Option(option.textContent.trim(), option.value)));
+      sort.addEventListener('change', () => {
+        source.value = sort.value;
+        source.dispatchEvent(new Event('change', { bubbles: true }));
+      });
+      sortWrap.hidden = false;
+    }
+    const writeTarget = findWrite();
+    if (write) write.hidden = !writeTarget;
+    return Boolean(source);
+  };
+
+  if (write) {
+    write.addEventListener('click', () => {
+      const target = findWrite();
+      if (target) target.click();
+    });
+  }
+
+  if (!connect()) {
+    const observer = new MutationObserver(() => {
+      if (connect()) observer.disconnect();
+    });
+    observer.observe(widget, { childList: true, subtree: true });
+    window.setTimeout(() => observer.disconnect(), 15000);
+  }
+}
+
+document.querySelectorAll('[data-yk-pdp-reviews]').forEach(initYkPdpReviews);
+document.addEventListener('shopify:section:load', (event) => {
+  event.target.querySelectorAll('[data-yk-pdp-reviews]').forEach(initYkPdpReviews);
+});
