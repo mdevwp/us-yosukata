@@ -424,3 +424,13 @@ body.yk-redesign .yk-header .header__row-mobile .header__icon-touch--account { d
   .yk-redesign .quick-search__no-results-header { font-size: 24px; line-height: 32px; }
   .yk-redesign .quick-search__no-results { font-size: 16px; line-height: 24px; }
 }
+
+/* Drawers and popups (search, cart, menus): page behind is dimmed 20% and blurred, as in the design */
+.yk-redesign .quick-search__overlay,
+.yk-redesign .quick-cart__overlay,
+.yk-redesign .drawer-menu__overlay,
+.yk-redesign .mobile-drawer__overlay {
+  background-color: rgba(0, 0, 0, .2);
+  -webkit-backdrop-filter: blur(12.5px);
+  backdrop-filter: blur(12.5px);
+}
