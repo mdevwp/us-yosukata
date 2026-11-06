@@ -347,7 +347,13 @@ function initYkDragScroll(track) {
   const snapToNearest = () => {
     const items = Array.from(track.children);
     const step = items[1] ? items[1].offsetLeft - items[0].offsetLeft : track.clientWidth;
-    const target = Math.round(track.scrollLeft / (step || 1)) * step;
+    const startIndex = Math.round(startScroll / (step || 1));
+    let index = Math.round(track.scrollLeft / (step || 1));
+    // A short drag still moves one slide in the drag direction (wide slides need this)
+    const dragged = track.scrollLeft - startScroll;
+    if (index === startIndex && Math.abs(dragged) > 50) index += dragged > 0 ? 1 : -1;
+    index = Math.max(0, Math.min(items.length - 1, index));
+    const target = index * step;
     track.classList.remove('yk-is-dragging');
     track.scrollTo({ left: Math.min(target, track.scrollWidth - track.clientWidth), behavior: 'smooth' });
   };
