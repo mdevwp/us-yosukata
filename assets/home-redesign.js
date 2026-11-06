@@ -17,7 +17,14 @@ function initHomeCategorySwitcher(section) {
     panel.setAttribute('aria-labelledby', tab.id);
   }
   tabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => activate(tab));
+    tab.addEventListener('click', () => {
+      // Desktop: tabs switch on hover, so a click opens the category page
+      if (window.matchMedia('(min-width: 960px)').matches && tab.dataset.categoryUrl) {
+        window.location.href = tab.dataset.categoryUrl;
+        return;
+      }
+      activate(tab);
+    });
     tab.addEventListener('pointerenter', (event) => {
       if (event.pointerType === 'mouse') activate(tab);
     });
@@ -43,8 +50,18 @@ function initYkHero(section) {
   section.dataset.ykHeroReady = 'true';
   let index = 0;
   let timer;
-  function show(next) {
-    index = (next + slides.length) % slides.length;
+  const prev = section.querySelector('[data-yk-hero-prev]');
+  const next = section.querySelector('[data-yk-hero-next]');
+  // Arrows and swipes stop at the first and last slide; autoplay loops
+  function go(target) {
+    if (target < 0 || target > slides.length - 1) return;
+    show(target);
+    restart();
+  }
+  function show(target) {
+    index = (target + slides.length) % slides.length;
+    if (prev) prev.disabled = index === 0;
+    if (next) next.disabled = index === slides.length - 1;
     slides.forEach((slide, i) => {
       const active = i === index;
       slide.classList.toggle('is-active', active);
@@ -57,16 +74,34 @@ function initYkHero(section) {
     clearInterval(timer);
     if (section.dataset.autoplay === 'true') timer = setInterval(() => show(index + 1), Number(section.dataset.autoplayDelay) || 6000);
   }
-  section.querySelector('[data-yk-hero-prev]')?.addEventListener('click', () => { show(index - 1); restart(); });
-  section.querySelector('[data-yk-hero-next]')?.addEventListener('click', () => { show(index + 1); restart(); });
+  prev?.addEventListener('click', () => go(index - 1));
+  next?.addEventListener('click', () => go(index + 1));
+  // Mouse drag on desktop
+  let dragX = null;
+  section.addEventListener('pointerdown', (event) => {
+    if (event.pointerType !== 'mouse' || event.button !== 0 || event.target.closest('a, button')) return;
+    dragX = event.clientX;
+  });
+  window.addEventListener('pointerup', (event) => {
+    if (dragX === null) return;
+    const delta = event.clientX - dragX;
+    dragX = null;
+    section.classList.remove('yk-is-dragging');
+    if (Math.abs(delta) > 40) go(index + (delta < 0 ? 1 : -1));
+  });
+  section.addEventListener('pointermove', (event) => {
+    if (dragX !== null && Math.abs(event.clientX - dragX) > 5) section.classList.add('yk-is-dragging');
+  });
+  section.addEventListener('dragstart', (event) => event.preventDefault());
   let startX = null;
   section.addEventListener('touchstart', (event) => { startX = event.touches[0].clientX; }, { passive: true });
   section.addEventListener('touchend', (event) => {
     if (startX === null) return;
     const delta = event.changedTouches[0].clientX - startX;
     startX = null;
-    if (Math.abs(delta) > 40) { show(index + (delta < 0 ? 1 : -1)); restart(); }
+    if (Math.abs(delta) > 40) go(index + (delta < 0 ? 1 : -1));
   });
+  show(0);
   restart();
 }
 document.querySelectorAll('[data-yk-hero]').forEach(initYkHero);
@@ -110,6 +145,7 @@ function initYkOffers(section) {
 
   prev.addEventListener('click', () => goTo(-1));
   next.addEventListener('click', () => goTo(1));
+  initYkDragScroll(track);
   track.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
   update();
@@ -298,3 +334,64 @@ document.addEventListener('toggle', (event) => {
     if (other !== item) other.open = false;
   });
 }, true);
+
+// Mouse drag for the scrolling sliders (touch devices already swipe natively)
+function initYkDragScroll(track) {
+  if (track.dataset.ykDrag) return;
+  track.dataset.ykDrag = 'true';
+  let startX = 0;
+  let startScroll = 0;
+  let pointerId = null;
+  let moved = false;
+
+  const snapToNearest = () => {
+    const items = Array.from(track.children);
+    const step = items[1] ? items[1].offsetLeft - items[0].offsetLeft : track.clientWidth;
+    const target = Math.round(track.scrollLeft / (step || 1)) * step;
+    track.classList.remove('yk-is-dragging');
+    track.scrollTo({ left: Math.min(target, track.scrollWidth - track.clientWidth), behavior: 'smooth' });
+  };
+
+  track.addEventListener('pointerdown', (event) => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    if (track.scrollWidth <= track.clientWidth + 2) return;
+    if (event.target.closest('button, input, select, textarea, form')) return;
+    pointerId = event.pointerId;
+    startX = event.clientX;
+    startScroll = track.scrollLeft;
+    moved = false;
+  });
+  track.addEventListener('pointermove', (event) => {
+    if (pointerId !== event.pointerId) return;
+    const delta = event.clientX - startX;
+    if (!moved && Math.abs(delta) < 6) return;
+    if (!moved) {
+      moved = true;
+      try { track.setPointerCapture(pointerId); } catch (error) { /* pointer already released */ }
+      track.classList.add('yk-is-dragging');
+    }
+    track.scrollLeft = startScroll - delta;
+  });
+  const end = (event) => {
+    if (pointerId !== event.pointerId) return;
+    pointerId = null;
+    if (moved) snapToNearest();
+  };
+  track.addEventListener('pointerup', end);
+  track.addEventListener('pointercancel', end);
+  // A drag must not open the product the mouse was released on
+  track.addEventListener('click', (event) => {
+    if (moved) {
+      event.preventDefault();
+      event.stopPropagation();
+      moved = false;
+    }
+  }, true);
+  track.addEventListener('dragstart', (event) => event.preventDefault());
+}
+
+const ykDragTracks = '[data-yk-offers-track], [data-yk-reviews-track], [data-yk-set-track], [data-yk-chefs-track], [data-yk-season-track], [data-yk-community-track]';
+document.querySelectorAll(ykDragTracks).forEach(initYkDragScroll);
+document.addEventListener('shopify:section:load', (event) => {
+  event.target.querySelectorAll(ykDragTracks).forEach(initYkDragScroll);
+});

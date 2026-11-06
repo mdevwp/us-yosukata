@@ -22,7 +22,7 @@
         {%- if settings[social_setting] != blank -%}
           <li>
             <a href="{{ settings[social_setting] }}" target="_blank" rel="noopener" aria-label="{{ social | replace: 'twitter', 'X' | capitalize }}">
-              {% render 'icon', icon: social %}
+              {%- if social == 'instagram' -%}{% render 'yk-icon', icon: social %}{%- else -%}{% render 'icon', icon: social %}{%- endif -%}
             </a>
           </li>
         {%- endif -%}
