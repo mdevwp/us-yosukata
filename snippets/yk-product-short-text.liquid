@@ -1,0 +1,42 @@
+{%- comment -%}
+  Short product description: the custom.short_description metafield when filled, otherwise
+  the first plain paragraph of the product description. Paragraphs that start with a bold
+  label (for example "Fit note:" or "Important compatibility note:") are skipped.
+{%- endcomment -%}
+{%- liquid
+  assign yk_meta = product.metafields.custom.short_description
+  if yk_meta != blank
+    if yk_meta.type == 'rich_text_field'
+      echo yk_meta | metafield_tag
+    else
+      echo yk_meta.value | escape | newline_to_br | prepend: '<p>' | append: '</p>'
+    endif
+  else
+    assign yk_found = ''
+    assign yk_chunks = product.description | split: '<p'
+    for yk_chunk in yk_chunks
+      if forloop.first
+        continue
+      endif
+      assign yk_open = yk_chunk | slice: 0
+      unless yk_open == '>' or yk_open == ' '
+        continue
+      endunless
+      assign yk_inner = yk_chunk | split: '</p>' | first
+      assign yk_inner_parts = yk_inner | split: '>'
+      assign yk_inner = yk_inner_parts | slice: 1, 999 | join: '>' | strip
+      assign yk_head = yk_inner | slice: 0, 7
+      if yk_head == '<strong' or yk_head == '<b>'
+        continue
+      endif
+      assign yk_text = yk_inner | strip_html | strip
+      if yk_text != blank
+        assign yk_found = yk_text
+        break
+      endif
+    endfor
+    if yk_found != blank
+      echo yk_found | truncatewords: 45 | escape | prepend: '<p>' | append: '</p>'
+    endif
+  endif
+-%}

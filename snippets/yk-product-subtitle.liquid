@@ -1,0 +1,63 @@
+{%- comment -%}
+  Short product subtitle, for example: 14-inch · Pre-Seasoned · Round Bottom
+  Uses the custom.card_subtitle (or custom.subtitle) metafield when filled, otherwise builds it from tags.
+  Params: product,
+  metafield_only (true on cards: product titles already carry size and bottom, so no tag subtitle there).
+{%- endcomment -%}
+{%- liquid
+  assign yk_subtitle = product.metafields.custom.card_subtitle.value | default: product.metafields.custom.subtitle.value
+  if yk_subtitle != blank
+    echo yk_subtitle | escape
+  elsif metafield_only != true
+
+  assign yk_size = ''
+  assign yk_finish = ''
+  assign yk_bottom = ''
+  assign yk_size_count = 1
+  for yk_tag in product.tags
+    assign yk_t = yk_tag | downcase | strip
+    unless yk_t contains 'fits' or yk_t contains ' x '
+      assign yk_first = yk_t | slice: 0
+      if '0123456789' contains yk_first
+        assign yk_tail = yk_t | slice: -5, 5
+        if yk_tail == '-inch' or yk_tail == ' inch'
+          assign yk_this_size = yk_t | remove: '-inch' | remove: ' inch' | strip | append: '-inch'
+          if yk_size == ''
+            assign yk_size = yk_this_size
+          elsif yk_size != yk_this_size
+            assign yk_size_count = 2
+          endif
+        endif
+      endif
+    endunless
+    case yk_t
+      when 'pre-seasoned'
+        assign yk_finish = 'Pre-Seasoned'
+      when 'unseasoned'
+        assign yk_finish = 'Unseasoned'
+      when 'flat bottom'
+        assign yk_bottom = 'Flat Bottom'
+      when 'round bottom'
+        assign yk_bottom = 'Round Bottom'
+    endcase
+  endfor
+  comment
+    Several different sizes (for example a chopsticks set): a single size would be misleading
+  endcomment
+  if yk_size_count == 2
+    assign yk_size = ''
+  endif
+
+  assign yk_parts = yk_size | append: '|' | append: yk_finish | append: '|' | append: yk_bottom | split: '|'
+  assign yk_out = ''
+  for yk_part in yk_parts
+    if yk_part != blank
+      if yk_out != ''
+        assign yk_out = yk_out | append: ' · '
+      endif
+      assign yk_out = yk_out | append: yk_part
+    endif
+  endfor
+  echo yk_out | escape
+  endif
+-%}

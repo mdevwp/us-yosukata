@@ -60,7 +60,6 @@
           {%- if product != blank -%}
             {%- liquid
               assign product_tags = product.tags | join: '|' | downcase | split: '|'
-              assign subtitle = product.metafields.custom.card_subtitle.value | default: product.metafields.custom.subtitle.value
               assign card_title = product.metafields.custom.card_title.value | default: product.title
               assign card_image = product.metafields.custom.card_image.value | default: product.featured_media
               assign rating = product.metafields.reviews.rating.value
@@ -74,6 +73,7 @@
                 assign has_badge_2 = true
               endif
             -%}
+            {%- capture subtitle -%}{% render 'yk-product-subtitle', product: product, metafield_only: true %}{%- endcapture -%}
             <li class="yk-set__product">
               <a class="yk-set__card" href="{{ product.url }}">
                 {%- if has_badge_1 or has_badge_2 -%}
@@ -101,7 +101,7 @@
               </a>
               <div class="yk-set__info">
                 {%- if subtitle != blank -%}
-                  <p class="yk-set__product-subtitle">{{ subtitle | escape }}</p>
+                  <p class="yk-set__product-subtitle">{{ subtitle }}</p>
                 {%- endif -%}
                 <h3 class="yk-set__product-title"><a href="{{ product.url }}">{{ card_title | escape }}</a></h3>
                 <p class="yk-set__price">{{ product.price | money }}</p>

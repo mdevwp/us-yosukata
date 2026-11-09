@@ -6,7 +6,6 @@
 {%- liquid
   assign product_tags = product.tags | join: '|' | downcase | split: '|'
   assign variant = product.selected_or_first_available_variant
-  assign subtitle = product.metafields.custom.card_subtitle.value | default: product.metafields.custom.subtitle.value
   assign card_title = product.metafields.custom.card_title.value | default: product.title
   assign card_image = product.metafields.custom.card_image.value | default: product.featured_media
   assign rating = product.metafields.reviews.rating.value
@@ -20,6 +19,7 @@
     assign has_badge_2 = true
   endif
 -%}
+{%- capture subtitle -%}{% render 'yk-product-subtitle', product: product, metafield_only: true %}{%- endcapture -%}
 <li class="yk-card">
   <div class="yk-card__media">
     <a class="yk-card__image-link" href="{{ product.url }}" tabindex="-1" aria-hidden="true">
@@ -82,7 +82,7 @@
 
   <div class="yk-card__info">
     {%- if subtitle != blank -%}
-      <p class="yk-card__subtitle">{{ subtitle | escape }}</p>
+      <p class="yk-card__subtitle">{{ subtitle }}</p>
     {%- endif -%}
     <h3 class="yk-card__title"><a href="{{ product.url }}">{{ card_title | escape }}</a></h3>
     <p class="yk-card__price">

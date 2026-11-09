@@ -211,6 +211,14 @@
                 endif
               endif
             -%}
+            {%- if block_text == blank -%}
+              {%- comment -%} Nothing filled in: subtitle from the tags, body text from the first paragraph of the description {%- endcomment -%}
+              {%- if block.settings.style == 'subtitle' -%}
+                {%- capture block_text -%}{% render 'yk-product-subtitle', product: product %}{%- endcapture -%}
+              {%- elsif block.settings.metafield contains 'short_description' -%}
+                {%- capture block_text -%}{% render 'yk-product-short-text', product: product %}{%- endcapture -%}
+              {%- endif -%}
+            {%- endif -%}
             {%- if block_text != blank -%}
               <div class="yk-product__text yk-product__text--{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ block_text }}</div>
             {%- endif -%}
