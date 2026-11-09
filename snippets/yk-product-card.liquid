@@ -19,7 +19,7 @@
     assign has_badge_2 = true
   endif
 -%}
-{%- capture subtitle -%}{% render 'yk-product-subtitle', product: product, metafield_only: true %}{%- endcapture -%}
+{%- capture subtitle -%}{% render 'yk-product-subtitle', product: product, no_finish: true %}{%- endcapture -%}
 <li class="yk-card">
   <div class="yk-card__media">
     <a class="yk-card__image-link" href="{{ product.url }}" tabindex="-1" aria-hidden="true">

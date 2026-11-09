@@ -2,13 +2,13 @@
   Short product subtitle, for example: 14-inch · Pre-Seasoned · Round Bottom
   Uses the custom.card_subtitle (or custom.subtitle) metafield when filled, otherwise builds it from tags.
   Params: product,
-  metafield_only (true on cards: product titles already carry size and bottom, so no tag subtitle there).
+  no_finish (true on product cards: the Pre-Seasoned badge already says it).
 {%- endcomment -%}
 {%- liquid
   assign yk_subtitle = product.metafields.custom.card_subtitle.value | default: product.metafields.custom.subtitle.value
   if yk_subtitle != blank
     echo yk_subtitle | escape
-  elsif metafield_only != true
+  else
 
   assign yk_size = ''
   assign yk_finish = ''
@@ -46,6 +46,9 @@
   endcomment
   if yk_size_count == 2
     assign yk_size = ''
+  endif
+  if no_finish
+    assign yk_finish = ''
   endif
 
   assign yk_parts = yk_size | append: '|' | append: yk_finish | append: '|' | append: yk_bottom | split: '|'

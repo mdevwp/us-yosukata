@@ -73,7 +73,7 @@
                 assign has_badge_2 = true
               endif
             -%}
-            {%- capture subtitle -%}{% render 'yk-product-subtitle', product: product, metafield_only: true %}{%- endcapture -%}
+            {%- capture subtitle -%}{% render 'yk-product-subtitle', product: product, no_finish: true %}{%- endcapture -%}
             <li class="yk-set__product">
               <a class="yk-set__card" href="{{ product.url }}">
                 {%- if has_badge_1 or has_badge_2 -%}
