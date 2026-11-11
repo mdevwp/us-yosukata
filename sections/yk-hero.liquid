@@ -22,7 +22,7 @@
   <div class="yk-hero__slides">
     {%- for block in slides -%}
       <div
-        class="yk-hero__slide{% if forloop.first %} is-active{% endif %}"
+        class="yk-hero__slide{% if forloop.first %} is-active{% endif %}{% if block.settings.image_mobile == blank and forloop.first == false %} yk-hero__slide--no-mobile-image{% endif %}"
         data-yk-hero-slide
         role="group"
         aria-roledescription="slide"
@@ -32,9 +32,9 @@
       >
         <picture class="yk-hero__media">
           {%- if block.settings.image_mobile != blank -%}
-            <source media="(max-width: 719px)" srcset="{{ block.settings.image_mobile | image_url: width: 780 }} 780w, {{ block.settings.image_mobile | image_url: width: 1080 }} 1080w">
+            <source media="(max-width: 959px)" srcset="{{ block.settings.image_mobile | image_url: width: 780 }} 780w, {{ block.settings.image_mobile | image_url: width: 1080 }} 1080w">
           {%- elsif forloop.first -%}
-            <source media="(max-width: 719px)" srcset="{{ 'home-hero-mobile.jpg' | asset_url }}">
+            <source media="(max-width: 959px)" srcset="{{ 'home-hero-mobile.jpg' | asset_url }}">
           {%- endif -%}
           {%- if block.settings.image != blank -%}
             {{ block.settings.image | image_url: width: 2400 | image_tag: widths: '960, 1440, 1920, 2400', sizes: '100vw', class: 'yk-hero__image', loading: 'eager', fetchpriority: 'high', alt: block.settings.title }}

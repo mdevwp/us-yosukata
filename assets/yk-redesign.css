@@ -224,6 +224,7 @@ body.yk-redesign .yk-header .header__row-mobile .header__icon-touch--account { d
   font-size: 14px;
 }
 .yk-footer__input::placeholder { color: #8a8a8a; opacity: 1; }
+.yk-footer__input:hover { border-color: #c4c4c4; }
 .yk-footer__input:focus { border-color: #fff; outline: none; }
 .yk-footer__submit {
   height: 48px;
@@ -450,6 +451,8 @@ body.yk-redesign .yk-header [data-js-cart-count] {
   font-weight: 600;
   line-height: 16px;
   text-align: center;
+  /* White ring keeps the badge apart from the icon lines without changing its size */
+  box-shadow: 0 0 0 2px #fff;
 }
 body.yk-redesign .yk-header .header__icon-touch:has([data-js-cart-count]) { position: relative; overflow: visible; }
 
@@ -565,4 +568,12 @@ body.yk-redesign .yk-header .header__icon-touch:has([data-js-cart-count]) { posi
   }
   body.yk-redesign .yk-header .header__links-primary > ul > li > [data-link] .link-hover::before { background: currentColor; }
   body.yk-redesign .yk-header .navigation__submenu-item [data-link] .link-hover::before { display: none; }
+}
+
+/* iOS Safari zooms the page in when a field with text smaller than 16px gets focus.
+   -webkit-touch-callout is supported only on iOS, so desktop and Android keep the design sizes. */
+@supports (-webkit-touch-callout: none) {
+  .yk-redesign input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="hidden"]),
+  .yk-redesign select,
+  .yk-redesign textarea { font-size: max(16px, 1em) !important; }
 }

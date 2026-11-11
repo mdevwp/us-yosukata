@@ -380,6 +380,7 @@
 @media (min-width: 960px) and (max-width: 1199px) {
   .yk-benefits__desktop br { display: none; }
   .yk-benefits__text { max-width: 240px; }
+  .yk-benefits__list { column-gap: 24px; }
 }
 
 /* FAQ */
@@ -1791,4 +1792,16 @@
 /* Narrow phones: a manual line break in the chef quote leaves a single word on its own line */
 @media (max-width: 389px) {
   .yk-chefs__text br { display: none; }
+}
+
+/* Hero below 960px: the slide is a tall, centred layout, so it uses the portrait mobile photo up to 959px
+   (the wide desktop photo lost its subject at the sides on tablets).
+   The 120.5% bottom-anchored crop fits narrow phones. From 480px the portrait photo is scaled to the slide width
+   and gets much taller than the slide, so that crop cut off the top (the chef's head): keep the top instead. */
+@media (min-width: 480px) and (max-width: 959px) {
+  .yk-hero__media img { top: 0; height: 100%; object-position: center 40%; }
+}
+/* A slide without a mobile photo shows the wide desktop photo as is */
+@media (max-width: 959px) {
+  .yk-hero__slide--no-mobile-image .yk-hero__media img { top: 0; height: 100%; object-position: center; }
 }
