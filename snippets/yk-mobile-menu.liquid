@@ -72,6 +72,8 @@
           {%- if shop.customer_accounts_enabled -%}
             <li><a href="{{ routes.account_url }}">{% if customer %}Account{% else %}Login{% endif %}</a></li>
           {%- endif -%}
+          {%- comment -%}QA 11.11 p.5: Track your order sits with the service links{%- endcomment -%}
+          <li><a href="/apps/17TRACK">Track your order</a></li>
           {%- if pages['faq'] != blank -%}
             <li><a href="{{ pages['faq'].url }}">FAQ</a></li>
           {%- endif -%}

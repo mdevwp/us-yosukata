@@ -812,3 +812,46 @@ body.yk-redesign .yk-header button:focus-visible {
 @media (min-width: 960px) and (max-width: 1279px) {
   body.yk-redesign .yk-header .header__links-primary .header__links-list > li:not(:last-child) { margin-right: 0; }
 }
+
+/* Service links on the right of the announcement bar (desktop, QA 11.11 p.5) */
+body.yk-redesign .yk-announcement__service { display: none; }
+@media (min-width: 960px) {
+  body.yk-redesign .yk-announcement__inline {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  body.yk-redesign .yk-announcement__inline .yk-announcement__item { flex: 1 1 0; min-width: 0; }
+  body.yk-redesign .yk-announcement__service {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 16px;
+    margin-left: auto;
+    padding-left: 24px;
+    border-left: 1px solid rgba(0, 0, 0, .2);
+  }
+  body.yk-redesign .yk-announcement__service a {
+    position: relative;
+    color: var(--yk-black);
+    font-family: var(--yk-font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 20px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color .2s ease;
+  }
+  body.yk-redesign .yk-announcement__service a::after { content: ""; position: absolute; inset: -6px -4px; }
+  body.yk-redesign .yk-announcement__service a:hover { color: var(--yk-red); }
+}
+@media (min-width: 1280px) and (max-width: 1439px) {
+  body.yk-redesign .yk-announcement__inline { justify-content: space-between; }
+  body.yk-redesign .yk-announcement__inline .yk-announcement__item { flex: 0 1 auto; white-space: nowrap; }
+  body.yk-redesign .yk-announcement__service { margin-left: 0; }
+}
+@media (min-width: 960px) and (max-width: 1279px) {
+  body.yk-redesign .yk-announcement__inline .yk-announcement__item { display: none; flex: 1 1 auto; justify-content: center; white-space: nowrap; }
+  body.yk-redesign .yk-announcement__inline .yk-announcement__item.is-current { display: flex; animation: yk-announce-in .4s ease; }
+}
+@keyframes yk-announce-in { from { opacity: 0; } to { opacity: 1; } }
