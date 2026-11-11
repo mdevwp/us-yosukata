@@ -54,6 +54,12 @@
 -%}
 
 <style>
+  {%- comment -%}
+    QA 11.11 p.36: the redesigned homepage only shows Montserrat 500/600/700/800, which the redesign styles declare.
+    The theme's own faces (400 and 900) were downloaded there only for hidden theme elements, so they are skipped on it.
+  {%- endcomment -%}
+  {%- capture yk_redesign_fonts -%}{% render 'yk-redesign-active' %}{%- endcapture -%}
+  {%- unless request.page_type == 'index' and yk_redesign_fonts == 'true' -%}
   {{ font_logo | font_face: font_display: 'swap' }}
   {{ font_heading | font_face: font_display: 'swap' }}
   {{ font_heading_light | font_face: font_display: 'swap' }}
@@ -61,6 +67,7 @@
   {{ font_body_bold | font_face: font_display: 'swap' }}
   {{ font_body_italic | font_face: font_display: 'swap' }}
   {{ font_body_bold_italic | font_face: font_display: 'swap' }}
+  {%- endunless -%}
 
   :root {
     --color-text: {{ settings.color_text }};
