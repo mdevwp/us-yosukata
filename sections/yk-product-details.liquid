@@ -91,9 +91,23 @@
             endfor
             assign description_intro = ''
             assign description_rest = description
+            # The photo goes after the first plain paragraph. Paragraphs that open with a bold label
+            # ("Cooktop compatibility:", "Fit note:") are notes, not the intro, so they stay above with it.
             if block.settings.split_after_intro and description contains '</p>'
               assign description_parts = description | split: '</p>'
-              assign description_intro = description_parts.first | append: '</p>'
+              for part in description_parts
+                if forloop.last
+                  break
+                endif
+                assign description_intro = description_intro | append: part | append: '</p>'
+                assign paragraph = part | split: '<p' | last
+                assign paragraph_text = paragraph | split: '>' | slice: 1, 9999 | join: '>' | strip
+                assign paragraph_head = paragraph_text | slice: 0, 7
+                assign paragraph_head_short = paragraph_text | slice: 0, 3
+                if paragraph_head != '<strong' and paragraph_head_short != '<b>' and paragraph_text != blank
+                  break
+                endif
+              endfor
               assign description_rest = description | remove_first: description_intro
             endif
           -%}
@@ -205,7 +219,7 @@
         { "type": "checkbox", "id": "split_after_intro", "label": "Show media after the first paragraph", "default": true },
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "video", "id": "video", "label": "Video", "info": "Plays muted on loop, with a pause button" },
-        { "type": "video_url", "id": "video_url", "label": "YouTube or Vimeo video", "accept": ["youtube", "vimeo"], "info": "Shows a cover with a play button; the player loads on click. The image above, if set, is used as the cover." },
+        { "type": "video_url", "id": "video_url", "label": "YouTube or Vimeo video", "accept": ["youtube", "vimeo"], "info": "Shows a cover with a play button; the player loads on click. Cover: the image above, else the default image file, else the video thumbnail." },
         { "type": "text", "id": "video_title", "label": "Video title", "info": "For screen readers" },
         { "type": "text", "id": "default_asset", "label": "Default image file", "default": "yk-product-story.jpg", "info": "Theme asset used when no image or video is chosen. Leave empty to show nothing." }
       ]
@@ -216,7 +230,7 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "video", "id": "video", "label": "Video", "info": "Plays muted on loop, with a pause button" },
-        { "type": "video_url", "id": "video_url", "label": "YouTube or Vimeo video", "accept": ["youtube", "vimeo"], "info": "Shows a cover with a play button; the player loads on click. The image above, if set, is used as the cover." },
+        { "type": "video_url", "id": "video_url", "label": "YouTube or Vimeo video", "accept": ["youtube", "vimeo"], "info": "Shows a cover with a play button; the player loads on click. Cover: the image above, else the default image file, else the video thumbnail." },
         { "type": "text", "id": "video_title", "label": "Video title", "info": "For screen readers" },
         { "type": "text", "id": "default_asset", "label": "Default image file", "info": "Theme asset used when no image or video is chosen" },
         {

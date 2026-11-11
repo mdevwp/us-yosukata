@@ -24,6 +24,8 @@
   <div class="{{ class_name }} yk-details__media--{{ media_width }} yk-details__media--embed" {{ attributes }} data-yk-embed="{{ yk_embed }}" data-yk-embed-title="{{ yk_video_title | escape }}">
     {%- if media_settings.image != blank -%}
       {{ media_settings.image | image_url: width: 1600 | image_tag: class: 'yk-details__media-el', loading: 'lazy', alt: '' }}
+    {%- elsif media_settings.default_asset != blank -%}
+      <img class="yk-details__media-el" src="{{ media_settings.default_asset | asset_url }}" alt="" loading="lazy" width="1080" height="1080">
     {%- elsif yk_cover != blank -%}
       <img class="yk-details__media-el" src="{{ yk_cover }}" alt="" loading="lazy" width="480" height="360">
     {%- endif -%}
