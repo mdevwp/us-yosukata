@@ -163,8 +163,8 @@
             "icon": "benefit-globe",
             "title": "Fast Delivery",
             "text": "Get your order within\n4 business days.",
-            "title_mobile": "Worldwide Shipping",
-            "text_mobile": "Receive your order around\n3-5 days after shipment"
+            "title_mobile": "",
+            "text_mobile": ""
           }
         },
         "benefit_3": {
