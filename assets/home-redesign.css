@@ -1395,7 +1395,7 @@
   letter-spacing: 0;
   text-transform: none;
 }
-.yk-brand__text { margin-top: 18px; font-size: 14px; line-height: 22px; }
+.yk-brand__text { margin-top: 16px; font-size: 14px; line-height: 22px; }
 .yk-brand__title-desktop { display: none; }
 .yk-brand__text p { margin: 0 0 22px; }
 .yk-brand__text p:last-child { margin-bottom: 0; }
@@ -1404,7 +1404,7 @@
   align-items: center;
   justify-content: center;
   height: 48px;
-  margin-top: 26px;
+  margin-top: 24px;
   border-radius: 28px;
   background: var(--yk-red);
   color: #fff;
@@ -1419,7 +1419,7 @@
   margin: 24px 0 0;
   font-family: var(--yk-font-heading);
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 24px;
   text-align: center;
 }
