@@ -100,7 +100,12 @@
   endif
 
   capture logo_tag_type
-    if request.page_type == 'index'
+    comment
+      Redesign: the homepage H1 is the hero heading, the logo is not a heading
+    endcomment
+    if request.page_type == 'index' and yk_redesign == 'true'
+      echo 'div'
+    elsif request.page_type == 'index'
       echo 'h1'
     else
       echo 'span'
@@ -414,6 +419,9 @@
   {% comment %} <a href="#main" class="header__skip-to-content btn btn--primary btn--small">
     {{ 'general.accessibility.skip_to_content' | t }}
   </a> {% endcomment %}
+  {%- if yk_redesign == 'true' -%}
+    <a href="#main" class="yk-skip-link">{{ 'general.accessibility.skip_to_content' | t }}</a>
+  {%- endif -%}
 
   <div class="header__inner">
     <div class="header__row header__row-desktop upper  ">

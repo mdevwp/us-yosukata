@@ -95,7 +95,7 @@
           {%- capture social_setting -%}social_{{ social }}_link{%- endcapture -%}
           {%- if settings[social_setting] != blank -%}
             <li>
-              <a href="{{ settings[social_setting] }}" target="_blank" rel="noopener" aria-label="{{ social | replace: 'twitter', 'X' | capitalize }}">
+              <a href="{{ settings[social_setting] }}" target="_blank" rel="noopener" aria-label="{{ social | capitalize | replace: 'Twitter', 'X' | replace: 'Youtube', 'YouTube' | replace: 'Tiktok', 'TikTok' }}">
                 {% render 'icon', icon: social %}
               </a>
             </li>

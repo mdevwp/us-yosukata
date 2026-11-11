@@ -746,3 +746,49 @@ html.yk-mmenu-lock { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .yk-mmenu, .yk-mmenu__screen { transition: none; }
 }
+
+/* Keyboard: skip link, visible focus on header links and the footer email field */
+.yk-skip-link {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1000;
+  padding: 12px 20px;
+  border-radius: 28px;
+  background: var(--yk-red, #ba0029);
+  color: #fff;
+  font-family: var(--yk-font-heading, Montserrat, sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  text-decoration: none;
+}
+/* Hidden until it gets keyboard focus */
+.yk-skip-link:not(:focus) {
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.yk-skip-link:focus { outline: 2px solid #fff; outline-offset: -4px; }
+body.yk-redesign .yk-header a:focus-visible,
+body.yk-redesign .yk-header button:focus-visible {
+  outline: 2px solid var(--yk-red, #ba0029);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.yk-footer__input:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Footer links: at least 24px tall tap area (WCAG 2.5.8) without changing the look */
+.yk-footer__links a,
+.yk-footer__note a,
+.yk-footer__powered a { position: relative; }
+.yk-footer__links a::after,
+.yk-footer__note a::after,
+.yk-footer__powered a::after {
+  content: "";
+  position: absolute;
+  inset: max(-4px, calc((24px - 100%) / -2)) -4px;
+}

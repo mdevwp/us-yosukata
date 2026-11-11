@@ -114,8 +114,13 @@
       {% render 'back-to-top' %}
     </div>
 
-    {{ '//www.youtube.com/iframe_api' | script_tag }}
-    {{ '//cdn.shopify.com/shopifycloud/shopify-plyr/v1.0/shopify-plyr.css' | stylesheet_tag }}
+    {%- comment -%}
+      The redesigned homepage has no theme video sections: skip the YouTube API and the video player styles there
+    {%- endcomment -%}
+    {%- unless request.page_type == 'index' and yk_redesign == 'true' -%}
+      {{ '//www.youtube.com/iframe_api' | script_tag }}
+      {{ '//cdn.shopify.com/shopifycloud/shopify-plyr/v1.0/shopify-plyr.css' | stylesheet_tag }}
+    {%- endunless -%}
   </body>
   <link
     rel="preload"

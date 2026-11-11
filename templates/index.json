@@ -18,7 +18,7 @@
             "image": "",
             "image_mobile": "",
             "promo": "<p>Get additional -10% with a promo code: <strong>Extra10</strong></p>",
-            "title": "Black Carbon Steel Wok 13,5-inch",
+            "title": "Black Carbon Steel Wok 13.5\"",
             "button_label": "Shop Now",
             "button_link": "shopify://products/13-5-inch-pre-seasoned-black-carbon-steel-wok-flat-bottomed"
           }
@@ -108,7 +108,7 @@
           "type": "category",
           "settings": {
             "title": "Carbon Steel Woks",
-            "collection": "black-carbon-steel-woks"
+            "collection": "carbon-steel-woks"
           }
         },
         "category_2": {
@@ -154,13 +154,13 @@
             "title": "Easy Returns",
             "text": "Free returning of your order\nwithin 30 days of purchase.",
             "title_mobile": "",
-            "text_mobile": "Your exchange ships out\nas soon as you email us"
+            "text_mobile": ""
           }
         },
         "benefit_2": {
           "type": "benefit",
           "settings": {
-            "icon": "benefit-globe",
+            "icon": "truck",
             "title": "Fast Delivery",
             "text": "Get your order within\n4 business days.",
             "title_mobile": "",
@@ -184,7 +184,7 @@
             "title": "Buy Now, Pay Later",
             "text": "Pay for your order upon\nreceipt of your goods.",
             "title_mobile": "",
-            "text_mobile": "Instalments with 0% interest and\nno extra charges through Shop Pay"
+            "text_mobile": ""
           }
         }
       },
@@ -205,7 +205,7 @@
           "type": "question",
           "settings": {
             "question": "How to choose a Yosukata pan?",
-            "answer": "<p>There are several things to pay attention to when choosing a professional wok. First of all, be aware of the thickness. A thicker skillet will heat up more slowly but will hold the heat better and be less likely to warp. Second, consider the size and shape of the wok. A 14-inch wok is a good size for most kitchens, but if you have a lot of space, you might want a bigger wok to buy. Next, pay attention to the size or style of the handle — you want one that will be comfortable to use. Another important feature is the material your pan is made of. The most popular choice is carbon steel, which heats up quickly and evenly. <a href=\"/collections/black-carbon-steel-skillets\" title=\"Black Carbon Steel Skillets\">Carbon-steel skillets</a> are durable and can be used for a variety of cooking methods.</p><p>Finally, decide whether you want to choose among the <a href=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Flat+Bottom\" title=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Flat+Bottom\">flat bottom woks</a> or <a href=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Round+Bottom\" title=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Round+Bottom\">round bottom</a> units. A round-bottomed wok is best for authentic stir-frying, but a flat-bottomed alternative will work fine if you only have an electric stove. If you already have a round-bottomed wok, think of purchasing a special ring among other <a href=\"/collections/accessories\" title=\"Accessories\">skillet & wok accessories</a>.</p><p>Now that you know how to choose the <a href=\"/collections/blue-carbon-stell-woks\" title=\"Blue Carbon Stell Woks\">best carbon steel wok</a>, it’s time to look for some tasty recipes!</p>"
+            "answer": "<p>There are several things to pay attention to when choosing a professional wok. First of all, be aware of the thickness. A thicker skillet will heat up more slowly but will hold the heat better and be less likely to warp. Second, consider the size and shape of the wok. A 14-inch wok is a good size for most kitchens, but if you have a lot of space, you might want a bigger wok to buy. Next, pay attention to the size or style of the handle — you want one that will be comfortable to use. Another important feature is the material your pan is made of. The most popular choice is carbon steel, which heats up quickly and evenly. <a href=\"/collections/black-carbon-steel-skillets\" title=\"Black Carbon Steel Skillets\">Carbon-steel skillets</a> are durable and can be used for a variety of cooking methods.</p><p>Finally, decide whether you want to choose among the <a href=\"/collections/carbon-steel-woks?filter.p.m.custom.feature=Flat+Bottom\" title=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Flat+Bottom\">flat bottom woks</a> or <a href=\"/collections/carbon-steel-woks?filter.p.m.custom.feature=Round+Bottom\" title=\"https://us.yosukata.com/collections/all?filter.v.price.gte=&filter.v.price.lte=&filter.p.m.custom.feature=Round+Bottom\">round bottom</a> units. A round-bottomed wok is best for authentic stir-frying, but a flat-bottomed alternative will work fine if you only have an electric stove. If you already have a round-bottomed wok, think of purchasing a special ring among other <a href=\"/collections/accessories\" title=\"Accessories\">skillet & wok accessories</a>.</p><p>Now that you know how to choose the <a href=\"/collections/blue-carbon-steel-woks\" title=\"Blue Carbon Stell Woks\">best carbon steel wok</a>, it’s time to look for some tasty recipes!</p>"
           }
         },
         "faq_item_ADM9y8": {
@@ -285,7 +285,7 @@
         ],
         "limit": 8,
         "show_rating": true,
-        "show_compare_price": false,
+        "show_compare_price": true,
         "show_quick_add": true,
         "quick_add_label": "Quick Add",
         "choose_options_label": "Choose options",
@@ -566,15 +566,15 @@
     "yk_brand": {
       "type": "yk-brand",
       "settings": {
-        "title": "Behind the Yosukata",
+        "title": "Behind the Yosukata Brand",
         "text": "<p>When it comes to dish excellence, there is never a detail that we overlook. More and more of us care about organic, healthy ingredients that are rich in taste and flavors but forget to pay attention to kitchen cooking utensils. Nature has provided us with a solution that has been forgotten in the pursuit of convenience: fire and iron.</p><p>We are chefs who care about flavor and can distinguish between a high-quality pan and one that is cheap tin. We are constantly sourcing and testing to distill the pans that make it possible to create culinary masterpieces.</p>",
         "button_label": "Find out more",
         "button_link": "/pages/about",
         "badges_heading": "Our quality has been proven over the years.",
         "show_default_badges": true,
         "quote": "<p>We founded the Yosukata company to help consumers revitalize the benefits of natural cooking ware.</p>",
-        "quote_author": "Name & Position",
-        "title_mobile": "Behind the Yosukata Brand"
+        "quote_author": "",
+        "title_mobile": ""
       }
     },
     "yk_chefs": {
@@ -613,7 +613,7 @@
         "show_logo": true,
         "title": "Follow us\non social media",
         "text": "Join our social media to explore delicious wok recipes and share your culinary creations.",
-        "networks": "instagram, twitter, youtube",
+        "networks": "youtube, instagram, facebook, threads, tiktok, pinterest, twitter",
         "image_position_y": 64
       }
     }

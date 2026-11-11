@@ -104,7 +104,14 @@
                   <p class="yk-set__product-subtitle">{{ subtitle }}</p>
                 {%- endif -%}
                 <h3 class="yk-set__product-title"><a href="{{ product.url }}">{{ card_title | escape }}</a></h3>
-                <p class="yk-set__price">{{ product.price | money }}</p>
+                <p class="yk-set__price">
+                  {%- if product.compare_at_price > product.price -%}<span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>{%- endif -%}
+                  {{ product.price | money }}
+                  {%- if product.compare_at_price > product.price -%}
+                    <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+                    <s class="yk-card__compare">{{ product.compare_at_price | money }}</s>
+                  {%- endif -%}
+                </p>
               </div>
             </li>
           {%- endif -%}

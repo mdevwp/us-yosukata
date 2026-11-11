@@ -1,5 +1,5 @@
 {%- comment -%}
-  Short product subtitle, for example: 14-inch · Pre-Seasoned · Round Bottom
+  Short product subtitle, for example: 14" · Pre-Seasoned · Round Bottom (US inch format, as in product titles)
   Uses the custom.card_subtitle (or custom.subtitle) metafield when filled, otherwise builds it from tags.
   Params: product,
   no_finish (true on product cards: the Pre-Seasoned badge already says it).
@@ -21,7 +21,7 @@
       if '0123456789' contains yk_first
         assign yk_tail = yk_t | slice: -5, 5
         if yk_tail == '-inch' or yk_tail == ' inch'
-          assign yk_this_size = yk_t | remove: '-inch' | remove: ' inch' | strip | append: '-inch'
+          assign yk_this_size = yk_t | remove: '-inch' | remove: ' inch' | strip | replace: ',', '.' | append: '"'
           if yk_size == ''
             assign yk_size = yk_this_size
           elsif yk_size != yk_this_size

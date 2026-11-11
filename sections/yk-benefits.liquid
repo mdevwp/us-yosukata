@@ -13,13 +13,22 @@
             {% render 'yk-icon', icon: block.settings.icon %}
           {%- endif -%}
         </span>
+        {%- comment -%}Separate mobile wording only when it is filled in, so the text is not repeated in the page{%- endcomment -%}
         <h3 class="yk-benefits__title">
-          <span class="yk-benefits__desktop">{{ block.settings.title | escape }}</span>
-          <span class="yk-benefits__mobile">{{ title_mobile | escape }}</span>
+          {%- if title_mobile != block.settings.title -%}
+            <span class="yk-benefits__desktop">{{ block.settings.title | escape }}</span>
+            <span class="yk-benefits__mobile">{{ title_mobile | escape }}</span>
+          {%- else -%}
+            {{ block.settings.title | escape }}
+          {%- endif -%}
         </h3>
         <div class="yk-benefits__text">
-          <span class="yk-benefits__desktop">{% render 'yk-text-nowrap-numbers', text: block.settings.text %}</span>
-          <span class="yk-benefits__mobile">{% render 'yk-text-nowrap-numbers', text: text_mobile %}</span>
+          {%- if text_mobile != block.settings.text -%}
+            <span class="yk-benefits__desktop">{% render 'yk-text-nowrap-numbers', text: block.settings.text %}</span>
+            <span class="yk-benefits__mobile">{% render 'yk-text-nowrap-numbers', text: text_mobile %}</span>
+          {%- else -%}
+            <span class="yk-benefits__all">{% render 'yk-text-nowrap-numbers', text: block.settings.text %}</span>
+          {%- endif -%}
         </div>
       </li>
     {%- endfor -%}
@@ -45,6 +54,7 @@
           "options": [
             { "value": "benefit-returns", "label": "Returns" },
             { "value": "benefit-globe", "label": "Globe" },
+            { "value": "truck", "label": "Delivery truck" },
             { "value": "benefit-non-toxic", "label": "Non-toxic" },
             { "value": "benefit-pay-later", "label": "Pay later" }
           ],

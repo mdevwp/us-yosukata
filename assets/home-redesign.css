@@ -378,7 +378,8 @@
 }
 /* Line breaks from the admin text are set for wide screens; narrower columns wrap naturally */
 @media (min-width: 960px) and (max-width: 1199px) {
-  .yk-benefits__desktop br { display: none; }
+  .yk-benefits__desktop br,
+  .yk-benefits__all br { display: none; }
   .yk-benefits__text { max-width: 240px; }
   .yk-benefits__list { column-gap: 24px; }
 }
@@ -1653,8 +1654,9 @@
 .yk-social__text { max-width: 358px; margin: 10px 0 0; font-size: 14px; font-weight: 500; line-height: 22px; }
 .yk-social__links {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
+  gap: 8px;
   margin: auto 0 0;
   padding: 24px 0 0;
   list-style: none;
@@ -1663,8 +1665,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: #fff;
   color: var(--yk-ink);
@@ -1681,7 +1683,8 @@
   .yk-social__title { margin-top: 160px; font-size: 48px; line-height: 56px; }
   .yk-social__title br { display: none; }
   .yk-social__text { max-width: none; margin-top: 11px; font-size: 16px; line-height: 24px; }
-  .yk-social__links { margin-top: 28px; padding: 0; }
+  .yk-social__links { gap: 16px; margin-top: 28px; padding: 0; }
+  .yk-social__links a { width: 48px; height: 48px; }
 }
 
 /* Slider arrows: hover and first/last slide states */
@@ -1804,4 +1807,21 @@
 /* A slide without a mobile photo shows the wide desktop photo as is */
 @media (max-width: 959px) {
   .yk-hero__slide--no-mobile-image .yk-hero__media img { top: 0; height: 100%; object-position: center; }
+}
+
+/* Hero at 960-1279px: the title ran into the wok on the photo; a smaller size keeps it on the dark half */
+@media (min-width: 960px) and (max-width: 1279px) {
+  .yk-hero__title { font-size: 3.4vw; }
+}
+
+/* Tablet 600-959px: no full-width stretched phone layout */
+@media (min-width: 600px) and (max-width: 959px) {
+  .yk-hero__button { width: 100%; max-width: 480px; margin-right: auto; margin-left: auto; }
+  .yk-hero__proofs { max-width: 480px; margin-right: auto; margin-left: auto; }
+  .home-categories__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 32px;
+  }
 }
