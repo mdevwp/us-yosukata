@@ -14,40 +14,101 @@
       {%- endif -%}
     </div>
 
+    {%- comment -%}
+      With the Judge.me "Featured carousel" app block added to this section, the reviews come from Judge.me:
+      its server-rendered markup is read here and shown in our cards. Without it, the manual review blocks are shown.
+    {%- endcomment -%}
+    {%- liquid
+      assign yk_app_block = section.blocks | where: 'type', '@app' | first
+      if section.settings.source == 'manual'
+        assign yk_app_block = nil
+      endif
+      assign yk_jm_items = ''
+      if yk_app_block
+        capture yk_jm_html
+          render yk_app_block
+        endcapture
+        assign yk_jm_items = yk_jm_html | replace: "class='jdgm-carousel-item'", "class='jdgm-carousel-item '" | split: "class='jdgm-carousel-item "
+        if yk_jm_items.size < 2
+          assign yk_jm_items = yk_jm_html | replace: 'class="jdgm-carousel-item"', 'class="jdgm-carousel-item "' | split: 'class="jdgm-carousel-item '
+        endif
+      endif
+      assign yk_use_jm = false
+      if yk_jm_items.size > 1
+        assign yk_use_jm = true
+        assign yk_total = yk_jm_items.size | minus: 1
+      else
+        assign yk_manual = section.blocks | where: 'type', 'review'
+        assign yk_total = yk_manual.size
+      endif
+    -%}
+
+
     <ul class="yk-reviews__track" role="list" data-yk-reviews-track>
-      {%- for block in section.blocks -%}
-        <li class="yk-review" {{ block.shopify_attributes }}>
-          <div class="yk-review__stars" role="img" aria-label="{{ block.settings.rating }} / 5">
-            {%- for i in (1..5) -%}
-              <span class="yk-review__star{% if i > block.settings.rating %} yk-review__star--empty{% endif %}">{% render 'yk-icon', icon: 'star' %}</span>
-            {%- endfor -%}
-          </div>
-          {%- if block.settings.title != blank -%}
-            <h3 class="yk-review__title">{{ block.settings.title | escape }}</h3>
+      {%- if yk_use_jm -%}
+        {%- for yk_item in yk_jm_items offset: 1 -%}
+          {%- liquid
+            assign yk_rating = yk_item | split: 'jdgm-carousel-item__reviewer-name' | first | split: 'jdgm--on' | size | minus: 1 | at_least: 1 | at_most: 5
+            assign yk_body = yk_item | split: 'jdgm-carousel-item__review-body' | last | split: '>' | slice: 1, 9999 | join: '>' | split: '</div>' | first | strip
+            assign yk_title = yk_item | split: 'jdgm-carousel-item__review-title' | last | split: '>' | slice: 1, 9999 | join: '>' | split: '</div>' | first | strip_html | strip
+            assign yk_name = yk_item | split: 'jdgm-carousel-item__reviewer-name' | last | split: '>' | slice: 1, 9999 | join: '>' | split: '</div>' | first | strip_html | strip
+          -%}
+          {%- if yk_body != blank -%}
+            <li class="yk-review">
+              <div class="yk-review__stars" role="img" aria-label="{{ yk_rating }} / 5">
+                {%- for i in (1..5) -%}
+                  <span class="yk-review__star{% if i > yk_rating %} yk-review__star--empty{% endif %}">{% render 'yk-icon', icon: 'star' %}</span>
+                {%- endfor -%}
+              </div>
+              {%- if yk_title != blank -%}
+                <h3 class="yk-review__title">{{ yk_title }}</h3>
+              {%- endif -%}
+              <div class="yk-review__text">{{ yk_body | strip_html | strip | escape | prepend: '<p>' | append: '</p>' }}</div>
+              <p class="yk-review__author">{{ yk_name | default: 'Anonymous' }}</p>
+            </li>
           {%- endif -%}
-          <div class="yk-review__text">{{ block.settings.text }}</div>
-          {%- if block.settings.author != blank -%}
-            <p class="yk-review__author">{{ block.settings.author | escape }}</p>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'review' -%}
+            <li class="yk-review" {{ block.shopify_attributes }}>
+              <div class="yk-review__stars" role="img" aria-label="{{ block.settings.rating }} / 5">
+                {%- for i in (1..5) -%}
+                  <span class="yk-review__star{% if i > block.settings.rating %} yk-review__star--empty{% endif %}">{% render 'yk-icon', icon: 'star' %}</span>
+                {%- endfor -%}
+              </div>
+              {%- if block.settings.title != blank -%}
+                <h3 class="yk-review__title">{{ block.settings.title | escape }}</h3>
+              {%- endif -%}
+              <div class="yk-review__text">{{ block.settings.text }}</div>
+              {%- if block.settings.author != blank -%}
+                <p class="yk-review__author">{{ block.settings.author | escape }}</p>
+              {%- endif -%}
+            </li>
           {%- endif -%}
-        </li>
-      {%- endfor -%}
+        {%- endfor -%}
+      {%- endif -%}
     </ul>
 
-    {%- if section.blocks.size > 1 -%}
+    {%- if yk_total > 1 -%}
       <div class="yk-reviews__nav" data-yk-reviews-nav>
         <button class="yk-reviews__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t | default: 'Previous' }}" data-yk-reviews-prev>
           {% render 'yk-icon', icon: 'arrow-left' %}
         </button>
-        <span class="yk-reviews__counter" aria-live="polite"><span data-yk-reviews-current>1</span>/<span data-yk-reviews-total>{{ section.blocks.size }}</span></span>
+        <span class="yk-reviews__counter" aria-live="polite"><span data-yk-reviews-current>1</span>/<span data-yk-reviews-total>{{ yk_total }}</span></span>
         <button class="yk-reviews__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t | default: 'Next' }}" data-yk-reviews-next>
           {% render 'yk-icon', icon: 'arrow-right' %}
         </button>
       </div>
       <div class="yk-reviews__dots" aria-hidden="true">
-        {%- for block in section.blocks -%}
+        {%- for i in (1..yk_total) -%}
           <span class="yk-reviews__dot{% if forloop.first %} is-active{% endif %}"></span>
         {%- endfor -%}
       </div>
+    {%- endif -%}
+    {%- if yk_app_block and yk_use_jm == false -%}
+      {%- comment -%}Judge.me block added but nothing could be read from it: show it as Judge.me renders it{%- endcomment -%}
+      {% render yk_app_block %}
     {%- endif -%}
   </div>
 </section>
@@ -60,9 +121,21 @@
   "settings": [
     { "type": "text", "id": "title", "label": "Heading", "default": "What Customers say about us" },
     { "type": "text", "id": "subtitle", "label": "Subheading" },
-    { "type": "image_picker", "id": "background", "label": "Background image", "info": "Use a blurred, dark image. Defaults to the flaming wok background." }
+    { "type": "image_picker", "id": "background", "label": "Background image", "info": "Use a blurred, dark image. Defaults to the flaming wok background." },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Reviews source",
+      "options": [
+        { "value": "judgeme", "label": "Judge.me (featured reviews)" },
+        { "value": "manual", "label": "Manual review blocks" }
+      ],
+      "default": "judgeme",
+      "info": "Judge.me needs its Featured carousel app block in this section. Manual uses the Review blocks below."
+    }
   ],
   "blocks": [
+    { "type": "@app" },
     {
       "type": "review",
       "name": "Review",

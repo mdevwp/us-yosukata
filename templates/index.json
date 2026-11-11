@@ -414,6 +414,10 @@
     "yk_reviews": {
       "type": "yk-reviews",
       "blocks": {
+        "judgeme_carousel": {
+          "type": "shopify://apps/judge-me-reviews/blocks/featured_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        },
         "review_1": {
           "type": "review",
           "settings": {
@@ -470,6 +474,7 @@
         }
       },
       "block_order": [
+        "judgeme_carousel",
         "review_1",
         "review_2",
         "review_3",
@@ -479,7 +484,8 @@
       ],
       "settings": {
         "title": "What Customers say about us",
-        "subtitle": "13,000+ five-star reviews from real working professionals."
+        "subtitle": "13,000+ five-star reviews from real working professionals.",
+        "source": "judgeme"
       }
     },
     "yk_set_of_day": {
