@@ -74,11 +74,28 @@
             <span>{{ column_title | escape }}</span>
             <span class="yk-footer__column-toggle" aria-hidden="true"></span>
           </summary>
-          {%- if menu.links.size > 0 -%}
+          {%- liquid
+            comment
+              QA 11.11 p.14: the Company column also links to the shipping policy, unless the menu already has it
+            endcomment
+            assign yk_add_shipping = false
+            if forloop.index == 2 and shop.shipping_policy.body != blank
+              assign yk_add_shipping = true
+              for link in menu.links
+                if link.url == shop.shipping_policy.url
+                  assign yk_add_shipping = false
+                endif
+              endfor
+            endif
+          -%}
+          {%- if menu.links.size > 0 or yk_add_shipping -%}
             <ul class="yk-footer__links" role="list">
               {%- for link in menu.links -%}
                 <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
               {%- endfor -%}
+              {%- if yk_add_shipping -%}
+                <li><a href="{{ shop.shipping_policy.url }}">Shipping Policy</a></li>
+              {%- endif -%}
             </ul>
           {%- endif -%}
         </details>
@@ -88,6 +105,9 @@
     <div class="yk-footer__bottom">
       <div class="yk-footer__copyright">
         <p>Copyright &copy; {{ 'now' | date: '%Y' }}, {{ shop.name }}. {{ section.settings.yk_copyright | remove: '<p>' | remove: '</p>' }}</p>
+        {%- if section.settings.yk_contact != blank -%}
+          <div class="yk-footer__contact">{{ section.settings.yk_contact }}</div>
+        {%- endif -%}
       </div>
 
       <ul class="yk-footer__social" role="list">

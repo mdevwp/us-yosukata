@@ -800,3 +800,9 @@ body.yk-redesign .yk-header button:focus-visible {
   body.yk-redesign .yk-announcement__inline { grid-auto-columns: auto; justify-content: space-between; }
   body.yk-redesign .yk-announcement__item { white-space: nowrap; }
 }
+
+/* Company address and email under the copyright line (QA 11.11 p.14) */
+.yk-footer__contact { margin-top: 4px; }
+.yk-footer__contact p { margin: 0; }
+.yk-footer__contact a { position: relative; color: inherit; }
+.yk-footer__contact a::after { content: ""; position: absolute; inset: -4px; }
