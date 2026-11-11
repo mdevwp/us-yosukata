@@ -33,7 +33,8 @@
           {{ shop.name }}
         {%- endif -%}
       </a>
-      {%- if yk_currency != blank -%}
+      {%- comment -%}Shown only when there is something to choose: more than one language or country{%- endcomment -%}
+      {%- if yk_currency != blank and shop.published_locales.size > 1 or yk_currency != blank and localization.available_countries.size > 1 -%}
         <span class="yk-mmenu__prefs">
           <span>{{ yk_locale }}</span>
           <span class="yk-mmenu__prefs-sep" aria-hidden="true"></span>
