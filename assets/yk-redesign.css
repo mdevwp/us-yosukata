@@ -806,3 +806,9 @@ body.yk-redesign .yk-header button:focus-visible {
 .yk-footer__contact p { margin: 0; }
 .yk-footer__contact a { position: relative; color: inherit; }
 .yk-footer__contact a::after { content: ""; position: absolute; inset: -4px; }
+
+/* Desktop menu with six items (About added, QA 11.11 p.5): the theme's 24px margin on top of our 24px gap
+   pushed the first item under the logo on narrow desktops. Up to 1279px only the gap is kept. */
+@media (min-width: 960px) and (max-width: 1279px) {
+  body.yk-redesign .yk-header .header__links-primary .header__links-list > li:not(:last-child) { margin-right: 0; }
+}
