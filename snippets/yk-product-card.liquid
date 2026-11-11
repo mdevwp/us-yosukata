@@ -18,6 +18,16 @@
   if badge_2_tag != blank and product_tags contains badge_2_tag
     assign has_badge_2 = true
   endif
+  comment
+    QA 11.11 p.9: Sale only on bundles (they always carry a compare-at price), Best Seller only on single products
+  endcomment
+  assign has_sale = false
+  if product.type == 'Bundle'
+    assign has_badge_2 = false
+    if product.compare_at_price > product.price
+      assign has_sale = true
+    endif
+  endif
 -%}
 {%- capture subtitle -%}{% render 'yk-product-subtitle', product: product, no_finish: true %}{%- endcapture -%}
 <li class="yk-card">
@@ -40,8 +50,11 @@
       {%- endif -%}
     </a>
 
-    {%- if has_badge_1 or has_badge_2 -%}
+    {%- if has_badge_1 or has_badge_2 or has_sale -%}
       <div class="yk-card__badges">
+        {%- if has_sale -%}
+          <span class="yk-card__badge yk-card__badge--sale">{{ 'products.product.on_sale' | t | default: 'Sale' }}</span>
+        {%- endif -%}
         {%- if has_badge_1 -%}
           <span class="yk-card__badge yk-card__badge--1">{{ card_settings.badge_1_label | default: card_settings.badge_1_tag | escape }}</span>
         {%- endif -%}

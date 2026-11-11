@@ -557,6 +557,7 @@
 }
 .yk-card__badge--1 { background: var(--yk-badge-1-bg); color: var(--yk-badge-1-text); }
 .yk-card__badge--2 { background: var(--yk-badge-2-bg); color: var(--yk-badge-2-text); }
+.yk-card__badge--sale { background: var(--yk-red); color: #fff; }
 .yk-card__rating {
   position: absolute;
   left: 17px;

@@ -611,7 +611,8 @@
       "block_order": [
         "quote_1",
         "quote_2"
-      ]
+      ],
+      "disabled": true
     },
     "yk_social": {
       "type": "yk-social",
