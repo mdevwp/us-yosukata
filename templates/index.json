@@ -256,6 +256,13 @@
             "question": "Yosukata cookware reviews",
             "answer": "<p>If you are interested in reviews from people who’ve already purchased our woks, check them on the product pages. Thus, you can find out more about a certain pan. We are confident that you will be happy with your purchase, but if for any reason you’re not satisfied, please feel free to reach out to us and we will be happy to help.</p>"
           }
+        },
+        "faq_item_get_wok": {
+          "type": "question",
+          "settings": {
+            "question": "How can I get a Yosukata wok?",
+            "answer": "<p>You can purchase a Yosukata wok right here in our store: choose a model, add it to your cart and check out. All major credit cards are accepted. We also have a variety of <a href=\"/collections/accessories\" title=\"Accessories\">accessories</a> to help you get the most out of your wok pan, and we offer <a href=\"/pages/warranty-and-returns\" title=\"Warranty & Returns\">returns</a> if you’re not completely satisfied with your purchase. You can find more information by <a href=\"/pages/contact\" title=\"Contact\">contacting us</a>.</p>"
+          }
         }
       },
       "block_order": [
@@ -266,6 +273,7 @@
         "faq_item_LBp4tE",
         "faq_item_EeW4q9",
         "faq_item_NAxUGb",
+        "faq_item_get_wok",
         "faq_item_hiiXmB"
       ],
       "settings": {
