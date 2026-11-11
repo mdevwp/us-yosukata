@@ -663,7 +663,8 @@
         "care_video": {
           "type": "media",
           "settings": {
-            "default_asset": "yk-product-care.jpg",
+            "video_url": "https://www.youtube.com/watch?v=JzKLXxAxrzw",
+            "video_title": "How to season a wok (basic oil method)",
             "width": "full"
           }
         },

@@ -6,7 +6,32 @@
   assign media_settings = media_block.settings
   assign media_width = media_settings.width | default: 'content'
 -%}
-{%- if media_settings.video != blank -%}
+{%- if media_settings.video_url != blank -%}
+  {%- comment -%}
+    YouTube/Vimeo: a cover with a play button; the player itself loads only after a click (no third-party iframe on page load).
+  {%- endcomment -%}
+  {%- liquid
+    assign yk_video = media_settings.video_url
+    if yk_video.type == 'youtube'
+      assign yk_embed = 'https://www.youtube-nocookie.com/embed/' | append: yk_video.id | append: '?autoplay=1&rel=0&modestbranding=1'
+      assign yk_cover = 'https://i.ytimg.com/vi/' | append: yk_video.id | append: '/hqdefault.jpg'
+    else
+      assign yk_embed = 'https://player.vimeo.com/video/' | append: yk_video.id | append: '?autoplay=1'
+      assign yk_cover = ''
+    endif
+    assign yk_video_title = media_settings.video_title | default: 'Play video'
+  -%}
+  <div class="{{ class_name }} yk-details__media--{{ media_width }} yk-details__media--embed" {{ attributes }} data-yk-embed="{{ yk_embed }}" data-yk-embed-title="{{ yk_video_title | escape }}">
+    {%- if media_settings.image != blank -%}
+      {{ media_settings.image | image_url: width: 1600 | image_tag: class: 'yk-details__media-el', loading: 'lazy', alt: '' }}
+    {%- elsif yk_cover != blank -%}
+      <img class="yk-details__media-el" src="{{ yk_cover }}" alt="" loading="lazy" width="480" height="360">
+    {%- endif -%}
+    <button class="yk-details__media-play" type="button" aria-label="{{ yk_video_title | escape }}" data-yk-embed-play>
+      <svg class="yk-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+    </button>
+  </div>
+{%- elsif media_settings.video != blank -%}
   <div class="{{ class_name }} yk-details__media--{{ media_width }}" {{ attributes }} data-yk-video>
     {{
       media_settings.video

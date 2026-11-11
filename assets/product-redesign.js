@@ -331,3 +331,18 @@ document.querySelectorAll('[data-yk-pdp-reviews]').forEach(initYkPdpReviews);
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-pdp-reviews]').forEach(initYkPdpReviews);
 });
+
+// Tabs media: YouTube/Vimeo player is loaded only when the visitor presses play
+document.addEventListener('click', (event) => {
+  const play = event.target.closest('[data-yk-embed-play]');
+  if (!play) return;
+  const box = play.closest('[data-yk-embed]');
+  if (!box || box.querySelector('iframe')) return;
+  const frame = document.createElement('iframe');
+  frame.src = box.dataset.ykEmbed;
+  frame.title = box.dataset.ykEmbedTitle || 'Video';
+  frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+  frame.allowFullscreen = true;
+  box.appendChild(frame);
+  play.remove();
+});
