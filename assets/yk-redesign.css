@@ -53,6 +53,8 @@ body.yk-redesign .yk-announcement .announcement-bar__item-inner {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  /* The item already sits between the arrows: the theme's extra 128px inset forced short messages onto 2 lines */
+  max-width: 100%;
 }
 body.yk-redesign .yk-announcement .announcement-bar__item .yk-icon { width: 20px; height: 20px; }
 body.yk-redesign .yk-announcement .slider-nav-button { width: 24px; height: 24px; padding: 0; color: var(--yk-black); }
@@ -791,4 +793,10 @@ body.yk-redesign .yk-header button:focus-visible {
   content: "";
   position: absolute;
   inset: max(-4px, calc((24px - 100%) / -2)) -4px;
+}
+
+/* Announcement bar at 960-1279px: equal columns were too narrow for the shipping message (it wrapped) */
+@media (min-width: 960px) and (max-width: 1279px) {
+  body.yk-redesign .yk-announcement__inline { grid-auto-columns: auto; justify-content: space-between; }
+  body.yk-redesign .yk-announcement__item { white-space: nowrap; }
 }
