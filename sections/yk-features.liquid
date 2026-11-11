@@ -30,9 +30,14 @@
             >
           {%- endif -%}
           <div class="yk-feature__content">
-            {%- if block.settings.title != blank -%}
-              <h3 class="yk-feature__title">{{ block.settings.title | escape }}</h3>
-            {%- endif -%}
+            <div class="yk-feature__head">
+              {%- if block.settings.icon != blank and block.settings.icon != 'none' -%}
+                <span class="yk-feature__icon">{% render 'yk-line-icon', icon: block.settings.icon %}</span>
+              {%- endif -%}
+              {%- if block.settings.title != blank -%}
+                <h3 class="yk-feature__title">{{ block.settings.title | escape }}</h3>
+              {%- endif -%}
+            </div>
             {%- if block.settings.text != blank -%}
               <div class="yk-feature__text">{{ block.settings.text }}</div>
             {%- endif -%}
@@ -76,6 +81,23 @@
           ]
         },
         { "type": "range", "id": "image_position_x", "label": "Image horizontal position", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50 },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "none",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "grid", "label": "Grid" },
+            { "value": "flame", "label": "Flame" },
+            { "value": "chef", "label": "Chef hat" },
+            { "value": "plus", "label": "Plus" },
+            { "value": "drop", "label": "Drop" },
+            { "value": "oven", "label": "Oven" }
+          ]
+        },
         { "type": "text", "id": "title", "label": "Title", "default": "Heat and Seasoning Retention" },
         { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Yosukata’s skillet pans stay hot for longer, cook your food evenly, and suck up seasoning from everything sizzled on it.</p>" }
       ]

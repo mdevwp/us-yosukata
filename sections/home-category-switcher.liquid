@@ -27,7 +27,7 @@
         src="{% if first_block.settings.image != blank %}{{ first_block.settings.image | image_url: width: 1200 }}{% else %}{{ 'home-category.jpg' | asset_url }}{% endif %}"
         alt="{{ first_block.settings.title | default: first_block.settings.collection.title | escape }}"
         width="1080" height="1080" loading="lazy">
-      <a data-home-category-link href="{{ first_url }}">{{ section.settings.button_label | escape }}</a>
+      <a data-home-category-link href="{{ first_url }}"><span class="home-categories__see-all">{{ section.settings.button_label | escape }}</span></a>
     </div>
   </div>
 </section>

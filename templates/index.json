@@ -316,7 +316,8 @@
             "fallback_image": "yk-feature-heat",
             "title": "Heat and Seasoning Retention",
             "text": "<p>Yosukata’s skillet pans stay hot for longer, cook your food evenly, and suck up seasoning from everything sizzled on it.</p>",
-            "image_position_x": 50
+            "image_position_x": 50,
+            "icon": "flame"
           }
         },
         "feature_maintenance": {
@@ -325,7 +326,8 @@
             "fallback_image": "yk-feature-maintenance",
             "title": "Easy Maintenance",
             "text": "<p>Say goodbye to scrubbing burnt pots and frying pans. These skillets and wok pans can be cleaned just by wiping with a wet cloth and drying.</p>",
-            "image_position_x": 91
+            "image_position_x": 91,
+            "icon": "drop"
           }
         },
         "feature_options": {
@@ -334,7 +336,8 @@
             "fallback_image": "yk-feature-options",
             "title": "Endless Options",
             "text": "<p>In addition to using your skillet on the stovetop, you can place them in the oven for baking and serve in them directly for a professional look.</p>",
-            "image_position_x": 50
+            "image_position_x": 50,
+            "icon": "oven"
           }
         }
       },
@@ -369,37 +372,43 @@
         "benefit_1": {
           "type": "benefit",
           "settings": {
-            "text": "It’s a natural alternative to cheap\ncarcinogenic cookware;"
+            "text": "It’s a natural alternative to cheap\ncarcinogenic cookware;",
+            "icon": "leaf"
           }
         },
         "benefit_2": {
           "type": "benefit",
           "settings": {
-            "text": "The material lasts way longer\nthan other types of cookware;"
+            "text": "The material lasts way longer\nthan other types of cookware;",
+            "icon": "shield"
           }
         },
         "benefit_3": {
           "type": "benefit",
           "settings": {
-            "text": "It’s super versatile;"
+            "text": "It’s super versatile;",
+            "icon": "grid"
           }
         },
         "benefit_4": {
           "type": "benefit",
           "settings": {
-            "text": "It heats food more evenly, resulting\nin better-cooked food;"
+            "text": "It heats food more evenly, resulting\nin better-cooked food;",
+            "icon": "flame"
           }
         },
         "benefit_5": {
           "type": "benefit",
           "settings": {
-            "text": "Carbon steel is what the most successful\nprofessional chefs use;"
+            "text": "Carbon steel is what the most successful\nprofessional chefs use;",
+            "icon": "chef"
           }
         },
         "benefit_6": {
           "type": "benefit",
           "settings": {
-            "text": "And more!"
+            "text": "And more!",
+            "icon": "plus"
           }
         }
       },

@@ -60,7 +60,14 @@
       <ol class="yk-season__benefits" role="list">
         {%- for block in benefits -%}
           <li class="yk-season__benefit" {{ block.shopify_attributes }}>
-            <span class="yk-season__number">{{ forloop.index }}</span>
+            {%- comment -%}QA 11.11 p.18: pictograms in every benefit list; the number stays when no icon is chosen{%- endcomment -%}
+            <span class="yk-season__number{% if block.settings.icon != blank and block.settings.icon != 'none' %} yk-season__number--icon{% endif %}" aria-hidden="true">
+              {%- if block.settings.icon != blank and block.settings.icon != 'none' -%}
+                {% render 'yk-line-icon', icon: block.settings.icon %}
+              {%- else -%}
+                {{ forloop.index }}
+              {%- endif -%}
+            </span>
             <span class="yk-season__benefit-text">{{ block.settings.text | escape | newline_to_br }}</span>
           </li>
         {%- endfor -%}
@@ -106,7 +113,25 @@
       "name": "Benefit",
       "limit": 12,
       "settings": [
-        { "type": "textarea", "id": "text", "label": "Text", "default": "Benefit text" }
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Benefit text" },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "info": "None shows the item number",
+          "default": "none",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "grid", "label": "Grid" },
+            { "value": "flame", "label": "Flame" },
+            { "value": "chef", "label": "Chef hat" },
+            { "value": "plus", "label": "Plus" },
+            { "value": "drop", "label": "Drop" },
+            { "value": "oven", "label": "Oven" }
+          ]
+        }
       ]
     }
   ],
