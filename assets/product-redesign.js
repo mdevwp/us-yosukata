@@ -346,3 +346,17 @@ document.addEventListener('click', (event) => {
   box.appendChild(frame);
   play.remove();
 });
+
+// "Buy with shop" (design style): open Shop Pay checkout for the selected variant and quantity
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('[data-yk-shop-pay]');
+  if (!link) return;
+  const buy = link.closest('[data-yk-buy]') || document;
+  const variant = buy.querySelector('[data-yk-shop-variant]');
+  const qtyInput = buy.querySelector('[data-yk-qty] input[name="quantity"]');
+  const qty = Math.max(1, parseInt(qtyInput ? qtyInput.value : '1', 10) || 1);
+  if (!variant || !variant.value) return;
+  event.preventDefault();
+  const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+  window.location.href = root + 'cart/' + variant.value + ':' + qty + '?payment=shop_pay';
+});

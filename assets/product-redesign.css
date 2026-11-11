@@ -1097,3 +1097,19 @@
 .yk-details__media-play:hover { background: #8f001f; transform: translate(-50%, -50%) scale(1.05); }
 .yk-details__media-play:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 .yk-details__media--embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* "Buy with shop" as in Figma: white, outlined, Shop logo in Shop purple */
+.yk-product__button--shop {
+  gap: 6px;
+  border: 1px solid var(--yk-pdp-ink);
+  background: #fff;
+  color: var(--yk-black);
+  text-decoration: none;
+  transition: background-color .2s ease;
+}
+.yk-product__button--shop:hover { background: var(--yk-grey-bg); }
+.yk-product__button--shop:focus-visible { outline: 2px solid var(--yk-red); outline-offset: 2px; }
+.yk-product__shop-logo { display: block; width: 44px; height: auto; color: #5a31f4; transform: translateY(1px); }
+@media (min-width: 960px) {
+  .yk-product__shop-logo { width: 48px; }
+}
