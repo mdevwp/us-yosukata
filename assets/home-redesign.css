@@ -1863,3 +1863,19 @@
   .home-categories__panel a:hover .home-categories__see-all,
   .home-categories__panel a:focus-visible .home-categories__see-all { background: var(--yk-red); color: #fff; }
 }
+
+/* Hero on tablets (600-959px): the portrait photo was stretched to the full width (the chef photo 3x and soft).
+   Show it at full slide height instead, centred, with its side edges faded into the dark slide. */
+@media (min-width: 600px) and (max-width: 959px) {
+  .yk-hero__slide:not(.yk-hero__slide--no-mobile-image) .yk-hero__media img {
+    inset: 0 auto auto 50%;
+    width: auto;
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transform: translateX(-50%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+  }
+}
