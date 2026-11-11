@@ -1061,3 +1061,13 @@
   .yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls > .jm-cluster { gap: 8px; }
   .yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button { min-width: 56px; height: 56px; font-size: 16px; }
 }
+
+/* Buy with Shop: the theme sets radius 0 and 48px straight on the Shopify element, which overrode the values above.
+   Shopify only lets themes change the height, corner radius and shadow of this button (its colours are fixed). */
+.yk-product__dynamic shopify-accelerated-checkout {
+  --shopify-accelerated-checkout-button-block-size: 48px;
+  --shopify-accelerated-checkout-button-border-radius: 100px;
+}
+@media (min-width: 960px) {
+  .yk-product__dynamic shopify-accelerated-checkout { --shopify-accelerated-checkout-button-block-size: 56px; }
+}
