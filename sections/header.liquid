@@ -566,6 +566,9 @@
     mobile_menu_image_blocks: mobile_menu_image_blocks,
     social_icons_mobile: social_icons_mobile
   %}
+  {%- if yk_redesign == 'true' -%}
+    {% render 'yk-mobile-menu', links: links, secondary_links: secondary_links, logo: logo %}
+  {%- endif -%}
 </header>
 
 {%- if yk_redesign == 'true' -%}

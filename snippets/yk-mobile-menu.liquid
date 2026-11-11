@@ -1,0 +1,249 @@
+{%- comment -%}
+  Mobile menu from the 2026 Figma ("Nav Menu (390)" and "Nav Menu - Subcategory (390)").
+  Built from the header menu:
+  - first-level links with children open their own screen;
+  - on that screen a child link with its own children becomes a group (grey heading + its links),
+    child links without children are listed as they are;
+  - "Full Catalog" leads to the parent link, or to all products when the parent is "#" and the section lists collections.
+  The small links at the bottom come from the header's secondary menu; without one: Login, FAQ, Returns/exchanges.
+  Params: links, secondary_links, logo
+{%- endcomment -%}
+{%- liquid
+  assign yk_locale = request.locale.iso_code | upcase
+  if yk_locale == 'EN'
+    assign yk_locale = 'ENG'
+  endif
+  assign yk_currency = localization.country.currency.iso_code | default: cart.currency.iso_code
+-%}
+{%- capture yk_chevron_right -%}<svg class="yk-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6l6 6-6 6"/></svg>{%- endcapture -%}
+{%- capture yk_chevron_left -%}<svg class="yk-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6"/></svg>{%- endcapture -%}
+{%- capture yk_close -%}
+  <button type="button" class="yk-mmenu__icon-btn" data-yk-mmenu-close aria-label="{{ 'general.accessibility.close_menu' | t }}">
+    <svg class="yk-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+{%- endcapture -%}
+
+<div class="yk-mmenu" data-yk-mmenu hidden role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="yk-mmenu__screen is-current" data-yk-mmenu-screen="root">
+    <div class="yk-mmenu__top">
+      <a class="yk-mmenu__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+        {%- if logo != blank -%}
+          {{ logo | image_url: width: 312 | image_tag: alt: shop.name, loading: 'lazy' }}
+        {%- else -%}
+          {{ shop.name }}
+        {%- endif -%}
+      </a>
+      {%- if yk_currency != blank -%}
+        <span class="yk-mmenu__prefs">
+          <span>{{ yk_locale }}</span>
+          <span class="yk-mmenu__prefs-sep" aria-hidden="true"></span>
+          <span>{{ yk_currency }}</span>
+        </span>
+      {%- endif -%}
+      {{ yk_close }}
+    </div>
+
+    <nav class="yk-mmenu__body" aria-label="Menu">
+      <ul class="yk-mmenu__list yk-mmenu__list--main">
+        {%- for link in links -%}
+          <li>
+            {%- if link.links.size > 0 -%}
+              <button type="button" class="yk-mmenu__row" data-yk-mmenu-open="yk-mmenu-{{ forloop.index }}" aria-expanded="false">
+                <span>{{ link.title | escape }}</span>
+                {{ yk_chevron_right }}
+              </button>
+            {%- else -%}
+              <a class="yk-mmenu__row" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>
+                <span>{{ link.title | escape }}</span>
+                {{ yk_chevron_right }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <ul class="yk-mmenu__extra">
+        {%- if secondary_links.size > 0 -%}
+          {%- for link in secondary_links -%}
+            <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+          {%- endfor -%}
+        {%- else -%}
+          {%- if shop.customer_accounts_enabled -%}
+            <li><a href="{{ routes.account_url }}">{% if customer %}Account{% else %}Login{% endif %}</a></li>
+          {%- endif -%}
+          {%- if pages['faq'] != blank -%}
+            <li><a href="{{ pages['faq'].url }}">FAQ</a></li>
+          {%- endif -%}
+          {%- if pages['warranty-and-returns'] != blank -%}
+            <li><a href="{{ pages['warranty-and-returns'].url }}">Returns/exchanges</a></li>
+          {%- endif -%}
+        {%- endif -%}
+      </ul>
+    </nav>
+  </div>
+
+  {%- for link in links -%}
+    {%- if link.links.size > 0 -%}
+      {%- liquid
+        assign yk_catalog_url = ''
+        if link.url != '#' and link.url != blank
+          if link.type == 'collection_link' or link.type == 'catalog_link' or link.type == 'collections_link'
+            assign yk_catalog_url = link.url
+          endif
+        else
+          assign yk_first_child = link.links | first
+          if yk_first_child.type == 'collection_link'
+            assign yk_catalog_url = routes.all_products_collection_url
+          endif
+        endif
+      -%}
+      <div class="yk-mmenu__screen" id="yk-mmenu-{{ forloop.index }}" data-yk-mmenu-screen hidden>
+        <div class="yk-mmenu__top yk-mmenu__top--sub">
+          <button type="button" class="yk-mmenu__icon-btn" data-yk-mmenu-back aria-label="{{ 'general.accessibility.back' | t }}">
+            {{ yk_chevron_left }}
+          </button>
+          <p class="yk-mmenu__title">{{ link.title | escape }}</p>
+          {{ yk_close }}
+        </div>
+
+        <div class="yk-mmenu__body">
+          {%- assign yk_open_list = false -%}
+          {%- for child in link.links -%}
+            {%- if child.links.size > 0 -%}
+              {%- if yk_open_list -%}</ul></div>{%- assign yk_open_list = false -%}{%- endif -%}
+              <div class="yk-mmenu__group">
+                <p class="yk-mmenu__group-title">{{ child.title | escape }}</p>
+                <ul class="yk-mmenu__list">
+                  {%- for grandchild in child.links -%}
+                    <li>
+                      <a class="yk-mmenu__row yk-mmenu__row--small" href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>
+                        <span>{{ grandchild.title | escape }}</span>
+                        {{ yk_chevron_right }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- else -%}
+              {%- unless yk_open_list -%}<div class="yk-mmenu__group"><ul class="yk-mmenu__list">{%- assign yk_open_list = true -%}{%- endunless -%}
+              <li>
+                <a class="yk-mmenu__row yk-mmenu__row--small" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>
+                  <span>{{ child.title | escape }}</span>
+                  {{ yk_chevron_right }}
+                </a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if yk_open_list -%}</ul></div>{%- endif -%}
+
+          {%- if yk_catalog_url != blank -%}
+            <a class="yk-mmenu__catalog" href="{{ yk_catalog_url }}">Full Catalog</a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+</div>
+
+<script>
+  (() => {
+    const menu = document.querySelector('[data-yk-mmenu]');
+    if (!menu || menu.dataset.ready) return;
+    menu.dataset.ready = 'true';
+    // Out of the header, so no transformed or sticky parent can trap the fixed overlay
+    document.body.appendChild(menu);
+    const root = menu.querySelector('[data-yk-mmenu-screen="root"]');
+    const mobile = window.matchMedia('(max-width: 959px)');
+    let opener = null;
+    let closeTimer = null;
+
+    const show = (screen, back) => {
+      const current = menu.querySelector('.yk-mmenu__screen.is-current');
+      if (current === screen) return;
+      screen.hidden = false;
+      screen.classList.toggle('is-from-left', back);
+      screen.getBoundingClientRect();
+      current.classList.remove('is-current');
+      current.classList.toggle('is-leaving-left', !back);
+      screen.classList.remove('is-from-left');
+      screen.classList.add('is-current');
+      setTimeout(() => {
+        current.hidden = true;
+        current.classList.remove('is-leaving-left');
+      }, 300);
+      const focusTarget = screen.querySelector(back ? '[data-yk-mmenu-open][aria-expanded="true"]' : '[data-yk-mmenu-back]');
+      menu.querySelectorAll('[data-yk-mmenu-open]').forEach((button) => button.setAttribute('aria-expanded', 'false'));
+      if (focusTarget) focusTarget.focus({ preventScroll: true });
+    };
+
+    const open = (button) => {
+      clearTimeout(closeTimer);
+      opener = button;
+      menu.querySelectorAll('[data-yk-mmenu-screen]').forEach((screen) => {
+        const isRoot = screen === root;
+        screen.hidden = !isRoot;
+        screen.classList.toggle('is-current', isRoot);
+        screen.classList.remove('is-from-left', 'is-leaving-left');
+      });
+      menu.hidden = false;
+      menu.getBoundingClientRect();
+      menu.classList.add('is-open');
+      document.documentElement.classList.add('yk-mmenu-lock');
+      document.querySelectorAll('[data-js-menu-button]').forEach((b) => b.setAttribute('aria-expanded', 'true'));
+      menu.querySelector('[data-yk-mmenu-close]').focus({ preventScroll: true });
+    };
+
+    const close = () => {
+      if (menu.hidden) return;
+      menu.classList.remove('is-open');
+      document.documentElement.classList.remove('yk-mmenu-lock');
+      document.querySelectorAll('[data-js-menu-button]').forEach((b) => b.setAttribute('aria-expanded', 'false'));
+      closeTimer = setTimeout(() => { menu.hidden = true; }, 250);
+      if (opener) opener.focus({ preventScroll: true });
+    };
+
+    // The theme's own drawer opens from the same button: take the click first on phones and tablets
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-js-menu-button]');
+      if (!button || !mobile.matches) return;
+      event.preventDefault();
+      event.stopPropagation();
+      open(button);
+    }, true);
+
+    menu.addEventListener('click', (event) => {
+      const openButton = event.target.closest('[data-yk-mmenu-open]');
+      if (openButton) {
+        const screen = document.getElementById(openButton.dataset.ykMmenuOpen);
+        show(screen, false);
+        openButton.setAttribute('aria-expanded', 'true');
+        return;
+      }
+      if (event.target.closest('[data-yk-mmenu-back]')) {
+        const fromScreen = event.target.closest('[data-yk-mmenu-screen]');
+        show(root, true);
+        const trigger = root.querySelector('[data-yk-mmenu-open="' + fromScreen.id + '"]');
+        if (trigger) trigger.focus({ preventScroll: true });
+        return;
+      }
+      if (event.target.closest('[data-yk-mmenu-close]')) { close(); return; }
+      // A link to a section of the current page (for example #about-us) would stay under the open menu
+      if (event.target.closest('a[href]')) close();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (menu.hidden) return;
+      if (event.key === 'Escape') { close(); return; }
+      if (event.key !== 'Tab') return;
+      const screen = menu.querySelector('.yk-mmenu__screen.is-current');
+      const items = [...screen.querySelectorAll('a[href], button:not([disabled])')];
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    });
+
+    mobile.addEventListener('change', () => { if (!mobile.matches) close(); });
+  })();
+</script>
