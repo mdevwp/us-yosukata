@@ -1000,3 +1000,8 @@ body.yk-redesign .yk-header .header__inner button:hover,
 body.yk-redesign .yk-header .header__icon-touch:hover {
   color: var(--yk-red) !important;
 }
+
+/* Desktop dropdown: the design shows the page as is under the open menu, without the theme's grey dimming */
+@media (min-width: 960px) {
+  body.yk-redesign:has(.yk-header.dropdown-active) .header-overlay__inner { opacity: 0; }
+}
