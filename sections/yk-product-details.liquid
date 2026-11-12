@@ -138,11 +138,25 @@
                 if spec_path.size == 2
                   assign spec_value = product.metafields[spec_path[0]][spec_path[1]].value
                 endif
+                comment
+                  Optional third part: a product metafield with a photo (File, image) shown in the card.
+                  Without a photo the card stays grey, as in the design.
+                endcomment
+                assign spec_photo = nil
+                assign photo_path = row_parts[2] | strip | split: '.'
+                if photo_path.size == 2
+                  assign spec_photo = product.metafields[photo_path[0]][photo_path[1]].value
+                endif
               -%}
               {%- if spec_value != blank -%}
-                <div class="yk-details__spec">
-                  <p class="yk-details__spec-label">{{ spec_label | escape }}</p>
-                  <p class="yk-details__spec-value">{{ spec_value | escape }}</p>
+                <div class="yk-details__spec{% if spec_photo != blank %} yk-details__spec--photo{% endif %}">
+                  <div class="yk-details__spec-text">
+                    <p class="yk-details__spec-label">{{ spec_label | escape }}</p>
+                    <p class="yk-details__spec-value">{{ spec_value | escape }}</p>
+                  </div>
+                  {%- if spec_photo != blank -%}
+                    {{ spec_photo | image_url: width: 1200 | image_tag: widths: '400, 600, 800, 1200', sizes: '(min-width: 960px) 540px, 100vw', loading: 'lazy', class: 'yk-details__spec-image', alt: spec_photo.alt | default: spec_label }}
+                  {%- endif -%}
                 </div>
               {%- endif -%}
             {%- endfor -%}
@@ -254,8 +268,8 @@
           "type": "textarea",
           "id": "specs",
           "label": "Cards",
-          "default": "Material | custom.material\nHandle material | custom.handle_material\nDiameter | custom.diameter",
-          "info": "One card per line: Label | namespace.key of a product metafield. Cards without a value are hidden."
+          "default": "Material | custom.material | custom.material_photo\nHandle material | custom.handle_material | custom.handle_material_photo\nDiameter | custom.diameter | custom.diameter_photo",
+          "info": "One card per line: Label | value metafield | photo metafield (optional, File type, image). Cards without a value are hidden; without a photo the card stays grey."
         }
       ]
     },

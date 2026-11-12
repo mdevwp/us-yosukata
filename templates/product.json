@@ -573,7 +573,7 @@
         "specs": {
           "type": "specs",
           "settings": {
-            "specs": "Material | custom.material\nHandle material | custom.handle_material\nDiameter | custom.diameter"
+            "specs": "Material | custom.material | custom.material_photo\nHandle material | custom.handle_material | custom.handle_material_photo\nDiameter | custom.diameter | custom.diameter_photo"
           }
         },
         "tab_care": {

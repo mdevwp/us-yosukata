@@ -1635,3 +1635,25 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__nav-btn-clos
   .yk-reviews-pdp #judgeme_product_reviews .jm-media-preview { margin-bottom: 32px; }
   .yk-reviews-pdp #judgeme_product_reviews .jm-media-grid__item { width: 120px; height: 120px; }
 }
+
+/* Specification cards with a photo (optional product metafields material_photo, handle_material_photo,
+   diameter_photo): the photo fills the card under the text; without one the card stays grey as in the design */
+.yk-details__spec { position: relative; overflow: hidden; }
+.yk-details__spec-text { position: relative; z-index: 1; display: flex; flex-direction: column; gap: inherit; }
+.yk-details__spec--photo { justify-content: flex-start; }
+.yk-details__spec-image {
+  display: block;
+  width: calc(100% + 48px);
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  margin: 24px -24px -24px;
+  object-fit: cover;
+}
+@media (min-width: 960px) {
+  .yk-details__spec--photo:last-child:nth-child(odd) { flex-direction: column-reverse; justify-content: flex-start; }
+  .yk-details__spec--photo:last-child:nth-child(odd) .yk-details__spec-image { margin: -40px -40px 24px; width: calc(100% + 80px); }
+}
+/* Without a photo the text wrapper steps aside, so the cards keep exactly the design layout */
+.yk-details__spec:not(.yk-details__spec--photo) .yk-details__spec-text { display: contents; }
