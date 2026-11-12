@@ -123,7 +123,10 @@
                   block is used only when "Same media for every product" is chosen.
                 endcomment
                 assign yk_desc_photo = nil
+                assign yk_desc_video = nil
                 if block.settings.photo_source != 'shared'
+                  # A product video (as in the design: plays muted on loop with a pause button) comes first
+                  assign yk_desc_video = product.metafields.custom.description_video.value
                   assign yk_desc_photo = product.metafields.custom.description_photo.value
                   if yk_desc_photo == blank and block.settings.gallery_photo > 0
                     assign yk_gallery_index = block.settings.gallery_photo | minus: 1
@@ -131,7 +134,18 @@
                   endif
                 endif
               -%}
-              {%- if yk_desc_photo != blank -%}
+              {%- if yk_desc_video != blank and yk_desc_video.media_type == 'video' -%}
+                <div class="yk-details__media yk-details__media--content" data-yk-video>
+                  {{
+                    yk_desc_video
+                    | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', class: 'yk-details__media-el'
+                  }}
+                  <button class="yk-details__media-toggle" type="button" aria-label="{{ 'general.accessibility.pause' | t }}" data-label-play="{{ 'general.accessibility.play' | t }}" data-label-pause="{{ 'general.accessibility.pause' | t }}" data-yk-video-toggle>
+                    {% render 'yk-icon', icon: 'pause' %}
+                    <svg class="yk-icon yk-icon--play" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10.5-6.5z"/></svg>
+                  </button>
+                </div>
+              {%- elsif yk_desc_photo != blank -%}
                 <div class="yk-details__media yk-details__media--content">
                   {{ yk_desc_photo | image_url: width: 2000 | image_tag: class: 'yk-details__media-el', loading: 'lazy', widths: '600, 900, 1200, 1600, 2000', sizes: '(min-width: 960px) 75vw, 92vw', alt: yk_desc_photo.alt | default: product.title }}
                 </div>
@@ -266,7 +280,7 @@
             { "value": "shared", "label": "Same media for every product (below)" }
           ],
           "default": "product",
-          "info": "This product's photo: the product field custom.description_photo, else the gallery photo with the number below; nothing if neither exists."
+          "info": "This product's media: the product field custom.description_video (plays muted on loop with a pause button), else custom.description_photo, else the gallery photo with the number below; nothing if none exists."
         },
         { "type": "range", "id": "gallery_photo", "label": "Gallery photo number", "min": 0, "max": 10, "step": 1, "default": 0, "info": "Used when the product has no description photo of its own. 0: show nothing (many gallery images are infographics with text)." },
         { "type": "image_picker", "id": "image", "label": "Image" },
