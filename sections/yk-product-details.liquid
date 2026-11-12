@@ -268,7 +268,7 @@
           "default": "product",
           "info": "This product's photo: the product field custom.description_photo, else the gallery photo with the number below; nothing if neither exists."
         },
-        { "type": "range", "id": "gallery_photo", "label": "Gallery photo number", "min": 0, "max": 10, "step": 1, "default": 2, "info": "0: do not take a photo from the gallery" },
+        { "type": "range", "id": "gallery_photo", "label": "Gallery photo number", "min": 0, "max": 10, "step": 1, "default": 0, "info": "Used when the product has no description photo of its own. 0: show nothing (many gallery images are infographics with text)." },
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "video", "id": "video", "label": "Video", "info": "Plays muted on loop, with a pause button" },
         { "type": "video_url", "id": "video_url", "label": "YouTube or Vimeo video", "accept": ["youtube", "vimeo"], "info": "Shows a cover with a play button; the player loads on click. Cover: the image above, else the default image file, else the video thumbnail." },
@@ -316,8 +316,8 @@
           "min": 0,
           "max": 10,
           "step": 1,
-          "default": 3,
-          "info": "Card 1 takes this gallery photo, card 2 the next, and so on. 0: cards without their own photo stay grey."
+          "default": 0,
+          "info": "Card 1 takes this gallery photo, card 2 the next, and so on. 0: cards without their own photo stay grey, as in the design."
         }
       ]
     },
