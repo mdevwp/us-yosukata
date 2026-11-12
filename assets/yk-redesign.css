@@ -980,3 +980,23 @@ body.yk-redesign .yk-header.is-sticky .header__inner a.yk-header-search:hover {
   background-color: #f6f6f6 !important;
   color: var(--yk-black) !important;
 }
+
+/* The old theme forces a dark see-through header with white text and icons (!important) on every page except home
+   and on the sticky header. The redesign header is white everywhere, so its icons and text stay black. */
+body.yk-redesign .yk-header,
+body.yk-redesign .yk-header.is-sticky,
+body.yk-redesign .yk-header.is-sticky:hover {
+  background-color: #fff !important;
+  color: var(--yk-black) !important;
+  --color-background-header: #fff !important;
+}
+body.yk-redesign .yk-header .header__inner,
+body.yk-redesign .yk-header .header__inner button,
+body.yk-redesign .yk-header .header__icon-touch,
+body.yk-redesign .yk-header .header__logo-text {
+  color: var(--yk-black) !important;
+}
+body.yk-redesign .yk-header .header__inner button:hover,
+body.yk-redesign .yk-header .header__icon-touch:hover {
+  color: var(--yk-red) !important;
+}
