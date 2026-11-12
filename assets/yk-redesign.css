@@ -855,3 +855,7 @@ body.yk-redesign .yk-announcement__service { display: none; }
   body.yk-redesign .yk-announcement__inline .yk-announcement__item.is-current { display: flex; animation: yk-announce-in .4s ease; }
 }
 @keyframes yk-announce-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Cart count: Montserrat digits sit ~0.7px right of their advance box, so a centred "1" looked off-centre.
+   One pixel less padding on the left balances the glyph optically. */
+body.yk-redesign .yk-header [data-js-cart-count] { padding: 0 5px 0 3px; font-variant-numeric: tabular-nums; }
