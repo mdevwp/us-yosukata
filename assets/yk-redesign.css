@@ -859,3 +859,12 @@ body.yk-redesign .yk-announcement__service { display: none; }
 /* Cart count: Montserrat digits sit ~0.7px right of their advance box, so a centred "1" looked off-centre.
    One pixel less padding on the left balances the glyph optically. */
 body.yk-redesign .yk-header [data-js-cart-count] { padding: 0 5px 0 3px; font-variant-numeric: tabular-nums; }
+
+/* Cart count: the old theme forces a white badge with !important on every page except home and on the sticky header
+   (made for its dark header). On the white redesign header that left a bare "1"; keep the black badge everywhere. */
+body.yk-redesign .yk-header [data-js-cart-count],
+body.yk-redesign .yk-header.is-sticky [data-js-cart-count] {
+  background-color: var(--yk-black, #000) !important;
+  color: #fff !important;
+  box-shadow: 0 0 0 2px #fff !important;
+}
