@@ -1005,3 +1005,17 @@ body.yk-redesign .yk-header .header__icon-touch:hover {
 @media (min-width: 960px) {
   body.yk-redesign:has(.yk-header.dropdown-active) .header-overlay__inner { opacity: 0; }
 }
+
+/* Desktop menu type as in Figma (Desktop/Button: Montserrat SemiBold 14/24, -1%); the open or hovered item is
+   only red, without the theme's underline */
+@media (min-width: 960px) {
+  body.yk-redesign .yk-header .header__links-primary a,
+  body.yk-redesign .yk-header .header__links-primary .navigation__link,
+  body.yk-redesign .yk-header .header__links-primary .header__links-list > li > a,
+  body.yk-redesign .yk-header .header__links-primary .header__links-list > li > button,
+  body.yk-redesign .yk-header .navigation__submenu-item [data-link] {
+    line-height: 24px;
+    letter-spacing: -.01em;
+  }
+  body.yk-redesign .yk-header .header__links-primary .link-hover::before { display: none; }
+}
