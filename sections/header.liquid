@@ -386,18 +386,21 @@
 {%- endcapture -%}
 
 {%- capture yk_search_field -%}
-  <form class="yk-header-search" action="{{ routes.search_url }}" method="get" role="search">
-    <label class="visually-hidden" for="YkHeaderSearch">{{ 'general.accessibility.open_search' | t }}</label>
-    <input
-      class="yk-header-search__input"
-      id="YkHeaderSearch"
-      type="search"
-      name="q"
-      placeholder="Search"
-      autocomplete="off"
-    >
-    <button class="yk-header-search__button" type="submit" aria-label="Search">{% render 'yk-icon', icon: 'search' %}</button>
-  </form>
+  {%- comment -%}
+    Looks like a field (12.11 design) but opens the store's search drawer with live results,
+    the same as the search icon did. Without JS it goes to the search page.
+  {%- endcomment -%}
+  <a
+    class="yk-header-search"
+    href="{{ routes.search_url }}"
+    {% if settings.enable_quick_search %}data-search{% endif %}
+    aria-label="{{ 'general.accessibility.open_search' | t }}"
+    aria-controls="MainQuickSearch"
+    aria-expanded="false"
+  >
+    <span class="yk-header-search__placeholder">Search</span>
+    <span class="yk-header-search__icon">{% render 'yk-icon', icon: 'search' %}</span>
+  </a>
 {%- endcapture -%}
 
 {%- capture yk_phone_icon -%}
