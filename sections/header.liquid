@@ -391,7 +391,7 @@
     the same as the search icon did. Without JS it goes to the search page.
   {%- endcomment -%}
   <a
-    class="yk-header-search"
+    class="yk-header-search{% if settings.enable_quick_search %} no-transition{% endif %}"
     href="{{ routes.search_url }}"
     {% if settings.enable_quick_search %}data-search{% endif %}
     aria-label="{{ 'general.accessibility.open_search' | t }}"
