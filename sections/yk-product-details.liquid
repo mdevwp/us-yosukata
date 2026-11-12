@@ -116,7 +116,28 @@
               <div class="yk-details__rte">{{ description_intro }}</div>
             {%- endif -%}
             {%- if block.settings.split_after_intro -%}
-              {% render 'yk-product-media', media_block: block, class_name: 'yk-details__media yk-details__media--content' %}
+              {%- liquid
+                comment
+                  Photo after the intro belongs to this product: its own "Description photo" field,
+                  else a photo from its gallery (number set in the block). The shared image/video/file of the
+                  block is used only when "Same media for every product" is chosen.
+                endcomment
+                assign yk_desc_photo = nil
+                if block.settings.photo_source != 'shared'
+                  assign yk_desc_photo = product.metafields.custom.description_photo.value
+                  if yk_desc_photo == blank and block.settings.gallery_photo > 0
+                    assign yk_gallery_index = block.settings.gallery_photo | minus: 1
+                    assign yk_desc_photo = product.images[yk_gallery_index]
+                  endif
+                endif
+              -%}
+              {%- if yk_desc_photo != blank -%}
+                <div class="yk-details__media yk-details__media--content">
+                  {{ yk_desc_photo | image_url: width: 2000 | image_tag: class: 'yk-details__media-el', loading: 'lazy', widths: '600, 900, 1200, 1600, 2000', sizes: '(min-width: 960px) 75vw, 92vw', alt: yk_desc_photo.alt | default: product.title }}
+                </div>
+              {%- elsif block.settings.photo_source == 'shared' -%}
+                {% render 'yk-product-media', media_block: block, class_name: 'yk-details__media yk-details__media--content' %}
+              {%- endif -%}
             {%- endif -%}
             <div class="yk-details__rte yk-details__rte--features">{{ description_rest }}</div>
           </div>
@@ -146,6 +167,11 @@
                 assign photo_path = row_parts[2] | strip | split: '.'
                 if photo_path.size == 2
                   assign spec_photo = product.metafields[photo_path[0]][photo_path[1]].value
+                endif
+                # No photo of its own: the next gallery photos (from the number set in the block), one per card
+                if spec_photo == blank and block.settings.gallery_from > 0
+                  assign spec_gallery_index = block.settings.gallery_from | minus: 1 | plus: forloop.index0
+                  assign spec_photo = product.images[spec_gallery_index]
                 endif
               -%}
               {%- if spec_value != blank -%}
@@ -231,6 +257,18 @@
       "settings": [
         { "type": "paragraph", "content": "Shows the product description. Bold text at the start of a list item becomes its title." },
         { "type": "checkbox", "id": "split_after_intro", "label": "Show media after the first paragraph", "default": true },
+        {
+          "type": "select",
+          "id": "photo_source",
+          "label": "Media after the first paragraph",
+          "options": [
+            { "value": "product", "label": "This product's photo" },
+            { "value": "shared", "label": "Same media for every product (below)" }
+          ],
+          "default": "product",
+          "info": "This product's photo: the product field custom.description_photo, else the gallery photo with the number below; nothing if neither exists."
+        },
+        { "type": "range", "id": "gallery_photo", "label": "Gallery photo number", "min": 0, "max": 10, "step": 1, "default": 2, "info": "0: do not take a photo from the gallery" },
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "video", "id": "video", "label": "Video", "info": "Plays muted on loop, with a pause button" },
         { "type": "video_url", "id": "video_url", "label": "YouTube or Vimeo video", "accept": ["youtube", "vimeo"], "info": "Shows a cover with a play button; the player loads on click. Cover: the image above, else the default image file, else the video thumbnail." },
@@ -269,7 +307,17 @@
           "id": "specs",
           "label": "Cards",
           "default": "Material | custom.material | custom.material_photo\nHandle material | custom.handle_material | custom.handle_material_photo\nDiameter | custom.diameter | custom.diameter_photo",
-          "info": "One card per line: Label | value metafield | photo metafield (optional, File type, image). Cards without a value are hidden; without a photo the card stays grey."
+          "info": "One card per line: Label | value metafield | photo metafield (optional, File type, image). Cards without a value are hidden."
+        },
+        {
+          "type": "range",
+          "id": "gallery_from",
+          "label": "Gallery photos for cards without their own, from number",
+          "min": 0,
+          "max": 10,
+          "step": 1,
+          "default": 3,
+          "info": "Card 1 takes this gallery photo, card 2 the next, and so on. 0: cards without their own photo stay grey."
         }
       ]
     },
