@@ -672,6 +672,7 @@
       const header = document.querySelector('.yk-header');
       const sync = () => header.querySelectorAll('[data-js-cart-count]').forEach((count) => {
         count.classList.toggle('yk-is-empty', count.textContent.trim() === '0');
+        count.classList.toggle('yk-is-one', count.textContent.trim() === '1');
       });
       sync();
       new MutationObserver(sync).observe(header, { subtree: true, childList: true, characterData: true });

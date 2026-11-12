@@ -816,7 +816,9 @@ body.yk-redesign .yk-header button:focus-visible {
 
 /* Cart count: Montserrat digits sit ~0.7px right of their advance box, so a centred "1" looked off-centre.
    One pixel less padding on the left balances the glyph optically. */
-body.yk-redesign .yk-header [data-js-cart-count] { padding: 0 5px 0 3px; font-variant-numeric: tabular-nums; }
+body.yk-redesign .yk-header [data-js-cart-count] { padding: 0 4px; font-variant-numeric: proportional-nums; }
+/* Montserrat draws "1" about half a pixel left of its box; every other count is centred as is */
+body.yk-redesign .yk-header [data-js-cart-count].yk-is-one { padding: 0 3.6px 0 4.5px; }
 
 /* Cart count: the old theme forces a white badge with !important on every page except home and on the sticky header
    (made for its dark header). On the white redesign header that left a bare "1"; keep the black badge everywhere. */
@@ -967,4 +969,13 @@ body.yk-redesign .yk-header.is-sticky [data-js-cart-count] {
 .yk-mmenu__extra a { color: #000; }
 @media (hover: hover) {
   .yk-mmenu__extra a:hover { color: var(--yk-red, #ba0029); }
+}
+
+/* Sticky header: the old theme turns every header link white (and drops link backgrounds on hover) for its dark
+   sticky bar. Our header stays white, so the search field keeps its grey fill and black text and icon. */
+body.yk-redesign .yk-header .header__inner a.yk-header-search,
+body.yk-redesign .yk-header.is-sticky .header__inner a.yk-header-search,
+body.yk-redesign .yk-header.is-sticky .header__inner a.yk-header-search:hover {
+  background-color: #f6f6f6 !important;
+  color: var(--yk-black) !important;
 }
