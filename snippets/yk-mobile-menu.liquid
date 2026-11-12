@@ -50,13 +50,13 @@
           <li>
             {%- if link.links.size > 0 -%}
               <button type="button" class="yk-mmenu__row" data-yk-mmenu-open="yk-mmenu-{{ forloop.index }}" aria-expanded="false">
-                <span>{{ link.title | escape }}</span>
+                <span>{{ link.title | strip | escape }}</span>
                 {{ yk_chevron_right }}
               </button>
             {%- else -%}
               {%- comment -%}No arrow on a plain link: the arrow means a submenu opens{%- endcomment -%}
               <a class="yk-mmenu__row" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>
-                <span>{{ link.title | escape }}</span>
+                <span>{{ link.title | strip | escape }}</span>
               </a>
             {%- endif -%}
           </li>

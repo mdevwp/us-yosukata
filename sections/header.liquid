@@ -347,7 +347,7 @@
 {%- capture yk_utility_items -%}
   {%- if yk_utility_links.size > 0 -%}
     {%- for link in yk_utility_links -%}
-      <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+      <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | strip | escape }}</a></li>
     {%- endfor -%}
   {%- else -%}
     <li><a href="/pages/how-to-season-a-carbon-steel-pan">How to season</a></li>
