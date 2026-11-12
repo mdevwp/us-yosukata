@@ -15,8 +15,13 @@
   <div class="yk-reviews-pdp__inner">
     <h2 class="visually-hidden" id="YkReviewsTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
 
-    {%- if rating_count > 0 -%}
-      <div class="yk-reviews-pdp__header">
+    {%- comment -%}The header (with Write Review) is shown on products without reviews too, so the first review can be written{%- endcomment -%}
+    <div class="yk-reviews-pdp__header{% if rating_count == 0 %} yk-reviews-pdp__header--empty{% endif %}">
+      {%- if rating_count == 0 -%}
+        <div class="yk-reviews-pdp__summary">
+          <p class="yk-reviews-pdp__empty">{{ section.settings.empty_text | escape }}</p>
+        </div>
+      {%- else -%}
         <div class="yk-reviews-pdp__summary">
           <p class="yk-reviews-pdp__average">
             <span class="yk-reviews-pdp__score">{{ rating_value | round: 2 }}</span>
@@ -31,6 +36,7 @@
           </p>
           <p class="yk-reviews-pdp__count">{{ section.settings.count_text | replace: '[count]', rating_count }}</p>
         </div>
+      {%- endif -%}
 
         <div class="yk-reviews-pdp__actions">
           <div class="yk-reviews-pdp__sort" hidden data-yk-reviews-sort-wrap>
@@ -42,8 +48,7 @@
           </div>
           <button class="yk-reviews-pdp__write" type="button" hidden data-yk-reviews-write>{{ section.settings.write_label | escape }}</button>
         </div>
-      </div>
-    {%- endif -%}
+    </div>
 
     <div class="yk-reviews-pdp__widget">
       {%- for block in section.blocks -%}
@@ -60,6 +65,7 @@
   "settings": [
     { "type": "text", "id": "title", "label": "Heading (for screen readers)", "default": "Customer reviews" },
     { "type": "text", "id": "count_text", "label": "Review count text", "default": "Based on [count] reviews" },
+    { "type": "text", "id": "empty_text", "label": "Text when the product has no reviews", "default": "No reviews yet. Be the first to share your experience." },
     { "type": "text", "id": "sort_label", "label": "Sort label", "default": "Sort by" },
     { "type": "text", "id": "write_label", "label": "Write review label", "default": "Write Review", "info": "Shown when the review app offers a write-a-review form" },
     { "type": "text", "id": "anchor", "label": "Anchor id", "default": "reviews" }

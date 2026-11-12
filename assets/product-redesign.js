@@ -293,7 +293,21 @@ function initYkPdpReviews(section) {
   const widget = section.querySelector('.jdgm-widget');
   if (!widget) return;
 
-  const findWrite = () => Array.from(widget.querySelectorAll('button, a')).find((el) => /write/i.test(`${el.className} ${el.textContent}`));
+  const findWrite = () => Array.from(widget.querySelectorAll('button, a')).find((el) => /write/i.test(`${el.className} ${el.textContent}`) && !el.closest('.jdgm-write-review-modal'));
+
+  // The current Judge.me widget has no write button of its own: open its write-a-review window directly,
+  // the same way the widget does it (old widgets still get their own button clicked)
+  const openJudgeMe = () => {
+    const jdgm = window.jdgm;
+    const productId = widget.dataset.id;
+    if (!jdgm || !jdgm._WriteReviewModal || !productId) return false;
+    document.querySelectorAll('.jdgm-review-widget-modal.jdgm-write-review-modal').forEach((modal) => modal.remove());
+    const modal = new jdgm._WriteReviewModal(jdgm.$);
+    Promise.resolve(modal.setup('jdgm-review-widget-modal', productId)).then((ready) => {
+      if (ready) modal.showModalPage();
+    }).catch(() => {});
+    return true;
+  };
 
   const connect = () => {
     const source = widget.querySelector('.jm-sort-filter__select, .jdgm-sort-dropdown');
@@ -306,15 +320,18 @@ function initYkPdpReviews(section) {
       });
       sortWrap.hidden = false;
     }
-    const writeTarget = findWrite();
-    if (write) write.hidden = !writeTarget;
     return Boolean(source);
   };
 
   if (write) {
+    write.hidden = false;
     write.addEventListener('click', () => {
       const target = findWrite();
-      if (target) target.click();
+      if (target) {
+        target.click();
+        return;
+      }
+      if (!openJudgeMe()) widget.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
 
