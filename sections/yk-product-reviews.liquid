@@ -40,11 +40,12 @@
 
         <div class="yk-reviews-pdp__actions">
           <div class="yk-reviews-pdp__sort" hidden data-yk-reviews-sort-wrap>
-            <label class="visually-hidden" for="YkReviewsSort-{{ section.id }}">{{ section.settings.sort_label | escape }}</label>
-            <select id="YkReviewsSort-{{ section.id }}" data-yk-reviews-sort>
-              <option value="" disabled selected hidden>{{ section.settings.sort_label | escape }}</option>
-            </select>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+            {%- comment -%}A styled list instead of the browser's own select menu; the choice is passed to the Judge.me sort{%- endcomment -%}
+            <button class="yk-reviews-pdp__sort-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="YkReviewsSort-{{ section.id }}" data-yk-reviews-sort-button>
+              <span>{{ section.settings.sort_label | escape }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <ul class="yk-reviews-pdp__sort-list" id="YkReviewsSort-{{ section.id }}" role="listbox" aria-label="{{ section.settings.sort_label | escape }}" tabindex="-1" hidden data-yk-reviews-sort-list></ul>
           </div>
           <button class="yk-reviews-pdp__write" type="button" hidden data-yk-reviews-write>{{ section.settings.write_label | escape }}</button>
         </div>

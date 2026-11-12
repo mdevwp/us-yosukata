@@ -903,10 +903,14 @@
 .yk-reviews-pdp__actions { display: flex; gap: 8px; margin-top: 24px; }
 .yk-reviews-pdp__actions [hidden] { display: none; }
 .yk-reviews-pdp__sort { position: relative; flex: 1; }
-.yk-reviews-pdp__sort select {
+.yk-reviews-pdp__sort-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   width: 100%;
   height: 48px;
-  padding: 0 48px 0 24px;
+  padding: 0 24px;
   border: 0;
   border-radius: 100px;
   background: var(--yk-grey-bg);
@@ -916,9 +920,39 @@
   font-weight: 600;
   letter-spacing: -.01em;
   cursor: pointer;
-  appearance: none;
 }
-.yk-reviews-pdp__sort svg { position: absolute; top: 50%; right: 24px; transform: translateY(-50%); pointer-events: none; }
+.yk-reviews-pdp__sort-button:hover { background: #ececec; }
+.yk-reviews-pdp__sort-button svg { flex: none; transition: transform .2s ease; }
+.yk-reviews-pdp__sort-button[aria-expanded="true"] svg { transform: rotate(180deg); }
+.yk-reviews-pdp__sort-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 20;
+  min-width: 100%;
+  margin: 0;
+  padding: 8px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .12);
+  list-style: none;
+}
+.yk-reviews-pdp__sort-list[hidden] { display: none; }
+.yk-reviews-pdp__sort-list:focus { outline: none; }
+.yk-reviews-pdp__sort-option {
+  padding: 10px 16px;
+  border-radius: 10px;
+  color: var(--yk-black);
+  font-family: var(--yk-font-heading);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.yk-reviews-pdp__sort-option:hover,
+.yk-reviews-pdp__sort-option.is-active { background: var(--yk-grey-bg); }
+.yk-reviews-pdp__sort-option[aria-selected="true"] { color: var(--yk-red); font-weight: 600; }
 .yk-reviews-pdp__write {
   flex: 1;
   height: 48px;
@@ -1056,8 +1090,8 @@
   .yk-reviews-pdp__count { font-size: 16px; line-height: 24px; }
   .yk-reviews-pdp__actions { margin-top: 1px; }
   .yk-reviews-pdp__sort { flex: none; width: 150px; }
-  .yk-reviews-pdp__sort select { height: 56px; padding-left: 34px; font-size: 14px; }
-  .yk-reviews-pdp__sort svg { right: 32px; }
+  .yk-reviews-pdp__sort-button { height: 56px; font-size: 14px; }
+  .yk-reviews-pdp__sort-list { right: 0; left: auto; }
   .yk-reviews-pdp__write { flex: none; width: 225px; height: 56px; font-size: 14px; }
   .yk-reviews-pdp__widget { margin-top: 50px; }
   .yk-reviews-pdp #judgeme_product_reviews .jm-reviewer-info__name { font-size: 16px; line-height: 24px; }

@@ -288,7 +288,8 @@ function initYkPdpReviews(section) {
   section.dataset.ready = 'true';
 
   const sortWrap = section.querySelector('[data-yk-reviews-sort-wrap]');
-  const sort = section.querySelector('[data-yk-reviews-sort]');
+  const sortButton = section.querySelector('[data-yk-reviews-sort-button]');
+  const sortList = section.querySelector('[data-yk-reviews-sort-list]');
   const write = section.querySelector('[data-yk-reviews-write]');
   const widget = section.querySelector('.jdgm-widget');
   if (!widget) return;
@@ -309,15 +310,75 @@ function initYkPdpReviews(section) {
     return true;
   };
 
+  // Sort menu: a listbox built from the Judge.me sort options (the browser's own select menu can't be styled)
+  const setupSort = (source) => {
+    const options = Array.from(source.options).map((option, index) => {
+      const item = document.createElement('li');
+      item.className = 'yk-reviews-pdp__sort-option';
+      item.id = `${sortList.id}-${index}`;
+      item.setAttribute('role', 'option');
+      item.setAttribute('aria-selected', String(index === source.selectedIndex));
+      item.dataset.value = option.value;
+      item.textContent = option.textContent.trim();
+      sortList.appendChild(item);
+      return item;
+    });
+    let active = -1;
+
+    const setActive = (index) => {
+      options.forEach((item, i) => item.classList.toggle('is-active', i === index));
+      active = index;
+      if (options[index]) sortList.setAttribute('aria-activedescendant', options[index].id);
+    };
+    const open = () => {
+      sortList.hidden = false;
+      sortButton.setAttribute('aria-expanded', 'true');
+      const selected = options.findIndex((item) => item.getAttribute('aria-selected') === 'true');
+      setActive(selected > -1 ? selected : 0);
+      sortList.focus({ preventScroll: true });
+    };
+    const close = (focusButton) => {
+      if (sortList.hidden) return;
+      sortList.hidden = true;
+      sortButton.setAttribute('aria-expanded', 'false');
+      if (focusButton) sortButton.focus({ preventScroll: true });
+    };
+    const choose = (index) => {
+      const item = options[index];
+      if (!item) return;
+      options.forEach((option) => option.setAttribute('aria-selected', String(option === item)));
+      source.value = item.dataset.value;
+      source.dispatchEvent(new Event('change', { bubbles: true }));
+      close(true);
+    };
+
+    sortButton.addEventListener('click', () => (sortList.hidden ? open() : close(true)));
+    sortList.addEventListener('click', (event) => {
+      const item = event.target.closest('[role="option"]');
+      if (item) choose(options.indexOf(item));
+    });
+    sortList.addEventListener('mousemove', (event) => {
+      const item = event.target.closest('[role="option"]');
+      if (item) setActive(options.indexOf(item));
+    });
+    sortList.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowDown') { event.preventDefault(); setActive(Math.min(active + 1, options.length - 1)); }
+      else if (event.key === 'ArrowUp') { event.preventDefault(); setActive(Math.max(active - 1, 0)); }
+      else if (event.key === 'Home') { event.preventDefault(); setActive(0); }
+      else if (event.key === 'End') { event.preventDefault(); setActive(options.length - 1); }
+      else if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); choose(active); }
+      else if (event.key === 'Escape' || event.key === 'Tab') close(event.key === 'Escape');
+    });
+    document.addEventListener('click', (event) => {
+      if (!sortWrap.contains(event.target)) close(false);
+    });
+  };
+
   const connect = () => {
     const source = widget.querySelector('.jm-sort-filter__select, .jdgm-sort-dropdown');
-    if (source && sort && !sort.dataset.ready) {
-      sort.dataset.ready = 'true';
-      Array.from(source.options).forEach((option) => sort.add(new Option(option.textContent.trim(), option.value)));
-      sort.addEventListener('change', () => {
-        source.value = sort.value;
-        source.dispatchEvent(new Event('change', { bubbles: true }));
-      });
+    if (source && sortList && !sortList.dataset.ready) {
+      sortList.dataset.ready = 'true';
+      setupSort(source);
       sortWrap.hidden = false;
     }
     return Boolean(source);
