@@ -332,6 +332,89 @@
   {%- endif -%}
 {%- endcapture -%}
 
+{%- comment -%}
+  Redesign 2026 (Figma "Main page - Subcategories (1600)", 12.11): a grey service row above the header
+  with the info links and the language/currency pill. The links come from the menu chosen in
+  "Service links"; without one, the six links from the design. The same links close the phone menu.
+{%- endcomment -%}
+{%- liquid
+  assign yk_utility_links = linklists[section.settings.yk_utility_menu].links
+  assign yk_has_choice = false
+  if shop.published_locales.size > 1 or localization.available_countries.size > 1
+    assign yk_has_choice = true
+  endif
+-%}
+{%- capture yk_utility_items -%}
+  {%- if yk_utility_links.size > 0 -%}
+    {%- for link in yk_utility_links -%}
+      <li><a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a></li>
+    {%- endfor -%}
+  {%- else -%}
+    <li><a href="/pages/how-to-season-a-carbon-steel-pan">How to season</a></li>
+    <li><a href="/blogs/news">Knowledge Base</a></li>
+    <li><a href="/pages/about">About</a></li>
+    <li><a href="/apps/17TRACK">Track your order</a></li>
+    <li><a href="/pages/faq">FAQ</a></li>
+    <li><a href="/pages/warranty-and-returns">Returns/Exchanges</a></li>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture yk_utility_bar -%}
+  {%- if yk_redesign == 'true' -%}
+    <div class="yk-utility">
+      <div class="yk-utility__inner">
+        <nav class="yk-utility__nav" aria-label="Information">
+          <ul class="yk-utility__links" role="list">{{ yk_utility_items }}</ul>
+        </nav>
+        {%- comment -%}Shown only when there is something to choose: more than one language or country{%- endcomment -%}
+        {%- if yk_has_choice -%}
+          {%- liquid
+            assign yk_lang = localization.language.iso_code | default: request.locale.iso_code | split: '-' | first | upcase
+            if yk_lang == 'EN'
+              assign yk_lang = 'ENG'
+            endif
+          -%}
+          <div class="yk-utility__prefs">
+            <span>{{ yk_lang }}</span>
+            <span class="yk-utility__prefs-sep" aria-hidden="true"></span>
+            <span>{{ localization.country.currency.iso_code | default: cart.currency.iso_code }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture yk_search_field -%}
+  <form class="yk-header-search" action="{{ routes.search_url }}" method="get" role="search">
+    <label class="visually-hidden" for="YkHeaderSearch">{{ 'general.accessibility.open_search' | t }}</label>
+    <input
+      class="yk-header-search__input"
+      id="YkHeaderSearch"
+      type="search"
+      name="q"
+      placeholder="Search"
+      autocomplete="off"
+    >
+    <button class="yk-header-search__button" type="submit" aria-label="Search">{% render 'yk-icon', icon: 'search' %}</button>
+  </form>
+{%- endcapture -%}
+
+{%- capture yk_phone_icon -%}
+  {%- liquid
+    assign yk_phone = section.settings.yk_phone | strip
+    assign yk_phone_href = yk_phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '.'
+  -%}
+  {%- if yk_phone != blank -%}
+    <a class="header__icon-touch yk-header__phone" href="tel:{{ yk_phone_href }}" aria-label="Call us {{ yk_phone | escape }}">
+  {%- else -%}
+    {%- comment -%}The store has no phone number yet: the icon leads to the contact page{%- endcomment -%}
+    <a class="header__icon-touch yk-header__phone" href="/pages/contact" aria-label="Contact us">
+  {%- endif -%}
+      <span class="icon-button"><span class="icon-button__icon">{% render 'yk-icon', icon: 'phone' %}</span></span>
+    </a>
+{%- endcapture -%}
+
 {%- capture filler -%}<div class="header__filler"></div>{%- endcapture -%}
 
 {%- capture localization_dropdowns -%}
@@ -423,6 +506,7 @@
     <a href="#main" class="yk-skip-link">{{ 'general.accessibility.skip_to_content' | t }}</a>
   {%- endif -%}
 
+  {{ yk_utility_bar }}
   <div class="header__inner">
     <div class="header__row header__row-desktop upper  ">
       <div class="header__row-segment header__row-segment-desktop left">
@@ -486,10 +570,10 @@
 
       <div class="header__row-segment header__row-segment-desktop right">
         {%- if yk_redesign == 'true' -%}
-          {{ search_icon }}
+          {{ yk_search_field }}
+          {{ yk_phone_icon }}
           {%- if shop.customer_accounts_enabled -%}{{ account_icon }}{%- endif -%}
           {{ cart_icon }}
-          {{ yk_locale_pill }}
         {%- else -%}
         {%- unless logo_position == 'center' and navigation_position == 'below' -%}
           {%- if section.settings.enable_custom_header_links -%}
@@ -575,7 +659,7 @@
     social_icons_mobile: social_icons_mobile
   %}
   {%- if yk_redesign == 'true' -%}
-    {% render 'yk-mobile-menu', links: links, secondary_links: secondary_links, logo: logo %}
+    {% render 'yk-mobile-menu', links: links, utility_items: yk_utility_items, logo: logo %}
   {%- endif -%}
 </header>
 
@@ -588,6 +672,14 @@
       });
       sync();
       new MutationObserver(sync).observe(header, { subtree: true, childList: true, characterData: true });
+      // Dropdowns are centred under their menu item: CSS needs the item's width
+      const setTriggerWidths = () => header.querySelectorAll('.header__links-primary .navigation__submenu[data-depth="1"]').forEach((submenu) => {
+        const item = submenu.parentElement;
+        if (item) submenu.style.setProperty('--yk-trigger-width', `${item.offsetWidth}px`);
+      });
+      setTriggerWidths();
+      window.addEventListener('resize', setTriggerWidths);
+      document.fonts && document.fonts.ready.then(setTriggerWidths);
     })();
   </script>
 {%- endif -%}
@@ -841,8 +933,20 @@
       "type": "checkbox",
       "id": "yk_show_locale_pill",
       "label": "Redesign 2026: show language / currency pill",
-      "info": "Display only for now: it does not switch language or currency. Keep it off until the store sells in several languages or currencies.",
+      "info": "Not used since the 12.11 design: the pill sits in the grey service row and shows by itself when the store has more than one language or country.",
       "default": false
+    },
+    {
+      "type": "link_list",
+      "id": "yk_utility_menu",
+      "label": "Redesign 2026: service links",
+      "info": "Grey row above the header on desktop and the small links at the bottom of the phone menu. Without a menu: How to season, Knowledge Base, About, Track your order, FAQ, Returns/Exchanges."
+    },
+    {
+      "type": "text",
+      "id": "yk_phone",
+      "label": "Redesign 2026: phone number",
+      "info": "For the phone icon in the header. Empty: the icon opens the contact page."
     }
   ],
   "blocks": [

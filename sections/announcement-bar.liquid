@@ -112,47 +112,7 @@
             {%- endif -%}
           </div>
         {%- endfor -%}
-        {%- comment -%}
-          QA 11.11 p.5: "Track your order / FAQ / Returns — у верхній службовий рядок".
-          Taken from the menu chosen in the section settings; without one, the three default links below.
-        {%- endcomment -%}
-        {%- assign yk_service_menu = linklists[section.settings.yk_service_menu] -%}
-        <nav class="yk-announcement__service" aria-label="Customer service">
-          {%- if yk_service_menu.links.size > 0 -%}
-            {%- for link in yk_service_menu.links -%}
-              <a href="{{ link.url }}">{{ link.title | escape }}</a>
-            {%- endfor -%}
-          {%- else -%}
-            <a href="/apps/17TRACK">Track your order</a>
-            <a href="{{ routes.root_url | append: '/pages/faq' | replace: '//', '/' }}">FAQ</a>
-            <a href="{{ routes.root_url | append: '/pages/warranty-and-returns' | replace: '//', '/' }}">Returns</a>
-          {%- endif -%}
-        </nav>
       </div>
-      <script>
-        (() => {
-          // 960-1279px: three messages and the service links do not fit in one line, so the messages take turns
-          const bar = document.currentScript.previousElementSibling;
-          if (!bar || bar.dataset.ready) return;
-          bar.dataset.ready = 'true';
-          const items = [...bar.querySelectorAll('.yk-announcement__item')];
-          if (items.length < 2) return;
-          const narrow = window.matchMedia('(min-width: 960px) and (max-width: 1279px)');
-          const still = window.matchMedia('(prefers-reduced-motion: reduce)');
-          let index = 0;
-          let timer = null;
-          const show = () => items.forEach((item, i) => item.classList.toggle('is-current', i === index));
-          const sync = () => {
-            clearInterval(timer);
-            show();
-            if (narrow.matches && !still.matches) {
-              timer = setInterval(() => { index = (index + 1) % items.length; show(); }, 4000);
-            }
-          };
-          narrow.addEventListener('change', sync);
-          sync();
-        })();
-      </script>
     {%- endif -%}
     <div
       class="swiper"
@@ -173,12 +133,6 @@
   "class": "announcement-bar__outer-wrapper",
   "max_blocks": 3,
   "settings": [
-    {
-      "type": "link_list",
-      "id": "yk_service_menu",
-      "label": "Service links (desktop, right side)",
-      "info": "Redesign 2026. Without a menu: Track your order, FAQ, Returns."
-    },
     {
       "id": "enable_sticky_announcement_bar",
       "type": "select",

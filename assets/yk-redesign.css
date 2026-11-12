@@ -813,48 +813,6 @@ body.yk-redesign .yk-header button:focus-visible {
   body.yk-redesign .yk-header .header__links-primary .header__links-list > li:not(:last-child) { margin-right: 0; }
 }
 
-/* Service links on the right of the announcement bar (desktop, QA 11.11 p.5) */
-body.yk-redesign .yk-announcement__service { display: none; }
-@media (min-width: 960px) {
-  body.yk-redesign .yk-announcement__inline {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-  body.yk-redesign .yk-announcement__inline .yk-announcement__item { flex: 1 1 0; min-width: 0; }
-  body.yk-redesign .yk-announcement__service {
-    display: flex;
-    flex: none;
-    align-items: center;
-    gap: 16px;
-    margin-left: auto;
-    padding-left: 24px;
-    border-left: 1px solid rgba(0, 0, 0, .2);
-  }
-  body.yk-redesign .yk-announcement__service a {
-    position: relative;
-    color: var(--yk-black);
-    font-family: var(--yk-font-heading);
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 20px;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color .2s ease;
-  }
-  body.yk-redesign .yk-announcement__service a::after { content: ""; position: absolute; inset: -6px -4px; }
-  body.yk-redesign .yk-announcement__service a:hover { color: var(--yk-red); }
-}
-@media (min-width: 1280px) and (max-width: 1439px) {
-  body.yk-redesign .yk-announcement__inline { justify-content: space-between; }
-  body.yk-redesign .yk-announcement__inline .yk-announcement__item { flex: 0 1 auto; white-space: nowrap; }
-  body.yk-redesign .yk-announcement__service { margin-left: 0; }
-}
-@media (min-width: 960px) and (max-width: 1279px) {
-  body.yk-redesign .yk-announcement__inline .yk-announcement__item { display: none; flex: 1 1 auto; justify-content: center; white-space: nowrap; }
-  body.yk-redesign .yk-announcement__inline .yk-announcement__item.is-current { display: flex; animation: yk-announce-in .4s ease; }
-}
-@keyframes yk-announce-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* Cart count: Montserrat digits sit ~0.7px right of their advance box, so a centred "1" looked off-centre.
    One pixel less padding on the left balances the glyph optically. */
@@ -867,4 +825,162 @@ body.yk-redesign .yk-header.is-sticky [data-js-cart-count] {
   background-color: var(--yk-black, #000) !important;
   color: #fff !important;
   box-shadow: 0 0 0 2px #fff !important;
+}
+
+/* Header from the 12.11 design ("Main page - Subcategories (1600)"):
+   grey service row with info links and the language/currency pill, 96px main row,
+   search as a field, phone icon, dropdowns as grey cards with 48px rows */
+.yk-utility { display: none; }
+@media (min-width: 960px) {
+  body.yk-redesign .yk-utility {
+    display: block;
+    background: #f6f6f6;
+  }
+  body.yk-redesign .yk-utility__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    max-width: var(--yk-max);
+    min-height: 56px;
+    margin: 0 auto;
+    padding: 0 var(--yk-gutter);
+    box-sizing: content-box;
+  }
+  body.yk-redesign .yk-utility__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  body.yk-redesign .yk-utility__links a {
+    position: relative;
+    color: #696969;
+    font-family: var(--yk-font-heading);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color .2s ease;
+  }
+  body.yk-redesign .yk-utility__links a::after { content: ""; position: absolute; inset: -8px -4px; }
+  body.yk-redesign .yk-utility__links a:hover,
+  body.yk-redesign .yk-utility__links a[aria-current="page"] { color: var(--yk-black); }
+  body.yk-redesign .yk-utility__prefs {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 16px;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 20px;
+    background: #fff;
+    color: #1c1c1a;
+    font-family: var(--yk-font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+  body.yk-redesign .yk-utility__prefs-sep { width: 1px; height: 24px; background: #d9d9d9; }
+
+  body.yk-redesign .yk-header .header__row-desktop.lower { min-height: 96px; }
+  body.yk-redesign .yk-header .header__row-segment-desktop.right { gap: 28px; }
+
+  /* Search field */
+  body.yk-redesign .yk-header-search {
+    position: relative;
+    flex: 0 1 172px;
+    min-width: 120px;
+    margin: 0;
+  }
+  body.yk-redesign .yk-header-search__input {
+    width: 100%;
+    height: 48px;
+    margin: 0;
+    padding: 0 48px 0 16px;
+    border: 1px solid #f6f6f6;
+    border-radius: 24px;
+    background: #f6f6f6;
+    color: var(--yk-black);
+    font-family: var(--yk-font-body);
+    font-size: 16px;
+    line-height: 24px;
+    box-shadow: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  body.yk-redesign .yk-header-search__input::placeholder { color: #696969; opacity: 1; }
+  body.yk-redesign .yk-header-search__input::-webkit-search-cancel-button { display: none; }
+  body.yk-redesign .yk-header-search__input:focus { border-color: var(--yk-black); outline: none; }
+  body.yk-redesign .yk-header-search__button {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--yk-black);
+    cursor: pointer;
+    transform: translateY(-50%);
+  }
+  body.yk-redesign .yk-header-search__button .yk-icon { width: 22px; height: 22px; }
+
+  /* Dropdown: grey card, 48px rows, no shadow (as in the design) */
+  /* Centred under its menu item and overlapping the header by 20px, as in the design
+     (--yk-trigger-width is set by the header script) */
+  body.yk-redesign .yk-header .navigation__submenu[data-depth="1"] {
+    margin-top: -20px;
+    margin-left: calc(var(--yk-trigger-width, 0px) / 2);
+    padding-top: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  body.yk-redesign .yk-header .navigation__submenu[data-depth="1"].active { transform: translateX(-50%); }
+  body.yk-redesign .yk-header .navigation__submenu-list .navigation__submenu-item { margin: 0; padding: 0; }
+  body.yk-redesign .yk-header .navigation__submenu-list {
+    min-width: 202px;
+    padding: 0;
+    border-radius: 16px;
+    background: #f6f6f6;
+    box-shadow: none;
+    overflow: hidden;
+  }
+  body.yk-redesign .yk-header .navigation__submenu-item [data-link] {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 16px;
+    border-radius: 0;
+  }
+  body.yk-redesign .yk-header .navigation__submenu-item [data-link]:hover,
+  body.yk-redesign .yk-header .navigation__submenu-item [data-link]:focus-visible { background: #ececec; }
+}
+/* 960-1279px: the search field gets narrower so the menu keeps its place */
+@media (min-width: 960px) and (max-width: 1279px) {
+  body.yk-redesign .yk-header .header__row-segment-desktop.right { gap: 20px; }
+  body.yk-redesign .yk-header-search { flex-basis: 140px; }
+}
+
+/* Phone menu from the 12.11 design ("Nav Menu (390)" and "Nav Menu - Subcategory (390)"):
+   top bar 24px from the top, 48px rows, service links in black at the bottom,
+   subcategory rows with product counts and a "View All" button at the bottom */
+.yk-mmenu__top { margin-top: 24px; }
+.yk-mmenu__body { padding: 46px 16px 44px; }
+.yk-mmenu__top--sub + .yk-mmenu__body { padding-top: 30px; padding-bottom: 50px; }
+.yk-mmenu__top--sub .yk-mmenu__title { margin-left: 16px; }
+.yk-mmenu__row { padding: 12px 0; }
+.yk-mmenu__row--sub { padding: 12px 0; font-size: 16px; line-height: 24px; }
+.yk-mmenu__catalog { margin-top: auto; }
+.yk-mmenu__body > .yk-mmenu__group:last-of-type { margin-bottom: 32px; }
+.yk-mmenu__extra { gap: 12px; }
+.yk-mmenu__extra a { color: #000; }
+@media (hover: hover) {
+  .yk-mmenu__extra a:hover { color: var(--yk-red, #ba0029); }
 }

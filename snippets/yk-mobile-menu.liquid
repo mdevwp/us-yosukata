@@ -5,8 +5,8 @@
   - on that screen a child link with its own children becomes a group (grey heading + its links),
     child links without children are listed as they are;
   - "Full Catalog" leads to the parent link, or to all products when the parent is "#" and the section lists collections.
-  The small links at the bottom come from the header's secondary menu; without one: Login, FAQ, Returns/exchanges.
-  Params: links, secondary_links, logo
+  The small links at the bottom are the header's service links (the grey row on desktop), then Login.
+  Params: links, utility_items (list items), logo
 {%- endcomment -%}
 {%- liquid
   assign yk_locale = request.locale.iso_code | upcase
@@ -63,23 +63,11 @@
         {%- endfor -%}
       </ul>
 
+      {%- comment -%}12.11 design: the same service links as the grey row on desktop, then Login{%- endcomment -%}
       <ul class="yk-mmenu__extra">
-        {%- if secondary_links.size > 0 -%}
-          {%- for link in secondary_links -%}
-            <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
-          {%- endfor -%}
-        {%- else -%}
-          {%- if shop.customer_accounts_enabled -%}
-            <li><a href="{{ routes.account_url }}">{% if customer %}Account{% else %}Login{% endif %}</a></li>
-          {%- endif -%}
-          {%- comment -%}QA 11.11 p.5: Track your order sits with the service links{%- endcomment -%}
-          <li><a href="/apps/17TRACK">Track your order</a></li>
-          {%- if pages['faq'] != blank -%}
-            <li><a href="{{ pages['faq'].url }}">FAQ</a></li>
-          {%- endif -%}
-          {%- if pages['warranty-and-returns'] != blank -%}
-            <li><a href="{{ pages['warranty-and-returns'].url }}">Returns/exchanges</a></li>
-          {%- endif -%}
+        {{ utility_items }}
+        {%- if shop.customer_accounts_enabled -%}
+          <li><a href="{{ routes.account_url }}">{% if customer %}Account{% else %}Login{% endif %}</a></li>
         {%- endif -%}
       </ul>
     </nav>
@@ -130,8 +118,9 @@
             {%- else -%}
               {%- unless yk_open_list -%}<div class="yk-mmenu__group"><ul class="yk-mmenu__list">{%- assign yk_open_list = true -%}{%- endunless -%}
               <li>
-                <a class="yk-mmenu__row yk-mmenu__row--small" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>
-                  <span>{{ child.title | escape }}</span>
+                <a class="yk-mmenu__row yk-mmenu__row--sub" href="{{ child.url }}"{% if child.current %} aria-current="page"{% endif %}>
+                  {%- comment -%}12.11 design: a collection shows how many products it has, e.g. "Flat Bottom Woks (14)"{%- endcomment -%}
+                  <span>{{ child.title | escape }}{% if child.type == 'collection_link' and child.object.products_count > 0 %} ({{ child.object.products_count }}){% endif %}</span>
                   {{ yk_chevron_right }}
                 </a>
               </li>
@@ -140,7 +129,7 @@
           {%- if yk_open_list -%}</ul></div>{%- endif -%}
 
           {%- if yk_catalog_url != blank -%}
-            <a class="yk-mmenu__catalog" href="{{ yk_catalog_url }}">Full Catalog</a>
+            <a class="yk-mmenu__catalog" href="{{ yk_catalog_url }}">View All</a>
           {%- endif -%}
         </div>
       </div>
