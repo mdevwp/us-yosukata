@@ -405,6 +405,14 @@ function initYkPdpReviews(section) {
   }
 }
 
+// Judge.me write-a-review window: a click on the dimmed page around it closes it, like the close button
+document.addEventListener('click', (event) => {
+  const modal = event.target.closest('.jdgm-write-review-modal');
+  if (!modal || event.target.closest('.jdgm-write-review-modal__content')) return;
+  const closeButton = modal.querySelector('.jdgm-write-review-modal__close-btn');
+  if (closeButton) closeButton.click();
+});
+
 document.querySelectorAll('[data-yk-pdp-reviews]').forEach(initYkPdpReviews);
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-pdp-reviews]').forEach(initYkPdpReviews);
