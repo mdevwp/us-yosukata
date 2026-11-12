@@ -859,11 +859,12 @@ body.yk-redesign .yk-header.is-sticky [data-js-cart-count] {
   }
   body.yk-redesign .yk-utility__links a {
     position: relative;
-    color: #696969;
+    color: #6a6a6a;
     font-family: var(--yk-font-heading);
     font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -.01em;
     text-decoration: none;
     white-space: nowrap;
     transition: color .2s ease;
