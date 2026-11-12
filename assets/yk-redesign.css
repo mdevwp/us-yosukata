@@ -902,7 +902,7 @@ body.yk-redesign .yk-header.is-sticky [data-js-cart-count] {
     gap: 8px;
     min-width: 120px;
     height: 48px;
-    padding: 0 14px 0 16px;
+    padding: 0 16px;
     border: 1px solid #f6f6f6;
     border-radius: 24px;
     background: #f6f6f6;
@@ -913,12 +913,12 @@ body.yk-redesign .yk-header.is-sticky [data-js-cart-count] {
   body.yk-redesign .yk-header-search:hover,
   body.yk-redesign .yk-header-search[aria-expanded="true"] { border-color: var(--yk-black); }
   body.yk-redesign .yk-header-search__placeholder {
-    color: #696969;
+    color: #6a6a6a;
     font-family: var(--yk-font-body);
     font-size: 16px;
     line-height: 24px;
   }
-  body.yk-redesign .yk-header-search__icon .yk-icon { width: 22px; height: 22px; }
+  body.yk-redesign .yk-header-search__icon .yk-icon { width: 24px; height: 24px; }
 
   /* Dropdown: grey card, 48px rows, no shadow (as in the design) */
   /* Centred under its menu item and overlapping the header by 20px, as in the design
