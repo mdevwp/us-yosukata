@@ -701,15 +701,26 @@
       let touchOpenState = null;
       header.addEventListener('pointerdown', (event) => {
         const trigger = event.target.closest('.header__links-primary [data-dropdown-trigger]');
-        touchOpenState = trigger && event.pointerType !== 'mouse' ? { trigger, wasOpen: trigger.getAttribute('aria-expanded') === 'true' } : null;
+        touchOpenState = trigger && event.pointerType !== 'mouse' ? { trigger, wasOpen: isOpen(trigger) } : null;
       }, true);
+      // The theme toggles a dropdown on focus, and a tap focuses the link right after the emulated mouseover
+      // opened it, closing it again: ignore that focus during a tap
+      header.addEventListener('focus', (event) => {
+        if (touchOpenState && event.target === touchOpenState.trigger) event.stopPropagation();
+      }, true);
+      const isOpen = (trigger) => {
+        const submenu = trigger.parentNode.querySelector('[data-submenu]');
+        return !!submenu && submenu.classList.contains('active');
+      };
       header.addEventListener('click', (event) => {
         const trigger = event.target.closest('.header__links-primary [data-dropdown-trigger]');
         if (!trigger || !touchOpenState || touchOpenState.trigger !== trigger) return;
         if (!touchOpenState.wasOpen) {
           event.preventDefault();
           event.stopPropagation();
-          trigger.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+          const open = () => { if (!isOpen(trigger)) trigger.dispatchEvent(new MouseEvent('mouseover', { bubbles: true })); };
+          open();
+          setTimeout(open, 60);
         }
         touchOpenState = null;
       }, true);

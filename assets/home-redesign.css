@@ -1988,3 +1988,33 @@
 @media (min-width: 960px) {
   .yk-hero__subtitle { margin-top: 16px; font-size: 20px; line-height: 28px; }
 }
+
+/* Behind the Yosukata Brand on phones and tablets: the chef cut-out ends sharply at its right edge (the file is cropped
+   there), so the photo sits against the right edge of the block, as on desktop, instead of floating in the middle;
+   tablets show him taller */
+@media (max-width: 959px) {
+  .yk-brand__portrait { right: 0; left: auto; transform: none; }
+}
+@media (min-width: 600px) and (max-width: 959px) {
+  .yk-brand__visual { height: 820px; }
+  .yk-brand__portrait { width: 520px; }
+}
+
+/* Set of the Day on tablets: arrows with 1/2 under the card, as on desktop, instead of the tiny phone dots */
+@media (min-width: 600px) and (max-width: 959px) {
+  .yk-set__dots { display: none; }
+  .yk-set__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -.015em;
+  }
+  .yk-set__arrow { display: flex; padding: 0; border: 0; background: none; color: var(--yk-black); cursor: pointer; }
+  .yk-set__arrow:disabled { cursor: default; opacity: .4; }
+  .yk-set__arrow .yk-icon { width: 26px; height: 26px; }
+}
