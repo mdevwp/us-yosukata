@@ -1885,3 +1885,106 @@
     mask-image: linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%);
   }
 }
+
+/* FAQ answers: links stand out from the text, as on the live site (tester 13.11 p.13) */
+.yk-faq__answer a {
+  color: var(--yk-red);
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.yk-faq__answer a:hover { color: #8f001f; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Feature cards: text stays readable over light parts of the photos (tester 13.11 p.9, 1024px) */
+.yk-feature__title,
+.yk-feature__text { text-shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 2px 16px rgba(0, 0, 0, .45); }
+@media (min-width: 960px) and (max-width: 1279px) {
+  .yk-feature__title { font-size: 24px; line-height: 32px; }
+  .yk-feature__text { font-size: 14px; line-height: 22px; }
+  .yk-feature::after {
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, .7) 0%, rgba(0, 0, 0, .15) 38%, rgba(0, 0, 0, .15) 52%, rgba(0, 0, 0, .85) 100%),
+      radial-gradient(ellipse 80% 65% at 50% 50%, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, .45) 100%);
+  }
+}
+
+/* Tablets 600-959px (tester 13.11 p.5-7): blocks closer to the desktop layout instead of one huge card each */
+@media (min-width: 600px) and (max-width: 959px) {
+  /* How to season: the two cards side by side */
+  .yk-season__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; }
+  .yk-season__card { aspect-ratio: 4 / 5; }
+  .yk-season__card-text { padding: 0 20px; }
+  .yk-season__dots { display: none; }
+
+  /* Follow our Community: two tiles in view, swipe for the third */
+  .yk-community__item { flex-basis: calc((100% - 8px) / 2); }
+  .yk-community__dots { display: none; }
+
+  /* Set of the Day: the photo with the dots and the product card side by side, as on desktop,
+     so a tap on a dot visibly changes the card next to it */
+  .yk-set__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .yk-set__frame { aspect-ratio: 887 / 758; }
+  .yk-set__canvas { top: 50%; right: auto; left: 0; width: 100%; height: auto; transform: translateY(-50%); }
+  .yk-set__hotspot { top: var(--y); left: var(--x); }
+  .yk-set__products { margin-top: 0; }
+  .yk-set__card { aspect-ratio: 474 / 540; }
+  .yk-set__product-image { padding: 56px 28px 40px; }
+}
+
+/* Behind the Yosukata Brand, chef photo (tester 13.11 p.8):
+   phones - the whole figure centred, not cut off on the right; tablets - taller */
+@media (max-width: 959px) {
+  .yk-brand__visual { overflow: hidden; }
+  .yk-brand__portrait { left: 50%; width: min(380px, 96%); transform: translateX(-50%); }
+}
+@media (min-width: 600px) and (max-width: 959px) {
+  .yk-brand__visual { height: 760px; }
+  .yk-brand__portrait { width: 480px; }
+}
+
+/* Hero, slides after the first on phones: the 120% zoom made for the first slide enlarged the chef too much
+   (tester 13.11 p.4); show the photo at the slide's height instead */
+@media (max-width: 599px) {
+  .yk-hero__slide:not(:first-child) .yk-hero__media img { top: 0; height: 100%; object-position: center top; }
+}
+
+/* Hero on tablets (tester 13.11 p.3): the side fade went to black ("mournful"); the sides now show a blurred,
+   darkened copy of the same photo, and the award badges sit in the top corner instead of over the face */
+@media (min-width: 600px) and (max-width: 959px) {
+  .yk-hero__media::before {
+    content: "";
+    position: absolute;
+    inset: -40px;
+    background: var(--yk-hero-mobile-bg, none) center / cover no-repeat;
+    filter: blur(28px) brightness(.55);
+  }
+  .yk-hero__slide:not(.yk-hero__slide--no-mobile-image) .yk-hero__media img {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+  }
+  .yk-hero__badges {
+    position: absolute;
+    top: 24px;
+    right: var(--yk-gutter);
+    z-index: 2;
+    margin: 0;
+  }
+}
+
+/* Hero video slide (client 13.11: the live site's product video) and slide subheadings from the live site */
+.yk-hero__media--video { overflow: hidden; }
+.yk-hero__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.yk-hero__subtitle {
+  margin: 12px 0 0;
+  color: #fff;
+  font-family: var(--yk-font-body);
+  font-size: 16px;
+  line-height: 24px;
+}
+@media (min-width: 960px) {
+  .yk-hero__subtitle { margin-top: 16px; font-size: 20px; line-height: 28px; }
+}

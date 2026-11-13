@@ -31,7 +31,8 @@
             "promo": "",
             "title": "Iron frying pans",
             "button_label": "Find out more",
-            "button_link": "shopify://collections"
+            "button_link": "shopify://collections",
+            "subtitle": "From raw iron gifted by nature"
           }
         },
         "slide_GK3Wpi": {
@@ -42,7 +43,8 @@
             "promo": "",
             "title": "Iron Wok (99% Fe)",
             "button_label": "Find out more",
-            "button_link": "shopify://blogs/articles"
+            "button_link": "shopify://blogs/articles",
+            "subtitle": "From raw iron gifted by nature"
           }
         },
         "slide_BfdHrP": {
@@ -53,7 +55,8 @@
             "promo": "",
             "title": "Chef's cookware",
             "button_label": "Find out more",
-            "button_link": "shopify://blogs/recipes"
+            "button_link": "shopify://blogs/recipes",
+            "subtitle": "Stir-fry like a Chef at your home!"
           }
         },
         "badge_good": {
@@ -83,10 +86,22 @@
             "label": "In the List of",
             "quote": "“The Best Cookware for Glass Stovetop”"
           }
+        },
+        "slide_video": {
+          "type": "slide",
+          "settings": {
+            "video": "shopify://files/videos/Wok-PPC_2_1_compressed.mp4",
+            "promo": "",
+            "title": "",
+            "subtitle": "",
+            "button_label": "",
+            "button_link": ""
+          }
         }
       },
       "block_order": [
         "slide_main",
+        "slide_video",
         "slide_AHhHVE",
         "slide_GK3Wpi",
         "slide_BfdHrP",
@@ -205,7 +220,7 @@
           "type": "question",
           "settings": {
             "question": "How to choose a Yosukata pan?",
-            "answer": "<p>There are several things to pay attention to when choosing a professional wok. First of all, be aware of the thickness. A thicker skillet will heat up more slowly but will hold the heat better and be less likely to warp. Second, consider the size and shape of the wok. A 14-inch wok is a good size for most kitchens, but if you have a lot of space, you might want a bigger wok to buy. Next, pay attention to the size or style of the handle — you want one that will be comfortable to use. Another important feature is the material your pan is made of. The most popular choice is carbon steel, which heats up quickly and evenly. <a href=\"/collections/black-carbon-steel-skillets\" title=\"Black Carbon Steel Skillets\">Carbon-steel skillets</a> are durable and can be used for a variety of cooking methods.</p><p>Finally, decide whether you want to choose among the <a href=\"/collections/flat-bottom-woks\">flat bottom woks</a> or <a href=\"/collections/round-bottom-woks\">round bottom</a> units. A round-bottomed wok is best for authentic stir-frying, but a flat-bottomed alternative will work fine if you only have an electric stove. If you already have a round-bottomed wok, think of purchasing a special ring among other <a href=\"/collections/accessories\" title=\"Accessories\">skillet & wok accessories</a>.</p><p>Now that you know how to choose the <a href=\"/collections/blue-carbon-steel-woks\" title=\"Blue Carbon Steel Woks\">best carbon steel wok</a>, it’s time to look for some tasty recipes!</p>"
+            "answer": "<p>There are several things to pay attention to when choosing a professional wok. First of all, be aware of the thickness. A thicker skillet will heat up more slowly but will hold the heat better and be less likely to warp. Second, consider the size and shape of the wok. A 13.5-inch wok is a good size for most kitchens; if you cook for a big family and have a lot of space, choose the 14-inch wok, and for one or two people the 11.8-inch wok is enough. Next, pay attention to the size or style of the handle — you want one that will be comfortable to use. Another important feature is the material your pan is made of. The most popular choice is carbon steel, which heats up quickly and evenly. <a href=\"/collections/black-carbon-steel-skillets\" title=\"Black Carbon Steel Skillets\">Carbon-steel skillets</a> are durable and can be used for a variety of cooking methods.</p><p>Finally, decide whether you want to choose among the <a href=\"/collections/flat-bottom-woks\">flat bottom woks</a> or <a href=\"/collections/round-bottom-woks\">round bottom</a> units. A round-bottomed wok is best for authentic stir-frying, but a flat-bottomed alternative will work fine if you only have an electric stove. If you already have a round-bottomed wok, think of purchasing a special ring among other <a href=\"/collections/accessories\" title=\"Accessories\">skillet & wok accessories</a>.</p><p>Now that you know how to choose the <a href=\"/collections/blue-carbon-steel-woks\" title=\"Blue Carbon Steel Woks\">best carbon steel wok</a>, it’s time to look for some tasty recipes!</p>"
           }
         },
         "faq_item_ADM9y8": {

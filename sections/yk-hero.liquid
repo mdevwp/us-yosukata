@@ -30,7 +30,22 @@
         {% unless forloop.first %}aria-hidden="true" inert{% endunless %}
         {{ block.shopify_attributes }}
       >
-        <picture class="yk-hero__media">
+        {%- if block.settings.video != blank -%}
+          {%- comment -%}Live site's product video (client 13.11): plays muted on loop, like there{%- endcomment -%}
+          <div class="yk-hero__media yk-hero__media--video">
+            {{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', class: 'yk-hero__video', image_size: '1600x' }}
+          </div>
+        {%- else -%}
+        {%- liquid
+          if block.settings.image_mobile != blank
+            assign yk_hero_bg = block.settings.image_mobile | image_url: width: 400
+          elsif forloop.first
+            assign yk_hero_bg = 'home-hero-mobile.jpg' | asset_url
+          else
+            assign yk_hero_bg = ''
+          endif
+        -%}
+        <picture class="yk-hero__media"{% if yk_hero_bg != blank %} style="--yk-hero-mobile-bg: url('{{ yk_hero_bg }}');"{% endif %}>
           {%- if block.settings.image_mobile != blank -%}
             <source media="(max-width: 959px)" srcset="{{ block.settings.image_mobile | image_url: width: 780 }} 780w, {{ block.settings.image_mobile | image_url: width: 1080 }} 1080w">
           {%- elsif forloop.first -%}
@@ -42,6 +57,7 @@
             <img class="yk-hero__image" src="{{ 'home-hero.jpg' | asset_url }}" width="1534" height="1080" alt="{{ block.settings.title | strip_html | escape }}" fetchpriority="high">
           {%- endif -%}
         </picture>
+        {%- endif -%}
 
         <div class="yk-hero__content">
           {{ badges_html }}
@@ -55,6 +71,9 @@
             {%- else -%}
               <h2 class="yk-hero__title">{{ block.settings.title | escape | newline_to_br }}</h2>
             {%- endif -%}
+          {%- endif -%}
+          {%- if block.settings.subtitle != blank -%}
+            <p class="yk-hero__subtitle">{{ block.settings.subtitle | escape }}</p>
           {%- endif -%}
           {%- if block.settings.button_label != blank -%}
             <a class="yk-hero__button" href="{{ block.settings.button_link | default: routes.all_products_collection_url }}">{{ block.settings.button_label | escape }}</a>
@@ -100,8 +119,10 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image", "info": "1600 x 744 or larger" },
         { "type": "image_picker", "id": "image_mobile", "label": "Mobile image", "info": "780 x 1500 or larger" },
+        { "type": "video", "id": "video", "label": "Video", "info": "Plays muted on loop instead of the images" },
         { "type": "richtext", "id": "promo", "label": "Promo label", "default": "<p>Get additional -5% with a promo code: <strong>WOK5</strong></p>" },
         { "type": "textarea", "id": "title", "label": "Heading", "default": "Black Carbon Steel Wok 13.5\"" },
+        { "type": "text", "id": "subtitle", "label": "Subheading" },
         { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop Now" },
         { "type": "url", "id": "button_link", "label": "Button link" }
       ]

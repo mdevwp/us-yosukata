@@ -1369,3 +1369,12 @@ html.yk-search-lock { overflow: hidden; }
    so they stay inside it. Without this they escaped the track's overflow and widened the page on phones
    (tester's report 13.11: horizontal scroll at the bottom of the homepage, page 953px wide on a 440px screen). */
 [class^="yk-"][class*="__track"] { position: relative; }
+
+/* 960-1099px: the menu and the search field touched (tester 13.11 p.11); keep a gap and a narrower search */
+@media (min-width: 960px) and (max-width: 1099px) {
+  body.yk-redesign .yk-header .header__row-desktop.lower { column-gap: 20px; }
+  body.yk-redesign .yk-header .header__links-primary > ul,
+  body.yk-redesign .yk-header .header__links-primary .header__links-list { gap: 18px; }
+  body.yk-redesign .yk-header .header__row-segment-desktop.right { gap: 14px; }
+  body.yk-redesign .yk-header-search { flex-basis: 116px; min-width: 104px; padding: 0 12px; }
+}
