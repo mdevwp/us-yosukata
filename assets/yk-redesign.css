@@ -1254,26 +1254,26 @@ html.yk-search-lock { overflow: hidden; }
 
 /* Desktop: a 614px panel on the right, underlined field, larger type, two cards with arrows */
 @media (min-width: 960px) {
-  .yk-search__panel { width: min(614px, 100%); padding: 20px 24px 32px; }
+  .yk-search__panel { width: min(614px, 100%); padding: 24px 24px 32px; }
   .yk-search__title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .yk-search__top { justify-content: flex-end; }
-  .yk-search__form {
-    height: 48px;
-    margin-top: 20px;
+  .yk-search__panel .yk-search__form {
+    height: 44px;
+    margin-top: 42px;
     padding: 0;
     border: 0;
-    border-bottom: 1px solid var(--yk-black, #000);
+    border-bottom: 1px solid #8e8e8e;
     border-radius: 0;
     background: none;
   }
-  .yk-search.has-value .yk-search__form,
-  .yk-search__form:focus-within { border-color: var(--yk-black, #000); background: none; }
+  .yk-search.has-value .yk-search__panel .yk-search__form,
+  .yk-search__panel .yk-search__form:focus-within { border-color: var(--yk-black, #000); background: none; }
   .yk-search__input { font-size: 16px; line-height: 24px; }
   .yk-search__clear .yk-icon { display: block; }
   .yk-search.has-value .yk-search__submit { display: flex; }
-  .yk-search__body { margin-top: 24px; }
-  .yk-search__heading { font-size: 20px; line-height: 28px; }
-  .yk-search__links { gap: 16px; margin-bottom: 32px; }
+  .yk-search__body { margin-top: 27px; }
+  .yk-search__heading { margin-bottom: 17px; font-size: 20px; line-height: 28px; }
+  .yk-search__links { gap: 16px; margin-bottom: 24px; }
   .yk-search__links a { font-size: 16px; line-height: 24px; }
   .yk-search__card { flex-basis: calc((100% - 8px) / 2); }
   .yk-search__quick { display: none; }
@@ -1304,3 +1304,11 @@ html.yk-search-lock { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .yk-search__panel, .yk-search__overlay { transition: none; }
 }
+
+/* The panel scrolls: its rows keep their own height instead of shrinking to fit */
+.yk-search__panel > * { flex-shrink: 0; }
+.yk-search__panel > .yk-search__body { flex: 1 0 auto; }
+.yk-search__panel { scrollbar-width: none; }
+.yk-search__panel::-webkit-scrollbar { display: none; }
+.yk-search__links li { line-height: 0; }
+.yk-search__links a { display: inline-block; }

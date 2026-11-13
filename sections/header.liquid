@@ -668,11 +668,11 @@
     {% render 'yk-mobile-menu', links: links, utility_items: yk_utility_items, logo: logo %}
     {%- liquid
       assign yk_search_recommended = section.settings.yk_search_recommended
-      if yk_search_recommended == blank or yk_search_recommended.size == 0
+      if yk_search_recommended.size == 0 or yk_search_recommended == nil
         assign yk_search_recommended = collections.all.products
       endif
       assign yk_search_offers = section.settings.yk_search_offers
-      if yk_search_offers == blank or yk_search_offers.size == 0
+      if yk_search_offers.size == 0 or yk_search_offers == nil
         assign yk_search_offers = collections.all.products
       endif
     -%}
