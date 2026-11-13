@@ -1989,15 +1989,14 @@
   .yk-hero__subtitle { margin-top: 16px; font-size: 20px; line-height: 28px; }
 }
 
-/* Behind the Yosukata Brand on phones and tablets: the chef cut-out ends sharply at its right edge (the file is cropped
-   there), so the photo sits against the right edge of the block, as on desktop, instead of floating in the middle;
+/* Behind the Yosukata Brand on phones and tablets: the whole chef figure (yk-brand-chef-full.webp), centred;
    tablets show him taller */
 @media (max-width: 959px) {
-  .yk-brand__portrait { right: 0; left: auto; transform: none; }
+  .yk-brand__portrait { right: auto; left: 50%; width: min(400px, 100%); transform: translateX(-50%); }
 }
 @media (min-width: 600px) and (max-width: 959px) {
   .yk-brand__visual { height: 820px; }
-  .yk-brand__portrait { width: 520px; }
+  .yk-brand__portrait { width: 540px; }
 }
 
 /* Set of the Day on tablets: arrows with 1/2 under the card, as on desktop, instead of the tiny phone dots */
