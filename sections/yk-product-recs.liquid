@@ -8,6 +8,192 @@
   assign source_products = recommendations.products
 -%}
 
+{%- comment -%}
+  Marketing audit, product page p.2: no substitutes (a round-bottom wok on a flat-bottom page), only what goes
+  with this product, matched by the existing tags:
+  - wok: lids that fit its size, utensils, chopsticks, cutting board, then sets with the same wok
+    (size, colour, bottom, seasoning); no other woks;
+  - set: the same wok on its own, the accessories the set does not include, other sets with this wok;
+  - lid: the woks it fits, sets with that wok and this kind of lid, then utensils;
+  - utensils, chopsticks, cutting board: woks, then the other accessories;
+  - skillet: the other skillets, then utensils.
+  "Shopify recommendations" in the section settings brings back the Shopify block.
+{%- endcomment -%}
+{%- assign yk_compat = '' -%}
+{%- if section.settings.source == 'compatible' and recommendations.performed? == false -%}
+  {%- liquid
+    assign tags = product.tags
+    assign kind = product.type
+    assign size = ''
+    for t in tags
+      case t
+        when '11.8 Inch', '11.8-inch'
+          assign size = '11.8'
+        when '13.5 Inch', '13.5-inch'
+          assign size = '13.5'
+        when '14 Inch', '14-inch'
+          assign size = '14'
+      endcase
+      if t contains 'Fits ' and t contains ' Inch Wok'
+        assign size = t | remove: 'Fits ' | remove: ' Inch Wok'
+      endif
+    endfor
+    assign colour = ''
+    if tags contains 'Blue Carbon Steel'
+      assign colour = 'Blue Carbon Steel'
+    elsif tags contains 'Black Carbon Steel'
+      assign colour = 'Black Carbon Steel'
+    endif
+    assign bottom = ''
+    if tags contains 'Flat Bottom'
+      assign bottom = 'Flat Bottom'
+    elsif tags contains 'Round Bottom'
+      assign bottom = 'Round Bottom'
+    endif
+    assign unseasoned = false
+    if tags contains 'Unseasoned'
+      assign unseasoned = true
+    endif
+    assign size_tag = size | append: ' Inch'
+    assign size_set_tag = size | append: '-inch'
+    assign fits_tag = 'Fits ' | append: size | append: ' Inch Wok'
+    assign has_lid = false
+    if tags contains 'Wooden Lid' or tags contains 'Stainless Steel Lid'
+      assign has_lid = true
+    endif
+    assign has_utensils = false
+    if tags contains 'Stainless Steel Utensils' or tags contains 'Carbon Steel Utensils'
+      assign has_utensils = true
+    endif
+    assign has_chopsticks = false
+    if tags contains 'Bamboo Chopsticks'
+      assign has_chopsticks = true
+    endif
+    assign has_board = false
+    if tags contains 'Stainless Steel Cutting Board'
+      assign has_board = true
+    endif
+    assign lid_kind = ''
+    if kind == 'Wok Lid'
+      if tags contains 'Wooden Lid'
+        assign lid_kind = 'Wooden Lid'
+      else
+        assign lid_kind = 'Stainless Steel Lid'
+      endif
+    endif
+  -%}
+  {%- paginate collections.all.products by 250 -%}
+    {%- liquid
+      assign pick_wok = ''
+      assign pick_lid = ''
+      assign pick_acc = ''
+      assign pick_set = ''
+      for p in collections.all.products
+        if p.id == product.id or p.available == false
+          continue
+        endif
+        assign p_tags = p.tags
+        # Same wok: colour, bottom and seasoning match (the size is checked separately)
+        assign p_unseasoned = false
+        if p_tags contains 'Unseasoned'
+          assign p_unseasoned = true
+        endif
+        assign p_same_wok = false
+        if colour != blank and bottom != blank and p_tags contains colour and p_tags contains bottom and p_unseasoned == unseasoned
+          assign p_same_wok = true
+        endif
+
+        if kind == 'Wok' or kind == 'Bundle'
+          if p.type == 'Wok Lid' and has_lid == false and size != ''
+            if p_tags contains fits_tag or p_tags contains size_tag and p_tags contains 'Wooden Lid'
+              assign pick_lid = pick_lid | append: p.handle | append: ','
+            endif
+          elsif p.type == 'Wok Utensils' and has_utensils == false
+            assign pick_acc = pick_acc | append: p.handle | append: ','
+          elsif p.type == 'Cooking Utensils' and has_chopsticks == false
+            assign pick_acc = pick_acc | append: p.handle | append: ','
+          elsif p.type == 'Cutting Board' and has_board == false
+            assign pick_acc = pick_acc | append: p.handle | append: ','
+          elsif p.type == 'Bundle' and p_tags contains size_set_tag and p_same_wok
+            assign pick_set = pick_set | append: p.handle | append: ','
+          elsif kind == 'Bundle' and p.type == 'Wok' and p_tags contains size_tag and p_same_wok
+            assign pick_wok = pick_wok | append: p.handle | append: ','
+          endif
+        elsif kind == 'Wok Lid'
+          if p.type == 'Wok' and p_tags contains size_tag
+            assign pick_wok = pick_wok | append: p.handle | append: ','
+          elsif p.type == 'Bundle' and p_tags contains size_set_tag and p_tags contains lid_kind
+            assign pick_set = pick_set | append: p.handle | append: ','
+          elsif p.type == 'Wok Utensils' or p.type == 'Cooking Utensils'
+            assign pick_acc = pick_acc | append: p.handle | append: ','
+          endif
+        elsif kind == 'Wok Utensils' or kind == 'Cooking Utensils' or kind == 'Cutting Board'
+          if p.type == 'Wok'
+            assign pick_wok = pick_wok | append: p.handle | append: ','
+          elsif p.type == 'Wok Utensils' or p.type == 'Cooking Utensils' or p.type == 'Cutting Board' or p.type == 'Wok Lid'
+            assign pick_acc = pick_acc | append: p.handle | append: ','
+          endif
+        elsif kind == 'Skillet'
+          if p.type == 'Skillet'
+            assign pick_wok = pick_wok | append: p.handle | append: ','
+          elsif p.type == 'Wok Utensils' or p.type == 'Cooking Utensils'
+            assign pick_acc = pick_acc | append: p.handle | append: ','
+          endif
+        endif
+      endfor
+      # On wok and set pages the sets with this wok come right after a few accessories, not after all of them
+      assign acc_list = pick_acc | split: ','
+      assign acc_first = ''
+      assign acc_rest = ''
+      for a in acc_list
+        if forloop.index <= 4 or kind != 'Wok' and kind != 'Bundle'
+          assign acc_first = acc_first | append: a | append: ','
+        else
+          assign acc_rest = acc_rest | append: a | append: ','
+        endif
+      endfor
+      assign yk_compat = pick_wok | append: pick_lid | append: acc_first | append: pick_set | append: acc_rest
+    -%}
+  {%- endpaginate -%}
+{%- endif -%}
+{%- assign yk_compat_handles = yk_compat | split: ',' -%}
+
+{%- if yk_compat_handles.size > 0 -%}
+<section
+  class="yk-offers yk-recs"
+  aria-labelledby="YkRecsTitle-{{ section.id }}"
+  style="--yk-badge-1-bg: {{ section.settings.badge_1_color }}; --yk-badge-1-text: {{ section.settings.badge_1_text_color }}; --yk-badge-2-bg: {{ section.settings.badge_2_color }}; --yk-badge-2-text: {{ section.settings.badge_2_text_color }};"
+  data-yk-offers
+>
+  <div class="yk-offers__inner">
+    <div class="yk-offers__header">
+      {%- if section.settings.title != blank -%}
+        <h2 class="yk-offers__title" id="YkRecsTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+      {%- endif -%}
+      <div class="yk-offers__nav" data-yk-offers-nav hidden>
+        <button class="yk-offers__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t }}" data-yk-offers-prev>
+          {% render 'yk-icon', icon: 'arrow-left' %}
+        </button>
+        <span class="yk-offers__counter" aria-live="polite"><span data-yk-offers-current>1</span>/<span data-yk-offers-total>1</span></span>
+        <button class="yk-offers__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t }}" data-yk-offers-next>
+          {% render 'yk-icon', icon: 'arrow-right' %}
+        </button>
+      </div>
+    </div>
+    <ul class="yk-offers__track" role="list" data-yk-offers-track>
+      {%- for handle in yk_compat_handles limit: section.settings.limit -%}
+        {%- assign card_product = all_products[handle] -%}
+        {%- if card_product != blank -%}
+          {%- render 'yk-product-card', product: card_product, card_settings: section.settings, badge_1_tag: badge_1_tag, badge_2_tag: badge_2_tag -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+    <div class="yk-offers__progress" aria-hidden="true">
+      <span class="yk-offers__progress-thumb" data-yk-offers-thumb></span>
+    </div>
+  </div>
+</section>
+{%- else -%}
 <section
   class="yk-offers yk-recs"
   aria-labelledby="YkRecsTitle-{{ section.id }}"
@@ -85,6 +271,7 @@
     <template data-yk-recs-fallback>{{ recs_markup }}</template>
   {%- endif -%}
 </section>
+{%- endif -%}
 
 {% schema %}
 {
@@ -92,6 +279,17 @@
   "class": "yk-recs-section",
   "settings": [
     { "type": "text", "id": "title", "label": "Heading", "default": "You may also like" },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Products",
+      "options": [
+        { "value": "compatible", "label": "Compatible products (by tags)" },
+        { "value": "shopify", "label": "Shopify recommendations" }
+      ],
+      "default": "compatible",
+      "info": "Compatible: lids that fit the wok's size, utensils, accessories and sets with the same wok; never other woks. When nothing matches, Shopify recommendations are shown."
+    },
     {
       "type": "select",
       "id": "intent",
