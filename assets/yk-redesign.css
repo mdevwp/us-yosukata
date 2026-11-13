@@ -1350,3 +1350,11 @@ html.yk-search-lock { overflow: hidden; }
 }
 /* Hover as in Figma: Primary/Red Brand with an underline */
 .yk-search__links a:hover { color: var(--yk-red, #ba0029); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+/* Close as in Figma: a 40 x 40 button with a 20 x 20 cross (visibly larger than the 18px search glyph) */
+.yk-search__top { min-height: 40px; }
+.yk-search__close { width: 40px; height: 40px; margin-right: -10px; }
+.yk-search__close .yk-search__close-icon { width: 20px; height: 20px; }
+@media (min-width: 960px) {
+  .yk-search__close { margin-right: 0; }
+  .yk-search__panel .yk-search__form { margin-top: 26px; }
+}
