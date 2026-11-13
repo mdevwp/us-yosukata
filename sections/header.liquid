@@ -167,11 +167,14 @@
       {% if settings.enable_quick_search %}no-transition{% endif %}
     "
     href="{{ routes.search_url }}"
-    {% if settings.enable_quick_search %}
+    {% if yk_redesign == 'true' %}
+      data-yk-search-open
+      aria-controls="YkSearch"
+    {% elsif settings.enable_quick_search %}
       data-search
+      aria-controls="MainQuickSearch"
     {% endif %}
     aria-label="{{ 'general.accessibility.open_search' | t }}"
-    aria-controls="MainQuickSearch"
     aria-expanded="false"
   >
     {%- if yk_redesign == 'true' -%}
@@ -387,15 +390,15 @@
 
 {%- capture yk_search_field -%}
   {%- comment -%}
-    Looks like a field (12.11 design) but opens the store's search drawer with live results,
-    the same as the search icon did. Without JS it goes to the search page.
+    Looks like a field (12.11 design) but opens the search panel from the Figma "Search" frames
+    (snippets/yk-search.liquid). Without JS it goes to the search page.
   {%- endcomment -%}
   <a
-    class="yk-header-search{% if settings.enable_quick_search %} no-transition{% endif %}"
+    class="yk-header-search no-transition"
     href="{{ routes.search_url }}"
-    {% if settings.enable_quick_search %}data-search{% endif %}
+    data-yk-search-open
     aria-label="{{ 'general.accessibility.open_search' | t }}"
-    aria-controls="MainQuickSearch"
+    aria-controls="YkSearch"
     aria-expanded="false"
   >
     <span class="yk-header-search__placeholder">Search</span>
@@ -663,6 +666,17 @@
   %}
   {%- if yk_redesign == 'true' -%}
     {% render 'yk-mobile-menu', links: links, utility_items: yk_utility_items, logo: logo %}
+    {%- liquid
+      assign yk_search_recommended = section.settings.yk_search_recommended
+      if yk_search_recommended == blank or yk_search_recommended.size == 0
+        assign yk_search_recommended = collections.all.products
+      endif
+      assign yk_search_offers = section.settings.yk_search_offers
+      if yk_search_offers == blank or yk_search_offers.size == 0
+        assign yk_search_offers = collections.all.products
+      endif
+    -%}
+    {% render 'yk-search', recommended: yk_search_recommended, offers: yk_search_offers %}
   {%- endif -%}
 </header>
 
@@ -945,6 +959,19 @@
       "id": "yk_utility_menu",
       "label": "Redesign 2026: service links",
       "info": "Grey row above the header on desktop and the small links at the bottom of the phone menu. Without a menu: How to season, Knowledge Base, About, Track your order, FAQ, Returns/Exchanges."
+    },
+    {
+      "type": "product_list",
+      "id": "yk_search_recommended",
+      "label": "Redesign 2026: search panel, \"Recommend for you\"",
+      "limit": 5,
+      "info": "Shown as links before the visitor types"
+    },
+    {
+      "type": "product_list",
+      "id": "yk_search_offers",
+      "label": "Redesign 2026: search panel, \"Special offers\"",
+      "limit": 8
     },
     {
       "type": "text",
