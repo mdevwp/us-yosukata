@@ -1312,3 +1312,41 @@ html.yk-search-lock { overflow: hidden; }
 .yk-search__panel::-webkit-scrollbar { display: none; }
 .yk-search__links li { line-height: 0; }
 .yk-search__links a { display: inline-block; }
+
+/* Product photos have a white background: multiply blends it into the grey tile, as the cut-outs in the design */
+.yk-search__card-media img,
+.yk-search__result-media img { mix-blend-mode: multiply; }
+
+/* Desktop, Figma "Search - Active (1600)": 56px field with a 1.5px line (grey, red while typing),
+   "Clear" 14/24 in Icon/Gray with a 10px cross, a 250 x 56 "All results" button in the middle */
+@media (min-width: 960px) {
+  .yk-search__panel .yk-search__form {
+    gap: 16px;
+    height: 56px;
+    margin-top: 34px;
+    border-bottom-width: 1.5px;
+  }
+  .yk-search.has-value .yk-search__panel .yk-search__form,
+  .yk-search__panel .yk-search__form:focus-within { border-color: var(--yk-red, #ba0029); }
+  .yk-search__clear {
+    gap: 6px;
+    color: #8f8f8f;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+  .yk-search__clear .yk-icon { width: 12px; height: 12px; }
+  .yk-search__body { margin-top: 23px; }
+  .yk-search__result-list { margin-bottom: 24px; }
+  .yk-search__all {
+    align-self: center;
+    width: 250px;
+    max-width: 100%;
+    height: 56px;
+    padding: 16px 24px;
+    font-size: 14px;
+    line-height: 24px;
+  }
+}
+/* Hover as in Figma: Primary/Red Brand with an underline */
+.yk-search__links a:hover { color: var(--yk-red, #ba0029); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
