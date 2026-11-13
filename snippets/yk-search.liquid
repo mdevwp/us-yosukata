@@ -1,0 +1,272 @@
+{%- comment -%}
+  Search panel from the 2026 Figma ("Search - Default / Active / No Results", 1600 and 390):
+  a panel on the right on desktop, full screen on phones. Before typing: "Recommend for you" links and a
+  "Special offers" slider; while typing: the first results with the total and an "All results" button,
+  or the "No results" message. Results come from the store search (sections/yk-search-results.liquid).
+  Params: recommended (products), offers (products)
+{%- endcomment -%}
+{%- liquid
+  assign yk_badge_1_tag = 'pre-seasoned'
+  assign yk_badge_2_tag = 'bestseller'
+-%}
+<div class="yk-search" id="YkSearch" data-yk-search hidden role="dialog" aria-modal="true" aria-labelledby="YkSearchTitle">
+  <div class="yk-search__overlay" data-yk-search-close></div>
+  <div class="yk-search__panel">
+    <div class="yk-search__top">
+      <p class="yk-search__title" id="YkSearchTitle">{{ 'search.search' | t | default: 'Search' }}</p>
+      <button class="yk-search__close" type="button" aria-label="{{ 'general.accessibility.close_modal' | t }}" data-yk-search-close>
+        <svg class="yk-icon yk-search__close-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M1 1l18 18M19 1L1 19"/></svg>
+      </button>
+    </div>
+
+    <form class="yk-search__form" action="{{ routes.search_url }}" method="get" role="search" data-yk-search-form>
+      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="options[prefix]" value="last">
+      <label class="visually-hidden" for="YkSearchInput">{{ 'search.placeholder' | t | default: 'What are you looking for?' }}</label>
+      <input
+        class="yk-search__input"
+        id="YkSearchInput"
+        type="search"
+        name="q"
+        placeholder="What are you looking for?"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        data-yk-search-input
+      >
+      <button class="yk-search__clear" type="button" hidden data-yk-search-clear>
+        Clear
+        <svg class="yk-icon yk-search__clear-icon" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="-1 -1 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M0 0l10 10M10 0L0 10"/></svg>
+      </button>
+      <button class="yk-search__submit" type="submit" aria-label="{{ 'search.search' | t | default: 'Search' }}">{% render 'yk-icon', icon: 'search' %}</button>
+    </form>
+
+    <div class="yk-search__body">
+      <div class="yk-search__idle" data-yk-search-idle>
+        {%- if recommended.size > 0 -%}
+          <p class="yk-search__heading">Recommend for you</p>
+          <ul class="yk-search__links" role="list">
+            {%- for product in recommended limit: 3 -%}
+              <li><a href="{{ product.url }}">{{ product.title | escape }}</a></li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if offers.size > 0 -%}
+          <div class="yk-search__offers" data-yk-search-offers>
+            <p class="yk-search__heading">Special offers</p>
+            <ul class="yk-search__track" role="list" data-yk-search-track>
+              {%- for product in offers limit: 8 -%}
+                {%- liquid
+                  assign tags = product.tags | join: '|' | downcase | split: '|'
+                  assign variant = product.selected_or_first_available_variant
+                  assign card_title = product.metafields.custom.card_title.value | default: product.title
+                  assign card_image = product.metafields.custom.card_image.value | default: product.featured_media
+                  assign badge_1 = false
+                  assign badge_2 = false
+                  if tags contains yk_badge_1_tag
+                    assign badge_1 = true
+                  endif
+                  if tags contains yk_badge_2_tag and product.type != 'Bundle'
+                    assign badge_2 = true
+                  endif
+                -%}
+                {%- capture subtitle -%}{% render 'yk-product-subtitle', product: product, no_finish: true %}{%- endcapture -%}
+                <li class="yk-search__card">
+                  <div class="yk-search__card-media">
+                    <a href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+                      {%- if card_image -%}
+                        {{ card_image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 450, 600', sizes: '(min-width: 960px) 280px, 45vw', alt: '' }}
+                      {%- endif -%}
+                    </a>
+                    {%- if badge_1 or badge_2 -%}
+                      <div class="yk-search__badges">
+                        {%- if badge_1 -%}<span class="yk-search__badge yk-search__badge--1">Pre-Seasoned</span>{%- endif -%}
+                        {%- if badge_2 -%}<span class="yk-search__badge yk-search__badge--2">Best Seller</span>{%- endif -%}
+                      </div>
+                    {%- endif -%}
+                    {%- if product.available and product.has_only_default_variant -%}
+                      <form class="yk-search__quick-form" action="{{ routes.cart_add_url }}" method="post" data-yk-search-quick-add>
+                        <input type="hidden" name="id" value="{{ variant.id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button class="yk-search__quick" type="submit" aria-label="Quick Add: {{ product.title | escape }}">{% render 'yk-icon', icon: 'plus' %}</button>
+                      </form>
+                    {%- elsif product.available -%}
+                      <a class="yk-search__quick" href="{{ product.url }}" aria-label="Choose options: {{ product.title | escape }}">{% render 'yk-icon', icon: 'plus' %}</a>
+                    {%- endif -%}
+                  </div>
+                  {%- if subtitle != blank -%}<p class="yk-search__card-subtitle">{{ subtitle }}</p>{%- endif -%}
+                  <p class="yk-search__card-title"><a href="{{ product.url }}">{{ card_title | escape }}</a></p>
+                  <p class="yk-search__card-price">{{ product.price | money }}</p>
+                </li>
+              {%- endfor -%}
+            </ul>
+            <div class="yk-search__offers-nav">
+              <span class="yk-search__progress" aria-hidden="true"><span data-yk-search-thumb></span></span>
+              <button class="yk-search__arrow" type="button" aria-label="{{ 'general.accessibility.previous' | t | default: 'Previous' }}" data-yk-search-prev>{% render 'yk-icon', icon: 'arrow-left' %}</button>
+              <span class="yk-search__counter"><span data-yk-search-current>1</span>/<span data-yk-search-total>1</span></span>
+              <button class="yk-search__arrow" type="button" aria-label="{{ 'general.accessibility.next' | t | default: 'Next' }}" data-yk-search-next>{% render 'yk-icon', icon: 'arrow-right' %}</button>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="yk-search__results" data-yk-search-results hidden aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (() => {
+    const root = document.querySelector('[data-yk-search]');
+    if (!root || root.dataset.ready) return;
+    root.dataset.ready = 'true';
+    // Out of the header, so no transformed or sticky parent can trap the fixed panel
+    document.body.appendChild(root);
+
+    const input = root.querySelector('[data-yk-search-input]');
+    const form = root.querySelector('[data-yk-search-form]');
+    const clear = root.querySelector('[data-yk-search-clear]');
+    const idle = root.querySelector('[data-yk-search-idle]');
+    const results = root.querySelector('[data-yk-search-results]');
+    const base = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+    let opener = null;
+    let timer = null;
+    let request = null;
+    let closeTimer = null;
+
+    const open = (trigger) => {
+      clearTimeout(closeTimer);
+      opener = trigger;
+      root.hidden = false;
+      root.getBoundingClientRect();
+      root.classList.add('is-open');
+      document.documentElement.classList.add('yk-search-lock');
+      document.querySelectorAll('[data-yk-search-open]').forEach((el) => el.setAttribute('aria-expanded', 'true'));
+      setTimeout(() => input.focus({ preventScroll: true }), 50);
+      updateOffers();
+    };
+    const close = () => {
+      if (root.hidden) return;
+      root.classList.remove('is-open');
+      document.documentElement.classList.remove('yk-search-lock');
+      document.querySelectorAll('[data-yk-search-open]').forEach((el) => el.setAttribute('aria-expanded', 'false'));
+      closeTimer = setTimeout(() => { root.hidden = true; }, 300);
+      if (opener) opener.focus({ preventScroll: true });
+    };
+
+    // Captured first, so the old theme's search drawer and page transition never get these clicks
+    document.addEventListener('click', (event) => {
+      const trigger = event.target.closest('[data-yk-search-open]');
+      if (!trigger) return;
+      event.preventDefault();
+      event.stopPropagation();
+      open(trigger);
+    }, true);
+    root.addEventListener('click', (event) => {
+      if (event.target.closest('[data-yk-search-close]')) close();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (root.hidden) return;
+      if (event.key === 'Escape') { close(); return; }
+      if (event.key !== 'Tab') return;
+      const items = [...root.querySelectorAll('.yk-search__panel a[href], .yk-search__panel button:not([hidden]), .yk-search__panel input:not([type="hidden"])')].filter((el) => el.offsetParent);
+      if (!items.length) return;
+      if (event.shiftKey && document.activeElement === items[0]) { event.preventDefault(); items[items.length - 1].focus(); }
+      else if (!event.shiftKey && document.activeElement === items[items.length - 1]) { event.preventDefault(); items[0].focus(); }
+    });
+
+    const showIdle = () => {
+      results.hidden = true;
+      results.innerHTML = '';
+      idle.hidden = false;
+      root.classList.remove('has-query');
+      updateOffers();
+    };
+    const search = () => {
+      const query = input.value.trim();
+      clear.hidden = input.value === '';
+      root.classList.toggle('has-value', input.value !== '');
+      if (!query) { showIdle(); return; }
+      if (request) request.abort();
+      request = new AbortController();
+      const params = new URLSearchParams({ q: query, type: 'product', 'options[prefix]': 'last', section_id: 'yk-search-results' });
+      fetch(`${base}search?${params}`, { signal: request.signal })
+        .then((response) => response.text())
+        .then((html) => {
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+          const content = doc.querySelector('[data-yk-search-content]');
+          results.innerHTML = content ? content.innerHTML : '';
+          idle.hidden = true;
+          results.hidden = false;
+          root.classList.add('has-query');
+        })
+        .catch(() => {});
+    };
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(search, 250);
+    });
+    clear.addEventListener('click', () => {
+      input.value = '';
+      clear.hidden = true;
+      root.classList.remove('has-value');
+      showIdle();
+      input.focus();
+    });
+    form.addEventListener('submit', (event) => {
+      if (!input.value.trim()) event.preventDefault();
+    });
+
+    // Special offers slider: progress bar, counter and arrows
+    const offers = root.querySelector('[data-yk-search-offers]');
+    const track = offers && offers.querySelector('[data-yk-search-track]');
+    function updateOffers() {
+      if (!track) return;
+      const cards = track.children;
+      if (!cards.length) return;
+      const step = cards[0].getBoundingClientRect().width + 8 || 1;
+      const perView = Math.max(1, Math.round(track.clientWidth / step));
+      const pages = Math.max(1, cards.length - perView + 1);
+      const current = Math.min(pages, Math.round(track.scrollLeft / step) + 1);
+      offers.querySelector('[data-yk-search-current]').textContent = current;
+      offers.querySelector('[data-yk-search-total]').textContent = pages;
+      const thumb = offers.querySelector('[data-yk-search-thumb]');
+      thumb.style.width = `${100 / pages}%`;
+      thumb.style.transform = `translateX(${(current - 1) * 100}%)`;
+      offers.querySelector('[data-yk-search-prev]').disabled = current <= 1;
+      offers.querySelector('[data-yk-search-next]').disabled = current >= pages;
+    }
+    if (track) {
+      track.addEventListener('scroll', () => window.requestAnimationFrame(updateOffers), { passive: true });
+      window.addEventListener('resize', updateOffers);
+      const go = (dir) => {
+        const step = track.children[0].getBoundingClientRect().width + 8;
+        track.scrollBy({ left: dir * step, behavior: 'smooth' });
+      };
+      offers.querySelector('[data-yk-search-prev]').addEventListener('click', () => go(-1));
+      offers.querySelector('[data-yk-search-next]').addEventListener('click', () => go(1));
+    }
+
+    // Quick add on the offer cards: adds to the cart and opens the cart drawer
+    root.addEventListener('submit', (event) => {
+      const quick = event.target.closest('[data-yk-search-quick-add]');
+      if (!quick) return;
+      event.preventDefault();
+      const button = quick.querySelector('button');
+      button.classList.add('is-loading');
+      fetch(`${base}cart/add.js`, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(quick) })
+        .then((response) => {
+          if (!response.ok) throw new Error('Add to cart failed');
+          document.dispatchEvent(new CustomEvent('apps:product-added-to-cart'));
+          close();
+          const cartIcon = [...document.querySelectorAll('[data-js-cart-icon]')].find((icon) => icon.offsetParent);
+          if (document.querySelector('.quick-cart') && cartIcon) setTimeout(() => cartIcon.click(), 350);
+          else window.location.href = `${base}cart`;
+        })
+        .catch(() => quick.submit())
+        .finally(() => button.classList.remove('is-loading'));
+    });
+  })();
+</script>

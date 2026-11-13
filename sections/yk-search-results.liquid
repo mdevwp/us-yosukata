@@ -1,0 +1,45 @@
+{%- comment -%}
+  Results for the search panel (snippets/yk-search.liquid), fetched as /search?q=…&section_id=yk-search-results.
+  Figma "Search - Active (390)": the first products with photo, name and price, then "All results (N)";
+  "Search - No Results": the message with the query.
+{%- endcomment -%}
+<div data-yk-search-content>
+  {%- liquid
+    assign yk_products = search.results | where: 'object_type', 'product'
+    assign yk_terms = search.terms | escape
+  -%}
+  {%- if search.performed and yk_products.size > 0 -%}
+    <p class="yk-search__heading">Results</p>
+    <ul class="yk-search__result-list" role="list">
+      {%- for product in yk_products limit: 3 -%}
+        {%- assign result_image = product.metafields.custom.card_image.value | default: product.featured_media -%}
+        <li>
+          <a class="yk-search__result" href="{{ product.url }}">
+            <span class="yk-search__result-media">
+              {%- if result_image -%}
+                {{ result_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 240', sizes: '100px', alt: '' }}
+              {%- endif -%}
+            </span>
+            <span class="yk-search__result-text">
+              <span class="yk-search__result-title">{{ product.title | escape }}</span>
+              <span class="yk-search__result-price">{{ product.price | money }}</span>
+            </span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+    <a class="yk-search__all" href="{{ routes.search_url }}?q={{ search.terms | url_encode }}&type=product&options%5Bprefix%5D=last">All results ({{ search.results_count }})</a>
+  {%- else -%}
+    <div class="yk-search__empty">
+      <p class="yk-search__empty-title">No results for “{{ yk_terms }}”</p>
+      <p class="yk-search__empty-text">Check the spelling or use a different word or phrase.</p>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Search panel results",
+  "settings": []
+}
+{% endschema %}

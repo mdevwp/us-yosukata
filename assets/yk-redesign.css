@@ -1019,3 +1019,348 @@ body.yk-redesign .yk-header .header__icon-touch:hover {
   }
   body.yk-redesign .yk-header .header__links-primary .link-hover::before { display: none; }
 }
+
+/* Search panel (Figma "Search - Default / Active / No Results", 1600 and 390) */
+html.yk-search-lock { overflow: hidden; }
+.yk-search[hidden] { display: none; }
+.yk-search {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482990;
+  color: var(--yk-black, #000);
+  font-family: var(--yk-font-body);
+}
+.yk-search__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(28, 28, 26, .3);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.yk-search__panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px 16px 32px;
+  background: #fff;
+  transform: translateX(100%);
+  transition: transform .3s ease;
+}
+.yk-search.is-open .yk-search__overlay { opacity: 1; }
+.yk-search.is-open .yk-search__panel { transform: none; }
+.yk-search__top { display: flex; align-items: center; justify-content: space-between; min-height: 32px; }
+.yk-search__title { margin: 0; font-family: var(--yk-font-heading); font-size: 16px; font-weight: 600; line-height: 24px; }
+.yk-search__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-right: -4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.yk-search__close .yk-icon { width: 24px; height: 24px; }
+
+/* Field: grey pill on phones, red outline while there is text */
+.yk-search__form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  margin: 24px 0 0;
+  padding: 0 16px;
+  border: 1px solid #f6f6f6;
+  border-radius: 24px;
+  background: #f6f6f6;
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.yk-search.has-value .yk-search__form,
+.yk-search__form:focus-within { border-color: var(--yk-red, #ba0029); background: #fff; }
+.yk-search__input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--yk-black, #000);
+  font-family: var(--yk-font-body);
+  font-size: 14px;
+  line-height: 20px;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.yk-search__input:focus { outline: none; }
+.yk-search__input::placeholder { color: #6a6a6a; opacity: 1; }
+.yk-search__input::-webkit-search-cancel-button { display: none; }
+.yk-search__clear {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #6a6a6a;
+  font-family: var(--yk-font-heading);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  cursor: pointer;
+}
+.yk-search__clear[hidden] { display: none; }
+.yk-search__clear .yk-icon { display: none; width: 16px; height: 16px; }
+.yk-search__submit {
+  display: flex;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--yk-black, #000);
+  cursor: pointer;
+}
+.yk-search__submit .yk-icon { width: 24px; height: 24px; }
+.yk-search.has-value .yk-search__submit { display: none; }
+
+.yk-search__body { display: flex; flex: 1; flex-direction: column; margin-top: 32px; }
+.yk-search__idle[hidden],
+.yk-search__results[hidden] { display: none; }
+.yk-search__results { display: flex; flex: 1; flex-direction: column; }
+.yk-search__heading {
+  margin: 0 0 16px;
+  font-family: var(--yk-font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.yk-search__links { display: grid; gap: 10px; margin: 0 0 32px; padding: 0; list-style: none; }
+.yk-search__links a {
+  color: var(--yk-black, #000);
+  font-size: 14px;
+  line-height: 20px;
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.yk-search__links a:hover { color: var(--yk-red, #ba0029); }
+
+/* Special offers slider */
+.yk-search__track {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.yk-search__track::-webkit-scrollbar { display: none; }
+.yk-search__card { flex: 0 0 calc((100% - 8px) / 2.1); min-width: 0; scroll-snap-align: start; }
+.yk-search__card-media {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #f6f6f6;
+}
+.yk-search__card-media > a { display: block; width: 100%; height: 100%; }
+.yk-search__card-media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.yk-search__badges { position: absolute; top: 8px; left: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+.yk-search__badge {
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-family: var(--yk-font-body);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+.yk-search__badge--1 { background: #235fa3; color: #fff; }
+.yk-search__badge--2 { background: #eecaa1; color: #000; }
+.yk-search__quick-form { margin: 0; }
+.yk-search__quick {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--yk-black, #000);
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease;
+}
+.yk-search__quick:hover { background: var(--yk-red, #ba0029); color: #fff; }
+.yk-search__quick .yk-icon { width: 16px; height: 16px; }
+.yk-search__quick.is-loading { opacity: .5; pointer-events: none; }
+.yk-search__card p { margin: 0; }
+.yk-search__card-subtitle { margin-top: 12px !important; color: #6a6a6a; font-family: var(--yk-font-heading); font-size: 12px; font-weight: 500; line-height: 16px; }
+.yk-search__card-title { margin-top: 8px !important; font-family: var(--yk-font-heading); font-size: 14px; font-weight: 600; line-height: 20px; }
+.yk-search__card-title a { color: inherit; text-decoration: none; }
+.yk-search__card-price { margin-top: 8px !important; font-family: var(--yk-font-heading); font-size: 14px; font-weight: 600; line-height: 20px; }
+.yk-search__offers-nav { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
+.yk-search__progress { position: relative; flex: 1; height: 4px; overflow: hidden; border-radius: 2px; background: #e5e5e5; }
+.yk-search__progress span { position: absolute; top: 0; left: 0; height: 100%; border-radius: 2px; background: var(--yk-black, #000); transition: transform .25s ease, width .25s ease; }
+.yk-search__arrow,
+.yk-search__counter { display: none; }
+
+/* Results */
+.yk-search__result-list { display: grid; gap: 16px; margin: 0 0 24px; padding: 0; list-style: none; }
+.yk-search__result { display: flex; align-items: center; gap: 16px; color: inherit; text-decoration: none; }
+.yk-search__result-media { flex: none; width: 104px; aspect-ratio: 1; overflow: hidden; border-radius: 16px; background: #f6f6f6; }
+.yk-search__result-media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.yk-search__result-text { display: flex; flex-direction: column; gap: 8px; }
+.yk-search__result-title { font-family: var(--yk-font-heading); font-size: 16px; font-weight: 600; line-height: 24px; transition: color .2s ease; }
+.yk-search__result:hover .yk-search__result-title { color: var(--yk-red, #ba0029); }
+.yk-search__result-price { font-family: var(--yk-font-heading); font-size: 16px; font-weight: 600; line-height: 24px; }
+.yk-search__all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  border-radius: 24px;
+  background: var(--yk-red, #ba0029);
+  color: #fff;
+  font-family: var(--yk-font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  text-decoration: none;
+  transition: background-color .2s ease;
+}
+.yk-search__all:hover { background: #8f001f; }
+.yk-search__empty { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; padding: 32px 0 64px; text-align: center; }
+.yk-search__empty p { margin: 0; }
+.yk-search__empty-title { font-family: var(--yk-font-heading); font-size: 18px; font-weight: 600; line-height: 24px; }
+.yk-search__empty-text { max-width: 260px; margin-top: 12px !important; color: #6a6a6a; font-size: 14px; line-height: 22px; }
+
+/* Desktop: a 614px panel on the right, underlined field, larger type, two cards with arrows */
+@media (min-width: 960px) {
+  .yk-search__panel { width: min(614px, 100%); padding: 24px 24px 32px; }
+  .yk-search__title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .yk-search__top { justify-content: flex-end; }
+  .yk-search__panel .yk-search__form {
+    height: 44px;
+    margin-top: 42px;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid #8e8e8e;
+    border-radius: 0;
+    background: none;
+  }
+  .yk-search.has-value .yk-search__panel .yk-search__form,
+  .yk-search__panel .yk-search__form:focus-within { border-color: var(--yk-black, #000); background: none; }
+  .yk-search__input { font-size: 16px; line-height: 24px; }
+  .yk-search__clear .yk-icon { display: block; }
+  .yk-search.has-value .yk-search__submit { display: flex; }
+  .yk-search__body { margin-top: 27px; }
+  .yk-search__heading { margin-bottom: 17px; font-size: 20px; line-height: 28px; }
+  .yk-search__links { gap: 16px; margin-bottom: 24px; }
+  .yk-search__links a { font-size: 16px; line-height: 24px; }
+  .yk-search__card { flex-basis: calc((100% - 8px) / 2); }
+  .yk-search__quick { display: none; }
+  .yk-search__badges { top: 12px; left: 12px; }
+  .yk-search__badge { font-size: 12px; }
+  .yk-search__card-subtitle { margin-top: 16px !important; font-size: 14px; line-height: 20px; }
+  .yk-search__card-title { font-size: 16px; line-height: 24px; }
+  .yk-search__card-price { font-size: 16px; line-height: 24px; }
+  .yk-search__offers-nav { margin-top: 24px; }
+  .yk-search__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--yk-black, #000);
+    cursor: pointer;
+  }
+  .yk-search__arrow:disabled { opacity: .3; cursor: default; }
+  .yk-search__counter { display: block; font-family: var(--yk-font-heading); font-size: 16px; font-weight: 600; line-height: 24px; }
+  .yk-search__all { height: 56px; font-size: 14px; }
+  .yk-search__empty-title { font-size: 24px; line-height: 32px; }
+  .yk-search__empty-text { max-width: none; font-size: 16px; line-height: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yk-search__panel, .yk-search__overlay { transition: none; }
+}
+
+/* The panel scrolls: its rows keep their own height instead of shrinking to fit */
+.yk-search__panel > * { flex-shrink: 0; }
+.yk-search__panel > .yk-search__body { flex: 1 0 auto; }
+.yk-search__panel { scrollbar-width: none; }
+.yk-search__panel::-webkit-scrollbar { display: none; }
+.yk-search__links li { line-height: 0; }
+.yk-search__links a { display: inline-block; }
+
+/* Product photos have a white background: multiply blends it into the grey tile, as the cut-outs in the design */
+.yk-search__card-media img,
+.yk-search__result-media img { mix-blend-mode: multiply; }
+
+/* Desktop, Figma "Search - Active (1600)": 56px field with a 1.5px line (grey, red while typing),
+   "Clear" 14/24 in Icon/Gray with a 10px cross, a 250 x 56 "All results" button in the middle */
+@media (min-width: 960px) {
+  .yk-search__panel .yk-search__form {
+    gap: 16px;
+    height: 56px;
+    margin-top: 34px;
+    border-bottom-width: 1.5px;
+  }
+  .yk-search__panel .yk-search__form:focus-within { border-color: #8e8e8e; }
+  .yk-search.has-value .yk-search__panel .yk-search__form { border-color: var(--yk-red, #ba0029); }
+  .yk-search__clear {
+    gap: 6px;
+    color: #8f8f8f;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+  .yk-search__clear .yk-icon { width: 12px; height: 12px; }
+  .yk-search__body { margin-top: 23px; }
+  .yk-search__result-list { margin-bottom: 24px; }
+  .yk-search__all {
+    align-self: center;
+    width: 250px;
+    max-width: 100%;
+    height: 56px;
+    padding: 16px 24px;
+    font-size: 14px;
+    line-height: 24px;
+  }
+}
+/* Hover as in Figma: Primary/Red Brand with an underline */
+.yk-search__links a:hover { color: var(--yk-red, #ba0029); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+/* Close as in Figma: a 40 x 40 button with a 20 x 20 cross (visibly larger than the 18px search glyph) */
+.yk-search__top { min-height: 40px; }
+.yk-search__close { width: 40px; height: 40px; margin-right: -10px; }
+.yk-search__close .yk-search__close-icon { width: 20px; height: 20px; }
+@media (min-width: 960px) {
+  .yk-search__close { margin-right: 0; }
+  .yk-search__panel .yk-search__form { margin-top: 26px; }
+}
+/* The offers slider must not push the panel wider than the screen: flex children may shrink below their content */
+.yk-search__panel { overflow-x: hidden; }
+.yk-search__panel > *,
+.yk-search__body > *,
+.yk-search__offers,
+.yk-search__track { min-width: 0; max-width: 100%; }
