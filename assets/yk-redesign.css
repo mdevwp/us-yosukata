@@ -1326,8 +1326,8 @@ html.yk-search-lock { overflow: hidden; }
     margin-top: 34px;
     border-bottom-width: 1.5px;
   }
-  .yk-search.has-value .yk-search__panel .yk-search__form,
-  .yk-search__panel .yk-search__form:focus-within { border-color: var(--yk-red, #ba0029); }
+  .yk-search__panel .yk-search__form:focus-within { border-color: #8e8e8e; }
+  .yk-search.has-value .yk-search__panel .yk-search__form { border-color: var(--yk-red, #ba0029); }
   .yk-search__clear {
     gap: 6px;
     color: #8f8f8f;
