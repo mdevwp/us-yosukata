@@ -473,8 +473,11 @@
 
 /* Special offers */
 .yk-offers {
+  position: relative;
   padding: 50px var(--yk-gutter);
-  overflow-x: clip;
+  /* hidden, not clip: on phones a clipped edge-to-edge slider (50vw margins) still widened the page
+     and gave it a horizontal scroll; a hidden overflow keeps it inside the section */
+  overflow-x: hidden;
   background: #fff;
   color: var(--yk-black);
   font-family: var(--yk-font-heading);
@@ -511,6 +514,9 @@
 }
 .yk-offers__track::-webkit-scrollbar { display: none; }
 .yk-card {
+  /* Positioned, so the card's absolutely placed bits (the screen-reader price label) stay inside the slider
+     instead of stretching the page sideways on phones */
+  position: relative;
   flex: 0 0 74.6%;
   min-width: 0;
   scroll-snap-align: start;

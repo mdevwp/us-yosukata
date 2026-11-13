@@ -1364,3 +1364,8 @@ html.yk-search-lock { overflow: hidden; }
 .yk-search__body > *,
 .yk-search__offers,
 .yk-search__track { min-width: 0; max-width: 100%; }
+
+/* Sliders: absolutely placed parts inside cards (screen-reader price labels) are measured against the track,
+   so they stay inside it. Without this they escaped the track's overflow and widened the page on phones
+   (tester's report 13.11: horizontal scroll at the bottom of the homepage, page 953px wide on a 440px screen). */
+[class^="yk-"][class*="__track"] { position: relative; }
