@@ -1358,3 +1358,9 @@ html.yk-search-lock { overflow: hidden; }
   .yk-search__close { margin-right: 0; }
   .yk-search__panel .yk-search__form { margin-top: 26px; }
 }
+/* The offers slider must not push the panel wider than the screen: flex children may shrink below their content */
+.yk-search__panel { overflow-x: hidden; }
+.yk-search__panel > *,
+.yk-search__body > *,
+.yk-search__offers,
+.yk-search__track { min-width: 0; max-width: 100%; }
