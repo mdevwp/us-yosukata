@@ -167,7 +167,7 @@
           "settings": {
             "icon": "benefit-returns",
             "title": "Easy Returns",
-            "text": "Free returning of your order\nwithin 30 days of purchase.",
+            "text": "30-day returns: exchange\nor full refund.",
             "title_mobile": "",
             "text_mobile": ""
           }
@@ -340,7 +340,7 @@
           "settings": {
             "fallback_image": "yk-feature-maintenance",
             "title": "Easy Maintenance",
-            "text": "<p>Say goodbye to scrubbing burnt pots and frying pans. These skillets and wok pans can be cleaned just by wiping with a wet cloth and drying.</p>",
+            "text": "<p>Say goodbye to scrubbing burnt pots and frying pans. These skillets and wok pans can be easily cleaned with warm water and dried immediately.</p>",
             "image_position_x": 91,
             "icon": "drop"
           }
@@ -439,7 +439,7 @@
       ],
       "settings": {
         "title": "Why do you need\nto Season?",
-        "intro": "<p>Pan seasoning can also be referred to as “curing.” The name seasoning can be misleading to some, and it means flavoring in most contexts. However, here, it really means protecting. The curing process serves two primary purposes.</p>",
+        "intro": "<p>Pan seasoning can also be referred to as “curing.” Here it means protecting, not flavoring. Yosukata cookware has no synthetic non-stick coating: factory pre-seasoning is the beginning of the wok’s natural patina, and as you keep cooking with oil and heat, the patina develops further and the surface becomes more naturally nonstick. See how in our <a href=\"/blogs/video/how-to-season-a-wok-basic-oil-method\" title=\"How to season a wok\">seasoning video</a> and <a href=\"/pages/how-to-season-a-carbon-steel-pan\" title=\"How to season a carbon steel pan\">wok care guide</a>.</p><p>The curing process serves two primary purposes.</p>",
         "subheading": "Some of the benefits of purchasing carbon steel cookware are as follows:"
       }
     },

@@ -33,7 +33,21 @@
         {%- if block.settings.video != blank -%}
           {%- comment -%}Live site's product video (client 13.11): plays muted on loop, like there{%- endcomment -%}
           <div class="yk-hero__media yk-hero__media--video">
-            {{ block.settings.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, preload: 'metadata', class: 'yk-hero__video', image_size: '1600x' }}
+            {%- comment -%}Own <video> instead of video_tag: its fallback <img> had no alt (QA p.27). The 1080p MP4 or the largest below it.{%- endcomment -%}
+            {%- liquid
+              assign yk_video = block.settings.video
+              assign yk_src = nil
+              assign yk_src_h = 0
+              for source in yk_video.sources
+                if source.format == 'mp4' and source.height <= 1080 and source.height > yk_src_h
+                  assign yk_src = source
+                  assign yk_src_h = source.height
+                endif
+              endfor
+            -%}
+            <video class="yk-hero__video" autoplay loop muted playsinline preload="metadata" poster="{{ yk_video.preview_image | image_url: width: 1600 }}"{% if yk_video.alt != blank %} aria-label="{{ yk_video.alt | escape }}"{% else %} aria-hidden="true"{% endif %}>
+              {%- if yk_src -%}<source src="{{ yk_src.url }}" type="{{ yk_src.mime_type }}">{%- endif -%}
+            </video>
           </div>
         {%- else -%}
         {%- liquid

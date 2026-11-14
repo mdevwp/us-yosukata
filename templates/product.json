@@ -166,7 +166,7 @@
             "icon_1": "stiletto",
             "text_1": "<p>Free shipping over $50</p>",
             "icon_2": "cotton",
-            "text_2": "<p>Free Returns & Exchanges</p>",
+            "text_2": "<p>30-day returns: exchange or full refund</p>",
             "icon_3": "plant",
             "text_3": "<p>Need help? <a href=\"/pages/contact\">Contact us</a></p>",
             "icon_4": "chat",
@@ -482,8 +482,8 @@
         "row_returns": {
           "type": "info_row",
           "settings": {
-            "icon": "returns-off",
-            "text": "<p>Free Returns & Exchanges</p>"
+            "icon": "returns",
+            "text": "<p>30-day returns: exchange or full refund</p>"
           }
         },
         "row_help": {
@@ -505,6 +505,13 @@
           "settings": {
             "icon": "truck",
             "text": "<p>Free shipping on orders over [free_shipping_threshold]</p>"
+          }
+        },
+        "row_warranty": {
+          "type": "info_row",
+          "settings": {
+            "icon": "verified",
+            "text": "<p>Limited Lifetime Warranty. <a href=\"/pages/warranty-and-returns\" title=\"Warranty & Returns\">Learn more</a></p>"
           }
         },
         "row_secure": {
@@ -529,6 +536,7 @@
         "row_help",
         "row_fit",
         "row_shipping",
+        "row_warranty",
         "row_secure"
       ],
       "settings": {
@@ -755,7 +763,7 @@
           "settings": {
             "icon": "benefit-returns",
             "title": "Easy Returns",
-            "text": "Free returning of your order\nwithin 30 days of purchase.",
+            "text": "30-day returns: exchange\nor full refund.",
             "title_mobile": "",
             "text_mobile": ""
           }

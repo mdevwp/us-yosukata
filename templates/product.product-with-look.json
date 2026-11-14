@@ -119,7 +119,7 @@
             "icon_2": "cotton",
             "text_2": "<p>Free Returns & Exchanges<\/p>",
             "icon_3": "plant",
-            "text_3": "<p>Need help? <a href='\/pages\/contact''>Contact us<\/a><\/p>",
+            "text_3": "<p>Need help? <a href=\"\/pages\/contact\">Contact us<\/a><\/p>",
             "icon_4": "chat",
             "text_4": "<p>Have questions about fit? <a href=\"\/pages\/contact\" title=\"Contact\">Contact us<\/a><\/p>",
             "icon_5": "moving-truck",
