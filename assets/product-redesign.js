@@ -68,6 +68,38 @@ function initYkGallery(gallery) {
     if (target !== index) setActive(target);
   }, { passive: true });
 
+  // Swipe with the mouse too (tester 14.11 p.5): drag the photo left or right to change it.
+  // Touch screens scroll the track natively.
+  let lastPointer = 'mouse';
+  let drag = null;
+  let suppressClick = false;
+  main.addEventListener('pointerdown', (event) => {
+    lastPointer = event.pointerType || 'mouse';
+    if (lastPointer !== 'mouse' || event.button !== 0 || slides.length < 2) return;
+    if (main.classList.contains('is-zoomed') || event.target.closest('button, a, video, iframe, model-viewer')) return;
+    drag = { x: event.clientX, left: track.scrollLeft, dx: 0, start: index };
+  });
+  window.addEventListener('pointermove', (event) => {
+    if (!drag) return;
+    drag.dx = event.clientX - drag.x;
+    if (Math.abs(drag.dx) < 6) return;
+    track.style.scrollSnapType = 'none';
+    track.style.cursor = 'grabbing';
+    track.scrollLeft = drag.left - drag.dx;
+  });
+  window.addEventListener('pointerup', () => {
+    if (!drag) return;
+    const { dx, start } = drag;
+    drag = null;
+    if (Math.abs(dx) < 6) return;
+    suppressClick = true;
+    setTimeout(() => { suppressClick = false; }, 0);
+    track.style.removeProperty('scroll-snap-type');
+    track.style.removeProperty('cursor');
+    goTo(dx < -40 ? start + 1 : dx > 40 ? start - 1 : start);
+  });
+  track.addEventListener('dragstart', (event) => event.preventDefault());
+
   if (zoom) {
     zoom.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -76,6 +108,9 @@ function initYkGallery(gallery) {
       moveZoom({ clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
     });
     main.addEventListener('click', (event) => {
+      if (suppressClick) { suppressClick = false; return; }
+      // Zoom is for the mouse; a tap on a touch screen must not lock the gallery (tester 14.11 p.5)
+      if (lastPointer !== 'mouse') return;
       if (event.target.closest('button, a, video, iframe, model-viewer')) return;
       if (!slides[index].classList.contains('yk-gallery__slide--image')) return;
       const zoomed = !main.classList.contains('is-zoomed');
@@ -207,6 +242,24 @@ function initYkProduct(section) {
 }
 
 document.querySelectorAll('[data-yk-product]').forEach(initYkProduct);
+
+// "…or from $X/mo with shop": the Shop logo lives in the shopify-payment-terms shadow DOM (no parts to style);
+// a stylesheet adopted into it sets the logo to 46x24 as in the design (tester 14.11 p.2)
+(() => {
+  let sheet;
+  const styleTerms = () => document.querySelectorAll('shopify-payment-terms').forEach((host) => {
+    const root = host.shadowRoot;
+    if (!root || root.ykStyled) return;
+    if (!sheet) {
+      sheet = new CSSStyleSheet();
+      sheet.replaceSync('svg[class~="w-[34px]"] { width: 46px; height: 24px; }');
+    }
+    root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+    root.ykStyled = true;
+  });
+  styleTerms();
+  setInterval(styleTerms, 1000);
+})();
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-product]').forEach(initYkProduct);
 });

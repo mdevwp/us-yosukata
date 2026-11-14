@@ -1657,3 +1657,38 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__nav-btn-clos
 }
 /* Without a photo the text wrapper steps aside, so the cards keep exactly the design layout */
 .yk-details__spec:not(.yk-details__spec--photo) .yk-details__spec-text { display: contents; }
+
+/* Product page, tester 14.11 */
+@media (min-width: 960px) {
+  /* p.1: gallery arrows as in the design (Arrow Right: 23.3 x 13.3 with a 2px line); the 26px icon box was squeezed
+     to 25x14 and drew a 13x8 arrow */
+  .yk-gallery__arrow .yk-icon { width: 26px; height: 26px; }
+  /* p.4: the arrows and 1/8 sit on a white pill, so they stay readable over dark photos */
+  .yk-gallery__nav {
+    left: 24px;
+    bottom: 24px;
+    gap: 16px;
+    padding: 8px 16px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, .92);
+  }
+  /* p.3: hover on the thumbnails and the "+" tile */
+  .yk-gallery__thumb { transition: border-color .2s ease, background-color .2s ease; }
+  .yk-gallery__thumb:not(.is-active):hover { border-color: #b8b8b8; background-color: #ececec; }
+  .yk-gallery__track { cursor: grab; }
+  .yk-gallery__main.is-zoomed .yk-gallery__track { cursor: none; }
+}
+@media (hover: hover) {
+  .yk-gallery__arrow:not(:disabled):hover { color: var(--yk-red); }
+}
+.yk-gallery__arrow { transition: color .2s ease, opacity .2s ease; }
+.yk-gallery__image { -webkit-user-drag: none; user-select: none; }
+
+/* p.6: "Contact us" links: darker red and the underline fades out on hover */
+.yk-product__row a,
+.yk-product__callout a {
+  text-decoration-color: currentColor;
+  transition: color .2s ease, text-decoration-color .2s ease;
+}
+.yk-product__row a:hover,
+.yk-product__callout a:hover { color: #8f001f; text-decoration-color: transparent; }
