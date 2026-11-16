@@ -315,8 +315,22 @@ document.querySelectorAll('[data-yk-product]').forEach(initYkProduct);
     root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
     root.ykStyled = true;
   });
+  // QA product p.12: the Shopify Forms teaser sits bottom-left over the sticky bar; it moves up by --yk-teaser-lift
+  // (set in product-redesign.css while the bar is shown). Its shadow root is open, so a sheet is adopted into it.
+  let teaserSheet;
+  const styleTeaser = () => document.querySelectorAll('shopify-forms-embed').forEach((host) => {
+    const root = host.shadowRoot;
+    if (!root || root.ykStyled) return;
+    if (!teaserSheet) {
+      teaserSheet = new CSSStyleSheet();
+      teaserSheet.replaceSync('[class*="appEmbedBottom"] { bottom: var(--yk-teaser-lift, 0px) !important; transition: bottom .3s ease; }');
+    }
+    root.adoptedStyleSheets = [...root.adoptedStyleSheets, teaserSheet];
+    root.ykStyled = true;
+  });
   styleTerms();
-  setInterval(styleTerms, 1000);
+  styleTeaser();
+  setInterval(() => { styleTerms(); styleTeaser(); }, 1000);
 })();
 document.addEventListener('shopify:section:load', (event) => {
   event.target.querySelectorAll('[data-yk-product]').forEach(initYkProduct);
@@ -327,6 +341,14 @@ function initYkDetails(section) {
   section.dataset.ready = 'true';
 
   const tabs = Array.from(section.querySelectorAll('[data-yk-tab]'));
+  // QA product p.20: fade at the right edge while tabs are hidden off-screen
+  const tabRow = section.querySelector('.yk-details__tabs');
+  if (tabRow) {
+    const markMore = () => tabRow.classList.toggle('has-more', tabRow.scrollLeft + tabRow.clientWidth < tabRow.scrollWidth - 4);
+    tabRow.addEventListener('scroll', markMore, { passive: true });
+    window.addEventListener('resize', markMore);
+    markMore();
+  }
   const select = (tab, focus) => {
     tabs.forEach((item) => {
       const active = item === tab;

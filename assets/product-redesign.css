@@ -2007,3 +2007,29 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-delete
 @media (max-width: 959px) {
   .yk-sticky-buy__title { font-size: 13px; line-height: 18px; }
 }
+
+/* p.19: on desktop the gallery stays in view while the long right column scrolls (layout unchanged) */
+@media (min-width: 960px) {
+  .yk-product__gallery {
+    position: sticky;
+    top: 120px;
+    align-self: start;
+  }
+}
+
+/* p.20: on phones the tab row fades at the right edge while more tabs are hidden, so the scroll is visible */
+@media (max-width: 959px) {
+  .yk-details__tabs.has-more {
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent);
+    mask-image: linear-gradient(90deg, #000 calc(100% - 56px), transparent);
+  }
+}
+
+/* p.7: the free shipping row reads as reached when the order ships free */
+.yk-product__row [data-yk-ship-note].is-free { font-weight: 600; }
+
+/* p.12: the "Get 5% off" teaser (Shopify Forms) is lifted above the sticky Add to cart bar; see product-redesign.js */
+body.yk-sticky-buy-on shopify-forms-embed { --yk-teaser-lift: 80px; }
+@media (min-width: 960px) {
+  body.yk-sticky-buy-on shopify-forms-embed { --yk-teaser-lift: 96px; }
+}

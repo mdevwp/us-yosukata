@@ -449,9 +449,63 @@
             {%- endif -%}
 
           {%- when 'info_row' -%}
+            {%- liquid
+              assign row_text = block.settings.text | replace: '[free_shipping_threshold]', yk_free_shipping
+              comment
+                [cooktops] (QA product p.3): which cooktops this product suits, from its tags, in the existing row.
+                A product without cooktop tags (lids, utensils) shows the row without that part.
+              endcomment
+              if row_text contains '[cooktops]'
+                assign fit_tags = product.tags | join: '|' | downcase
+                assign fit_title = product.title | downcase
+                assign fit_list = ''
+                if fit_tags contains 'gas stove'
+                  assign fit_list = fit_list | append: 'gas, '
+                endif
+                if fit_tags contains 'electric stove'
+                  assign fit_list = fit_list | append: 'electric, '
+                endif
+                if fit_tags contains 'glass cooktop' or fit_tags contains 'ceramic cooktop'
+                  assign fit_list = fit_list | append: 'glass & ceramic, '
+                endif
+                if fit_tags contains 'induction'
+                  assign fit_list = fit_list | append: 'induction, '
+                endif
+                if fit_tags contains 'outdoor burner'
+                  assign fit_list = fit_list | append: 'outdoor burners, '
+                endif
+                assign fit_text = ''
+                if fit_list != blank
+                  assign fit_list = fit_list | strip | split: ',' | join: ',' | remove_last: ','
+                  if fit_tags contains 'round bottom' or fit_title contains 'round bottom'
+                    assign fit_text = 'Round bottom: for ' | append: fit_list | append: '; on a flat cooktop use a wok ring.'
+                  else
+                    assign fit_text = 'Works on ' | append: fit_list | append: ' cooktops.'
+                  endif
+                endif
+                assign row_text = row_text | replace: '[cooktops]', fit_text
+              endif
+              comment
+                [free_shipping_progress] (QA product p.7): "Add $X more for free shipping" / "Free shipping on this order",
+                counted with the cart by product-redesign.js; the threshold is Theme settings > Cart.
+              endcomment
+              if row_text contains '[free_shipping_progress]'
+                assign ship_threshold = settings.free_shipping_threshold | times: 100 | round
+                if current_variant.price >= ship_threshold
+                  assign ship_now = 'Free shipping on this order'
+                else
+                  assign ship_left = ship_threshold | minus: current_variant.price | money
+                  assign ship_now = 'Add ' | append: ship_left | append: ' more for free shipping'
+                endif
+                capture ship_html
+                  echo '<span data-yk-ship-note data-threshold="' | append: ship_threshold | append: '" data-price="' | append: current_variant.price | append: '" data-text-more="Add [amount] more for free shipping" data-text-free="Free shipping on this order"><span data-yk-ship-note-text>' | append: ship_now | append: '</span></span>'
+                endcapture
+                assign row_text = row_text | replace: '[free_shipping_progress]', ship_html
+              endif
+            -%}
             <div class="yk-product__row" {{ block.shopify_attributes }}>
               {%- if block.settings.icon != 'none' -%}{% render 'yk-icon', icon: block.settings.icon %}{%- endif -%}
-              <div class="yk-product__row-text">{{ block.settings.text | replace: '[free_shipping_threshold]', yk_free_shipping }}</div>
+              <div class="yk-product__row-text">{{ row_text }}</div>
             </div>
 
           {%- when 'custom_liquid' -%}

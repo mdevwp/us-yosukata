@@ -477,7 +477,8 @@
             "text": "We've refreshed our sale with discounts of up to 50% on select styles.",
             "link": "",
             "show_when_sold_out": false
-          }
+          },
+          "disabled": true
         },
         "row_returns": {
           "type": "info_row",
@@ -497,14 +498,14 @@
           "type": "info_row",
           "settings": {
             "icon": "question",
-            "text": "<p>Not sure which wok fits your stove? <a href=\"/pages/contact\" title=\"Contact us\">Contact us</a></p>"
+            "text": "<p>[cooktops] Questions about your stove? <a href=\"/pages/contact\" title=\"Contact us\">Contact us</a></p>"
           }
         },
         "row_shipping": {
           "type": "info_row",
           "settings": {
             "icon": "truck",
-            "text": "<p>Free shipping on orders over [free_shipping_threshold]</p>"
+            "text": "<p>[free_shipping_progress]</p>"
           }
         },
         "row_warranty": {
@@ -601,7 +602,7 @@
         "care_intro": {
           "type": "text",
           "settings": {
-            "text": "<p>Keep your Yosukata carbon steel wok in excellent condition with proper cleaning, seasoning, and storage.</p>"
+            "text": "<p>Keep your Yosukata carbon steel wok in excellent condition with proper cleaning, seasoning, and storage. Step-by-step: <a href=\"/pages/wok-care-first-use-guide\" title=\"Wok Care & First Use Guide\">Wok Care & First Use Guide</a>.</p>"
           }
         },
         "care_first_use_heading": {
