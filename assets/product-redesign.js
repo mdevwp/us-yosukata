@@ -437,7 +437,18 @@ function initYkPdpReviews(section) {
     return Boolean(source);
   };
 
-  if (write) {
+  // Follow Judge.me's own "who can write a review" setting: with "signed-in customers" it rejects
+  // reviews from guests (422 "Web reviews ... are not allowed"), and its own widget hides the button for them
+  const canWrite = () => {
+    const settings = window.jdgmSettings || {};
+    if (settings.disable_web_reviews) return false;
+    const visibility = settings.write_review_button_visibility;
+    if (!visibility || visibility === 'everyone' || visibility === 'all') return true;
+    if (visibility === 'signed_in_customers') return write.hasAttribute('data-yk-signed-in');
+    return false;
+  };
+
+  if (write && canWrite()) {
     write.hidden = false;
     write.addEventListener('click', () => {
       const target = findWrite();

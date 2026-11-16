@@ -47,7 +47,7 @@
             </button>
             <ul class="yk-reviews-pdp__sort-list" id="YkReviewsSort-{{ section.id }}" role="listbox" aria-label="{{ section.settings.sort_label | escape }}" tabindex="-1" hidden data-yk-reviews-sort-list></ul>
           </div>
-          <button class="yk-reviews-pdp__write" type="button" hidden data-yk-reviews-write>{{ section.settings.write_label | escape }}</button>
+          <button class="yk-reviews-pdp__write" type="button" hidden data-yk-reviews-write{% if customer %} data-yk-signed-in{% endif %}>{{ section.settings.write_label | escape }}</button>
         </div>
     </div>
 
