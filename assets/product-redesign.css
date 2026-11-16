@@ -1997,84 +1997,6 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-delete
 
 /* ===== Product page, QA 11.11 sheet "Product bugs" (16.11) ===== */
 
-/* p.6: size, seasoning and bottom right under the title and easy to see */
-.yk-product__info > .yk-product__title + .yk-product__text--subtitle { margin-top: 8px; }
-.yk-product__text--subtitle {
-  color: var(--yk-pdp-ink);
-  font-size: 14px;
-  line-height: 20px;
-}
-@media (min-width: 960px) {
-  .yk-product__info > .yk-product__title + .yk-product__text--subtitle { margin-top: 12px; }
-  .yk-product__text--subtitle { font-size: 16px; line-height: 24px; }
-}
-
-/* p.3: which cooktops the pan suits, right before the buy button */
-.yk-product__fit {
-  padding: 16px;
-  border-radius: 16px;
-  background: var(--yk-grey-bg);
-}
-.yk-product__info > * + .yk-product__fit { margin-top: 16px; }
-.yk-product__info > .yk-product__fit + .yk-product__buy { margin-top: 16px; }
-.yk-product__fit-title {
-  margin: 0;
-  color: var(--yk-black);
-  font-family: var(--yk-font-heading);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-}
-.yk-product__fit-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.yk-product__fit-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--yk-pdp-ink);
-  font-size: 14px;
-  line-height: 20px;
-}
-.yk-product__fit-item .yk-icon { flex: none; width: 18px; height: 18px; color: var(--yk-red); }
-.yk-product__fit-note {
-  margin: 8px 0 0;
-  color: #6a6a6a;
-  font-size: 13px;
-  line-height: 18px;
-}
-@media (min-width: 960px) {
-  .yk-product__fit { padding: 16px 24px; }
-  .yk-product__info > * + .yk-product__fit { margin-top: 24px; }
-  .yk-product__info > .yk-product__fit + .yk-product__buy { margin-top: 24px; }
-  .yk-product__fit-title, .yk-product__fit-item { font-size: 16px; line-height: 24px; }
-  .yk-product__fit-note { font-size: 14px; line-height: 20px; }
-}
-
-/* p.7: free shipping progress under the buy button */
-.yk-product__ship-note {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin: 0;
-  color: var(--yk-pdp-ink);
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-}
-.yk-product__info > .yk-product__buy + .yk-product__ship-note { margin-top: 12px; }
-.yk-product__ship-note .yk-icon { flex: none; width: 20px; height: 20px; color: var(--yk-red); }
-.yk-product__ship-note.is-free { font-weight: 600; }
-@media (min-width: 960px) {
-  .yk-product__ship-note { font-size: 16px; line-height: 24px; }
-}
-
 /* p.18: the sticky bar shows the full name on up to two lines */
 .yk-sticky-buy__title {
   display: -webkit-box;
@@ -2084,25 +2006,4 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-delete
 }
 @media (max-width: 959px) {
   .yk-sticky-buy__title { font-size: 13px; line-height: 18px; }
-}
-
-/* p.19: on desktop the gallery stays in view while the right column scrolls */
-@media (min-width: 960px) {
-  .yk-product__gallery {
-    position: sticky;
-    top: 120px;
-    align-self: start;
-  }
-}
-
-/* p.11: a spec card without a photo is compact: the value under the label, no tall empty grey block */
-.yk-details__spec:not(.yk-details__spec--photo) { min-height: 0; }
-@media (min-width: 960px) {
-  .yk-details__spec:not(.yk-details__spec--photo) {
-    min-height: 0;
-    justify-content: flex-start;
-    padding: 32px;
-  }
-  .yk-details__spec:not(.yk-details__spec--photo):last-child:nth-child(odd) { padding: 32px; }
-  .yk-details__spec:not(.yk-details__spec--photo):last-child:nth-child(odd) .yk-details__spec-value { font-size: 32px; line-height: 40px; }
 }
