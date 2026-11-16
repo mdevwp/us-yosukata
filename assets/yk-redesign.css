@@ -476,6 +476,33 @@ body.yk-redesign .yk-header .header__icon-touch:has([data-js-cart-count]) { posi
 .yk-redesign .quick-cart__empty-state-promo-button .btn:hover,
 .yk-redesign .cart__empty .btn:hover { background: #8f001f; }
 
+/* Checkout in the cart drawer and on the cart page: a filled red button, not red text (QA home p.39, audit "Cart 2") */
+.yk-redesign .quick-cart__submit,
+.yk-redesign .cart__checkout,
+.yk-redesign button[name="checkout"] {
+  min-height: 56px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--yk-red);
+  color: #fff;
+  font-family: var(--yk-font-heading);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: background-color .2s ease;
+}
+.yk-redesign .quick-cart__submit .btn-text,
+.yk-redesign button[name="checkout"] .btn-text { color: #fff; }
+.yk-redesign .quick-cart__submit .btn-borders,
+.yk-redesign .quick-cart__submit .btn-anim,
+.yk-redesign button[name="checkout"] .btn-borders,
+.yk-redesign button[name="checkout"] .btn-anim { display: none; }
+.yk-redesign .quick-cart__submit:hover,
+.yk-redesign button[name="checkout"]:hover { background: #8f001f; color: #fff; }
+.yk-redesign .quick-cart__submit:focus-visible,
+.yk-redesign button[name="checkout"]:focus-visible { outline: 2px solid var(--yk-black, #000); outline-offset: 2px; }
+
 /* Text cursor in our colours instead of the system blue */
 .yk-redesign input,
 .yk-redesign textarea { caret-color: var(--yk-black, #000); }

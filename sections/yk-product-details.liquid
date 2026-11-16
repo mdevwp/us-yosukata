@@ -174,6 +174,53 @@
                   assign spec_value = product.metafields[spec_path[0]][spec_path[1]].value
                 endif
                 comment
+                  US store: sizes in inches (client 11.11), as in the design "13.5 inch (34cm)". A diameter stored in
+                  cm or mm gets the inch size from the product title (13.5" — the nominal size the product is sold as),
+                  or cm / 2.54 when the title has none; the metric value stays in brackets.
+                endcomment
+                if spec_path[1] contains 'diameter' and spec_value != blank
+                  assign spec_cm = 0
+                  if spec_value.unit != blank
+                    if spec_value.unit == 'cm'
+                      assign spec_cm = spec_value.value | times: 1.0
+                    elsif spec_value.unit == 'mm'
+                      assign spec_cm = spec_value.value | divided_by: 10.0
+                    endif
+                  else
+                    assign spec_text = spec_value | append: '' | downcase
+                    unless spec_text contains '"' or spec_text contains 'inch' or spec_text contains ' in'
+                      if spec_text contains 'mm'
+                        assign spec_cm = spec_text | remove: 'mm' | strip | times: 1.0 | divided_by: 10.0
+                      elsif spec_text contains 'cm'
+                        assign spec_cm = spec_text | remove: 'cm' | strip | times: 1.0
+                      endif
+                    endunless
+                  endif
+                  if spec_cm > 0
+                    assign spec_inch = 0
+                    if product.title contains '"'
+                      assign title_size = product.title | split: '"' | first | split: ' ' | last
+                      assign spec_inch = title_size | times: 1.0
+                    endif
+                    if spec_inch <= 0
+                      assign spec_inch = spec_cm | divided_by: 2.54 | round: 1
+                    endif
+                    # Whole numbers without ".0": 14 inch (36cm), not 14.0 inch (36.0cm)
+                    assign spec_inch_text = spec_inch | append: ''
+                    assign spec_whole = spec_inch | round
+                    if spec_whole == spec_inch
+                      assign spec_inch_text = spec_whole | append: ''
+                    endif
+                    assign spec_cm = spec_cm | round: 1
+                    assign spec_cm_text = spec_cm | append: ''
+                    assign spec_whole = spec_cm | round
+                    if spec_whole == spec_cm
+                      assign spec_cm_text = spec_whole | append: ''
+                    endif
+                    assign spec_value = spec_inch_text | append: ' inch (' | append: spec_cm_text | append: 'cm)'
+                  endif
+                endif
+                comment
                   Optional third part: a product metafield with a photo (File, image) shown in the card.
                   Without a photo the card stays grey, as in the design.
                 endcomment
