@@ -474,13 +474,14 @@
                 if fit_tags contains 'outdoor burner'
                   assign fit_list = fit_list | append: 'outdoor burners, '
                 endif
-                assign fit_text = ''
+                # Without cooktop tags (lids, utensils) the row keeps the general question
+                assign fit_text = 'Not sure which wok fits your stove?'
                 if fit_list != blank
-                  assign fit_list = fit_list | strip | split: ',' | join: ',' | remove_last: ','
+                  assign fit_list = fit_list | strip | remove_last: ','
                   if fit_tags contains 'round bottom' or fit_title contains 'round bottom'
-                    assign fit_text = 'Round bottom: for ' | append: fit_list | append: '; on a flat cooktop use a wok ring.'
+                    assign fit_text = 'Round bottom: for ' | append: fit_list | append: '; on a flat cooktop it needs a wok ring. Questions?'
                   else
-                    assign fit_text = 'Works on ' | append: fit_list | append: ' cooktops.'
+                    assign fit_text = 'Works on ' | append: fit_list | append: ' cooktops. Questions?'
                   endif
                 endif
                 assign row_text = row_text | replace: '[cooktops]', fit_text

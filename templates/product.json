@@ -498,7 +498,7 @@
           "type": "info_row",
           "settings": {
             "icon": "question",
-            "text": "<p>[cooktops] Questions about your stove? <a href=\"/pages/contact\" title=\"Contact us\">Contact us</a></p>"
+            "text": "<p>[cooktops] <a href=\"/pages/contact\" title=\"Contact us\">Contact us</a></p>"
           }
         },
         "row_shipping": {
