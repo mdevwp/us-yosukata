@@ -720,6 +720,49 @@ document.addEventListener('click', (event) => {
   link.href = root + 'cart/' + variant.value + ':' + qty + '?payment=shop_pay';
 });
 
+// Free shipping progress under the buy button (QA product p.7): the cart total plus this product against the threshold
+document.querySelectorAll('[data-yk-ship-note]').forEach((note) => {
+  const section = note.closest('section') || document;
+  const text = note.querySelector('[data-yk-ship-note-text]');
+  const threshold = Number(note.dataset.threshold) || 0;
+  const variantsEl = section.querySelector('[data-yk-variants]');
+  const variants = variantsEl ? JSON.parse(variantsEl.textContent) : [];
+  const variantInput = section.querySelector('[data-yk-variant-id]');
+  let cartTotal = 0;
+  let cartIds = [];
+  const money = (cents) => {
+    const format = window.theme?.moneyFormat || window.Shopify?.money_format || '${{amount}}';
+    return format.replace(/\{\{\s*(\w+)\s*\}\}/, (match, key) => {
+      const value = (cents / 100).toFixed(key.includes('no_decimals') ? 0 : 2);
+      return key.includes('comma') ? value.replace('.', ',') : value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+  };
+  const render = () => {
+    const current = variants.find((variant) => String(variant.id) === String(variantInput?.value));
+    const price = current ? current.price : Number(note.dataset.price) || 0;
+    // A product already in the cart is counted once
+    const inCart = current ? cartIds.includes(current.id) : false;
+    const left = threshold - cartTotal - (inCart ? 0 : price);
+    text.textContent = left > 0 ? note.dataset.textMore.replace('[amount]', money(left)) : note.dataset.textFree;
+    note.classList.toggle('is-free', left <= 0);
+  };
+  const refresh = () => {
+    const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+    fetch(root + 'cart.js', { headers: { Accept: 'application/json' } })
+      .then((response) => response.json())
+      .then((cart) => {
+        cartTotal = cart.total_price || 0;
+        cartIds = (cart.items || []).map((item) => item.variant_id);
+        render();
+      })
+      .catch(() => {});
+  };
+  section.querySelector('[data-yk-variant-picker]')?.addEventListener('change', () => window.setTimeout(render, 0));
+  ['cart:updated', 'theme:cart:change', 'cart:change'].forEach((name) => document.addEventListener(name, refresh));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
+  refresh();
+});
+
 // Sticky Add to cart bar (design "Page Scrolling"): shown once the buy buttons are above the screen
 document.querySelectorAll('[data-yk-sticky-buy]').forEach((bar) => {
   const section = bar.closest('section') || document;
@@ -735,8 +778,9 @@ document.querySelectorAll('[data-yk-sticky-buy]').forEach((bar) => {
 
   const sync = () => {
     if (mainPrice) {
+      // Only the price: no struck-out price and no "Sale price" label meant for screen readers (QA product p.18)
       const copy = mainPrice.cloneNode(true);
-      copy.querySelectorAll('s').forEach((el) => el.remove());
+      copy.querySelectorAll('s, .visually-hidden, .sr-only').forEach((el) => el.remove());
       price.textContent = copy.textContent.trim();
     }
     if (picker && variantText) {

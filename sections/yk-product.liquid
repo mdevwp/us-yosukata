@@ -243,6 +243,84 @@
               <div class="yk-product__text yk-product__text--{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ block_text }}</div>
             {%- endif -%}
 
+          {%- when 'stove_fit' -%}
+            {%- comment -%}
+              QA product p.3 (TZ 4.2 block 6, MUST): which cooktops this pan suits, next to the buy button.
+              Built from the product tags (Gas Stove, Electric Stove, Glass Cooktop, Ceramic Cooktop, Induction,
+              Outdoor Burner, Wok Ring) and the bottom shape (Flat Bottom / Round Bottom tag or title).
+            {%- endcomment -%}
+            {%- liquid
+              assign fit_tags = product.tags | join: '|' | downcase
+              assign fit_title = product.title | downcase
+              assign fit_list = ''
+              if fit_tags contains 'gas stove'
+                assign fit_list = fit_list | append: 'Gas|'
+              endif
+              if fit_tags contains 'electric stove'
+                assign fit_list = fit_list | append: 'Electric|'
+              endif
+              if fit_tags contains 'glass cooktop' or fit_tags contains 'ceramic cooktop'
+                assign fit_list = fit_list | append: 'Glass & ceramic|'
+              endif
+              if fit_tags contains 'induction'
+                assign fit_list = fit_list | append: 'Induction|'
+              endif
+              if fit_tags contains 'outdoor burner'
+                assign fit_list = fit_list | append: 'Outdoor burner|'
+              endif
+              assign fit_items = fit_list | split: '|'
+              assign fit_bottom = ''
+              if fit_tags contains 'round bottom' or fit_title contains 'round bottom'
+                assign fit_bottom = 'round'
+              elsif fit_tags contains 'flat bottom' or fit_title contains 'flat bottom'
+                assign fit_bottom = 'flat'
+              endif
+            -%}
+            {%- if fit_items.size > 0 -%}
+              <div class="yk-product__fit" {{ block.shopify_attributes }}>
+                <p class="yk-product__fit-title">{{ block.settings.title | escape }}</p>
+                <ul class="yk-product__fit-list" role="list">
+                  {%- for item in fit_items -%}
+                    <li class="yk-product__fit-item">{% render 'yk-icon', icon: 'check-square' %}<span>{{ item }}</span></li>
+                  {%- endfor -%}
+                </ul>
+                {%- if fit_bottom == 'round' and block.settings.round_note != blank -%}
+                  <p class="yk-product__fit-note">{{ block.settings.round_note | escape }}</p>
+                {%- elsif fit_bottom == 'flat' and block.settings.flat_note != blank -%}
+                  <p class="yk-product__fit-note">{{ block.settings.flat_note | escape }}</p>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+          {%- when 'shipping_note' -%}
+            {%- comment -%}
+              QA product p.7: under the buy button, "Add $X more for free shipping" / "This order ships free".
+              The threshold is Theme settings > Cart > Free shipping threshold; the amount counts the cart
+              plus this product and is updated by product-redesign.js.
+            {%- endcomment -%}
+            {%- if settings.free_shipping_threshold != blank -%}
+              {%- assign ship_threshold = settings.free_shipping_threshold | times: 100 | round -%}
+              <p
+                class="yk-product__ship-note"
+                data-yk-ship-note
+                data-threshold="{{ ship_threshold }}"
+                data-price="{{ current_variant.price }}"
+                data-text-more="{{ block.settings.text_more | escape }}"
+                data-text-free="{{ block.settings.text_free | escape }}"
+                {{ block.shopify_attributes }}
+              >
+                {% render 'yk-icon', icon: 'truck' %}
+                <span data-yk-ship-note-text>
+                  {%- if current_variant.price >= ship_threshold -%}
+                    {{ block.settings.text_free | escape }}
+                  {%- else -%}
+                    {%- assign ship_left = ship_threshold | minus: current_variant.price | money -%}
+                    {{ block.settings.text_more | escape | replace: '[amount]', ship_left }}
+                  {%- endif -%}
+                </span>
+              </p>
+            {%- endif -%}
+
           {%- when 'callout' -%}
             <div class="yk-product__callout" {{ block.shopify_attributes }}>
               {%- if block.settings.icon != 'none' -%}{% render 'yk-icon', icon: block.settings.icon %}{%- endif -%}
@@ -455,6 +533,27 @@
           ],
           "default": "body"
         }
+      ]
+    },
+    {
+      "type": "stove_fit",
+      "name": "Cooktop compatibility",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "Cooktops come from the product tags: Gas Stove, Electric Stove, Glass Cooktop, Ceramic Cooktop, Induction, Outdoor Burner. The note depends on the Flat Bottom / Round Bottom tag or the title. Hidden when the product has none of these tags." },
+        { "type": "text", "id": "title", "label": "Heading", "default": "Works on" },
+        { "type": "text", "id": "flat_note", "label": "Flat bottom note", "default": "Flat bottom: sits steady on home cooktops." },
+        { "type": "text", "id": "round_note", "label": "Round bottom note", "default": "Round bottom: for gas wok burners and outdoor burners. On a flat cooktop it needs a wok ring; not for induction, electric or glass cooktops." }
+      ]
+    },
+    {
+      "type": "shipping_note",
+      "name": "Free shipping progress",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "Uses Theme settings > Cart > Free shipping threshold. [amount] is how much is left, counting the cart and this product." },
+        { "type": "text", "id": "text_more", "label": "Below the threshold", "default": "Add [amount] more for free shipping" },
+        { "type": "text", "id": "text_free", "label": "Threshold reached", "default": "This order ships free" }
       ]
     },
     {

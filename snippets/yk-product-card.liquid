@@ -7,6 +7,14 @@
   assign product_tags = product.tags | join: '|' | downcase | split: '|'
   assign variant = product.selected_or_first_available_variant
   assign card_title = product.metafields.custom.card_title.value | default: product.title
+  # Audit "Catalog 8": shorter card names; the brand is on every card, so "Yosukata " at the start is dropped
+  # (the product's own title stays as it is; a card_title metafield is used as written)
+  if product.metafields.custom.card_title == blank
+    assign card_title_start = card_title | slice: 0, 9
+    if card_title_start == 'Yosukata '
+      assign card_title = card_title | remove_first: 'Yosukata '
+    endif
+  endif
   assign card_image = product.metafields.custom.card_image.value | default: product.featured_media
   assign rating = product.metafields.reviews.rating.value
   assign rating_count = product.metafields.reviews.rating_count.value | default: 0

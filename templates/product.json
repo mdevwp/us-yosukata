@@ -477,7 +477,8 @@
             "text": "We've refreshed our sale with discounts of up to 50% on select styles.",
             "link": "",
             "show_when_sold_out": false
-          }
+          },
+          "disabled": true
         },
         "row_returns": {
           "type": "info_row",
@@ -497,7 +498,7 @@
           "type": "info_row",
           "settings": {
             "icon": "question",
-            "text": "<p>Have questions about fit? <a href=\"/pages/contact\" title=\"Contact us\">Contact us</a></p>"
+            "text": "<p>Not sure which wok fits your stove? <a href=\"/pages/contact\" title=\"Contact us\">Contact us</a></p>"
           }
         },
         "row_shipping": {
@@ -520,17 +521,34 @@
             "icon": "shield",
             "text": "<p>Secure payment</p>"
           }
+        },
+        "stove_fit": {
+          "type": "stove_fit",
+          "settings": {
+            "title": "Works on",
+            "flat_note": "Flat bottom: sits steady on home cooktops.",
+            "round_note": "Round bottom: for gas wok burners and outdoor burners. On a flat cooktop it needs a wok ring; not for induction, electric or glass cooktops."
+          }
+        },
+        "shipping_note": {
+          "type": "shipping_note",
+          "settings": {
+            "text_more": "Add [amount] more for free shipping",
+            "text_free": "This order ships free"
+          }
         }
       },
       "block_order": [
         "badges",
         "title",
+        "subtitle",
         "price",
         "short_text",
-        "subtitle",
         "variant_picker",
         "carbon",
+        "stove_fit",
         "buy_buttons",
+        "shipping_note",
         "promo",
         "row_returns",
         "row_help",
@@ -584,99 +602,6 @@
             "specs": "Material | custom.material | custom.material_photo\nHandle material | custom.handle_material | custom.handle_material_photo\nDiameter | custom.diameter | custom.diameter_photo"
           }
         },
-        "tab_care": {
-          "type": "tab",
-          "settings": {
-            "title": "Care & Maintenance"
-          }
-        },
-        "care_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Care & Maintenance",
-            "size": "large",
-            "append_product_title": false
-          }
-        },
-        "care_intro": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Keep your Yosukata carbon steel wok in excellent condition with proper cleaning, seasoning, and storage.</p>"
-          }
-        },
-        "care_first_use_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Before First Use",
-            "size": "small",
-            "append_product_title": false
-          }
-        },
-        "care_first_use": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Although your Yosukata wok is pre-seasoned, it requires additional seasoning with oil before cooking. Wash it thoroughly with warm, soapy water to remove any protective oil or residue from manufacturing and shipping. Dry completely, then apply a thin, even layer of cooking oil and season according to the manufacturer's instructions.</p>"
-          }
-        },
-        "care_cleaning_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Cleaning & Maintenance",
-            "size": "small",
-            "append_product_title": false
-          }
-        },
-        "care_cleaning": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Allow the wok to cool before cleaning. Hand-wash with warm water and a soft sponge to remove food residue. A small amount of mild dish soap can be used when necessary, but avoid harsh detergents and abrasive scrubbing that may damage the seasoning.</p><p>Never place the wok in a dishwasher or leave it soaking in water, as prolonged moisture exposure can cause rust.</p>"
-          }
-        },
-        "care_drying_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Drying & Storage",
-            "size": "small",
-            "append_product_title": false
-          }
-        },
-        "care_drying": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Immediately after washing, dry the wok thoroughly with a clean towel or over low heat to remove any remaining moisture.</p><p>Before storing, apply a very thin layer of cooking oil to protect the carbon steel surface from oxidation. Store in a clean, dry, well-ventilated place, away from excessive humidity.</p>"
-          }
-        },
-        "care_seasoning_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Seasoning & Long-Term Care",
-            "size": "small",
-            "append_product_title": false
-          }
-        },
-        "care_seasoning": {
-          "type": "text",
-          "settings": {
-            "text": "<p>With regular use, your wok will gradually develop a darker, more effective natural non-stick patina. Changes in surface color and uneven darkening are normal characteristics of carbon steel.</p><p>If food begins to stick or rust appears, gently remove the affected residue or rust and re-season the surface with cooking oil.</p><p>Avoid leaving acidic foods or sauces in the wok for extended periods, as they can weaken the protective seasoning layer.</p>"
-          }
-        },
-        "care_video_heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "How to Season",
-            "size": "large",
-            "append_product_title": true
-          }
-        },
-        "care_video": {
-          "type": "media",
-          "settings": {
-            "video_url": "https://www.youtube.com/watch?v=JzKLXxAxrzw",
-            "video_title": "How to season a wok (basic oil method)",
-            "width": "full",
-            "default_asset": "yk-product-care.jpg"
-          }
-        },
         "tab_shipping": {
           "type": "tab",
           "settings": {
@@ -695,8 +620,8 @@
           "type": "feature",
           "settings": {
             "icon": "benefit-returns",
-            "title": "Free Easy Returns",
-            "text": "<p>Need to return an item? We make it easy. Email us and we'll send you a free return label with instructions on how to return.</p>"
+            "title": "30-Day Returns",
+            "text": "<p>30-day returns: exchange or full refund. Contact us within 30 days of delivery and we will help with the return. <a href=\"/pages/warranty-and-returns\" title=\"Warranty & Returns\">Warranty & Returns policy</a></p>"
           }
         },
         "ship_questions": {
@@ -713,19 +638,6 @@
         "description_heading",
         "description",
         "specs",
-        "tab_care",
-        "care_heading",
-        "care_intro",
-        "care_first_use_heading",
-        "care_first_use",
-        "care_cleaning_heading",
-        "care_cleaning",
-        "care_drying_heading",
-        "care_drying",
-        "care_seasoning_heading",
-        "care_seasoning",
-        "care_video_heading",
-        "care_video",
         "tab_shipping",
         "ship_standard",
         "ship_returns",
@@ -793,7 +705,7 @@
           "settings": {
             "icon": "benefit-pay-later",
             "title": "Buy Now, Pay Later",
-            "text": "Pay for your order upon\nreceipt of your goods.",
+            "text": "Pay in 4 interest-free\ninstallments with Shop Pay.",
             "title_mobile": "",
             "text_mobile": ""
           }
@@ -832,14 +744,129 @@
         "write_label": "Write Review",
         "anchor": "reviews"
       }
+    },
+    "yk_care": {
+      "type": "yk-product-details",
+      "blocks": {
+        "tab_care": {
+          "type": "tab",
+          "settings": {
+            "title": "Care & Maintenance"
+          }
+        },
+        "care_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Care & Maintenance",
+            "size": "large",
+            "append_product_title": false
+          }
+        },
+        "care_video_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "How to Season",
+            "size": "large",
+            "append_product_title": true
+          }
+        },
+        "care_video": {
+          "type": "media",
+          "settings": {
+            "video_url": "https://www.youtube.com/watch?v=JzKLXxAxrzw",
+            "video_title": "How to season a wok (basic oil method)",
+            "width": "full",
+            "default_asset": "yk-product-care.jpg"
+          }
+        },
+        "care_intro": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Keep your Yosukata carbon steel wok in excellent condition with proper cleaning, seasoning, and storage.</p>"
+          }
+        },
+        "care_first_use_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Before First Use",
+            "size": "small",
+            "append_product_title": false
+          }
+        },
+        "care_first_use": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Although your Yosukata wok is pre-seasoned, it requires additional seasoning with oil before cooking. Wash it thoroughly with warm, soapy water to remove any protective oil or residue from manufacturing and shipping. Dry completely, then apply a thin, even layer of cooking oil and season according to the manufacturer's instructions.</p>"
+          }
+        },
+        "care_cleaning_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Cleaning & Maintenance",
+            "size": "small",
+            "append_product_title": false
+          }
+        },
+        "care_cleaning": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Allow the wok to cool before cleaning. Hand-wash with warm water and a soft sponge to remove food residue. A small amount of mild dish soap can be used when necessary, but avoid harsh detergents and abrasive scrubbing that may damage the seasoning.</p><p>Never place the wok in a dishwasher or leave it soaking in water, as prolonged moisture exposure can cause rust.</p>"
+          }
+        },
+        "care_drying_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Drying & Storage",
+            "size": "small",
+            "append_product_title": false
+          }
+        },
+        "care_drying": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Immediately after washing, dry the wok thoroughly with a clean towel or over low heat to remove any remaining moisture.</p><p>Before storing, apply a very thin layer of cooking oil to protect the carbon steel surface from oxidation. Store in a clean, dry, well-ventilated place, away from excessive humidity.</p>"
+          }
+        },
+        "care_seasoning_heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Seasoning & Long-Term Care",
+            "size": "small",
+            "append_product_title": false
+          }
+        },
+        "care_seasoning": {
+          "type": "text",
+          "settings": {
+            "text": "<p>With regular use, your wok will gradually develop a darker, more effective natural non-stick patina. Changes in surface color and uneven darkening are normal characteristics of carbon steel.</p><p>If food begins to stick or rust appears, gently remove the affected residue or rust and re-season the surface with cooking oil.</p><p>Avoid leaving acidic foods or sauces in the wok for extended periods, as they can weaken the protective seasoning layer.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "tab_care",
+        "care_heading",
+        "care_video_heading",
+        "care_video",
+        "care_intro",
+        "care_first_use_heading",
+        "care_first_use",
+        "care_cleaning_heading",
+        "care_cleaning",
+        "care_drying_heading",
+        "care_drying",
+        "care_seasoning_heading",
+        "care_seasoning"
+      ],
+      "settings": {}
     }
   },
   "order": [
     "yk_product",
-    "yk_details",
     "yk_recs",
-    "yk_reviews",
+    "yk_details",
     "1763379844eb994b3c",
+    "yk_reviews",
+    "yk_care",
     "yk_benefits",
     "main",
     "product_tabs",

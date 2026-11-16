@@ -17,7 +17,7 @@
           "settings": {
             "image": "",
             "image_mobile": "",
-            "promo": "<p>Get additional -5% with a promo code: <strong>WOK5</strong></p>",
+            "promo": "",
             "title": "Black Carbon Steel Wok 13.5\"",
             "button_label": "Shop Now",
             "button_link": "shopify://products/13-5-inch-pre-seasoned-black-carbon-steel-wok-flat-bottomed"
@@ -64,14 +64,16 @@
           "settings": {
             "fallback": "good",
             "alt": "Seriously Good"
-          }
+          },
+          "disabled": true
         },
         "badge_seen": {
           "type": "badge",
           "settings": {
             "fallback": "seen",
             "alt": "As Seen On Serious Eats 2026"
-          }
+          },
+          "disabled": true
         },
         "proof_winner": {
           "type": "proof",
@@ -197,7 +199,7 @@
           "settings": {
             "icon": "benefit-pay-later",
             "title": "Buy Now, Pay Later",
-            "text": "Pay for your order upon\nreceipt of your goods.",
+            "text": "Pay in 4 interest-free\ninstallments with Shop Pay.",
             "title_mobile": "",
             "text_mobile": ""
           }

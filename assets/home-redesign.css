@@ -2017,3 +2017,14 @@
   .yk-set__arrow:disabled { cursor: default; opacity: .4; }
   .yk-set__arrow .yk-icon { width: 26px; height: 26px; }
 }
+
+/* Audit "Navigation 7": a clearly visible catalog button: See All on the category image is a filled red pill */
+@media (min-width: 960px) {
+  .home-categories__see-all { width: 180px; height: 56px; border-radius: 28px; background: var(--yk-red); color: #fff; font-size: 14px; }
+  .home-categories__panel a:hover .home-categories__see-all,
+  .home-categories__panel a:focus-visible .home-categories__see-all { background: #8f001f; color: #fff; }
+}
+@media (max-width: 959px) {
+  .home-categories__panel a { background: var(--yk-red); color: #fff; }
+  .home-categories__panel a:active { background: #8f001f; }
+}

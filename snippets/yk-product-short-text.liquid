@@ -35,8 +35,16 @@
         break
       endif
     endfor
+    comment
+      QA product p.16: under the price only the first sentence; the full paragraph stays in the description below
+    endcomment
     if yk_found != blank
-      echo yk_found | truncatewords: 45 | escape | prepend: '<p>' | append: '</p>'
+      assign yk_sentence = yk_found | split: '. ' | first | strip
+      assign yk_last_char = yk_sentence | slice: -1
+      unless yk_last_char == '.' or yk_last_char == '!' or yk_last_char == '?'
+        assign yk_sentence = yk_sentence | append: '.'
+      endunless
+      echo yk_sentence | truncatewords: 45 | escape | prepend: '<p>' | append: '</p>'
     endif
   endif
 -%}
