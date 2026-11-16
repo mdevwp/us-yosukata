@@ -761,7 +761,7 @@ document.querySelectorAll('[data-yk-ship-note]').forEach((note) => {
   };
   const render = () => {
     const current = variants.find((variant) => String(variant.id) === String(variantInput?.value));
-    const price = current ? current.price : Number(note.dataset.price) || 0;
+    const price = current ? current.price : Number(note.dataset.ykShipPrice) || 0;
     // A product already in the cart is counted once
     const inCart = current ? cartIds.includes(current.id) : false;
     const left = threshold - cartTotal - (inCart ? 0 : price);

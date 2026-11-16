@@ -304,7 +304,7 @@
                 class="yk-product__ship-note"
                 data-yk-ship-note
                 data-threshold="{{ ship_threshold }}"
-                data-price="{{ current_variant.price }}"
+                data-yk-ship-price="{{ current_variant.price }}"
                 data-text-more="{{ block.settings.text_more | escape }}"
                 data-text-free="{{ block.settings.text_free | escape }}"
                 {{ block.shopify_attributes }}
@@ -499,7 +499,7 @@
                   assign ship_now = 'Add ' | append: ship_left | append: ' more for free shipping'
                 endif
                 capture ship_html
-                  echo '<span data-yk-ship-note data-threshold="' | append: ship_threshold | append: '" data-price="' | append: current_variant.price | append: '" data-text-more="Add [amount] more for free shipping" data-text-free="Free shipping on this order"><span data-yk-ship-note-text>' | append: ship_now | append: '</span></span>'
+                  echo '<span data-yk-ship-note data-threshold="' | append: ship_threshold | append: '" data-yk-ship-price="' | append: current_variant.price | append: '" data-text-more="Add [amount] more for free shipping" data-text-free="Free shipping on this order"><span data-yk-ship-note-text>' | append: ship_now | append: '</span></span>'
                 endcapture
                 assign row_text = row_text | replace: '[free_shipping_progress]', ship_html
               endif
