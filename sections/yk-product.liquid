@@ -19,6 +19,24 @@
   endif
 
   assign crumb_collection = collection
+  # The clean woks collections (handles ending in -new, without bundles) come first: Blue / Black, then all woks
+  if crumb_collection == blank
+    for product_collection in product.collections
+      assign crumb_handle_end = product_collection.handle | split: '-' | last
+      if crumb_handle_end == 'new' and product_collection.handle != 'carbon-steel-woks-new'
+        assign crumb_collection = product_collection
+        break
+      endif
+    endfor
+  endif
+  if crumb_collection == blank
+    for product_collection in product.collections
+      if product_collection.handle == 'carbon-steel-woks-new'
+        assign crumb_collection = product_collection
+        break
+      endif
+    endfor
+  endif
   if crumb_collection == blank
     for product_collection in product.collections
       unless product_collection.handle == 'all' or product_collection.handle == 'frontpage'
