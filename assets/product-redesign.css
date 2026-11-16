@@ -1906,8 +1906,10 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-input:
 /* p.15, p.16: after a photo is added the field shows the photos as 120px tiles and a white "+" tile for more */
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-start;
   gap: 8px;
   padding: 24px;
 }
@@ -1977,4 +1979,9 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-delete
   body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) { padding: 16px; }
   body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-preview-container,
   body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) .jdgm-write-review-modal__media-upload { width: 96px; height: 96px; }
+}
+
+/* p.33: on phones 50px from the last info row to the tabs, as in the design (was 50 + 25) */
+@media (max-width: 959px) {
+  .yk-product__inner { padding-bottom: 25px; }
 }

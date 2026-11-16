@@ -499,7 +499,7 @@ function initYkPdpReviews(section) {
   new MutationObserver(() => {
     if (queued) return;
     queued = true;
-    window.requestAnimationFrame(() => { queued = false; decorate(); });
+    window.setTimeout(() => { queued = false; decorate(); }, 50);
   }).observe(widget, { childList: true, subtree: true });
   window.addEventListener('resize', decorate);
   decorate();
