@@ -400,6 +400,9 @@ function initYkPdpReviews(section) {
       const item = options[index];
       if (!item) return;
       options.forEach((option) => option.setAttribute('aria-selected', String(option === item)));
+      // QA 16.11 p.13: the button shows the chosen order
+      const label = sortButton.querySelector('span');
+      if (label) label.textContent = item.textContent.trim();
       source.value = item.dataset.value;
       source.dispatchEvent(new Event('change', { bubbles: true }));
       close(true);
@@ -467,6 +470,52 @@ function initYkPdpReviews(section) {
     observer.observe(widget, { childList: true, subtree: true });
     window.setTimeout(() => observer.disconnect(), 15000);
   }
+
+  // QA 16.11 p.12, p.35: Judge.me's "Verified" mark and its seal (link to judge.me) next to our review count,
+  // a "Verified buyer" hint on the red badge of each review, the photo-row arrow only when the photos overflow
+  const count = section.querySelector('.yk-reviews-pdp__count, .yk-reviews-pdp__average');
+  const decorate = () => {
+    if (count && !section.querySelector('.yk-reviews-pdp__trust')) {
+      const badge = widget.querySelector('.jm-review-widget__header .jm-verified-badge');
+      const medals = widget.querySelector('.jm-review-widget__header .jm-medals');
+      if (badge || medals) {
+        const trust = document.createElement('div');
+        trust.className = 'yk-reviews-pdp__trust';
+        if (badge) trust.appendChild(badge.cloneNode(true));
+        if (medals) trust.appendChild(medals.cloneNode(true));
+        count.insertAdjacentElement('afterend', trust);
+      }
+    }
+    widget.querySelectorAll('.jm-verified-buyer-badge:not([title])').forEach((el) => {
+      el.title = 'Verified buyer';
+    });
+    widget.querySelectorAll('.jm-media-grid').forEach((grid) => {
+      const track = grid.querySelector('.jm-media-grid__container');
+      const overflow = track ? track.scrollWidth > track.clientWidth + 2 : false;
+      grid.classList.toggle('yk-no-overflow', !overflow);
+    });
+  };
+  let queued = false;
+  new MutationObserver(() => {
+    if (queued) return;
+    queued = true;
+    window.requestAnimationFrame(() => { queued = false; decorate(); });
+  }).observe(widget, { childList: true, subtree: true });
+  window.addEventListener('resize', decorate);
+  decorate();
+
+  // QA 16.11 p.14: a page change in the review list brings the list top into view below the sticky header
+  widget.addEventListener('click', (event) => {
+    if (!event.target.closest('.jm-pagination-controls__button')) return;
+    window.setTimeout(() => {
+      const top = widget.getBoundingClientRect().top;
+      const header = document.querySelector('.header__outer-wrapper, .yk-header, header');
+      const offset = (header ? Math.max(0, header.getBoundingClientRect().bottom) : 0) + 16;
+      if (top < offset || top > window.innerHeight) {
+        window.scrollTo({ top: window.scrollY + top - offset, behavior: 'smooth' });
+      }
+    }, 350);
+  });
 }
 
 // Judge.me write-a-review window: a click on the dimmed page around it closes it, like the close button
@@ -476,6 +525,105 @@ document.addEventListener('click', (event) => {
   const closeButton = modal.querySelector('.jdgm-write-review-modal__close-btn');
   if (closeButton) closeButton.click();
 });
+
+// Judge.me write-a-review window, QA 16.11 p.21–30: design texts, a 0/1000 counter, the main button
+// inactive until the step is filled, Skip on the photo step. Judge.me's steps, checks and sending stay its own.
+(() => {
+  const MAX = 1000;
+  if (window.jdgmSettings) window.jdgmSettings.advanced_settings_next_step_button_text = 'Continue';
+
+  const setLabel = (input, text) => {
+    const label = input && input.closest('.jdgm-write-review-modal__field-group')?.querySelector('.jdgm-write-review-modal__field-label');
+    if (label && label.textContent !== text) label.textContent = text;
+  };
+
+  const enhance = (modal) => {
+    if (window.jdgmSettings) window.jdgmSettings.advanced_settings_next_step_button_text = 'Continue';
+    const body = modal.querySelector('textarea[name="review_body"]');
+    if (body && !body.dataset.ykReady) {
+      body.dataset.ykReady = 'true';
+      body.maxLength = MAX;
+      body.placeholder = 'Write your text';
+      setLabel(body, 'Tell us what you liked (required)');
+      const counter = document.createElement('p');
+      counter.className = 'yk-jm-counter';
+      counter.setAttribute('aria-live', 'polite');
+      const count = () => { counter.textContent = `${body.value.length}/${MAX} symbols`; };
+      body.insertAdjacentElement('afterend', counter);
+      body.addEventListener('input', count);
+      count();
+    }
+    const name = modal.querySelector('input[name="reviewer_name"]');
+    const email = modal.querySelector('input[name="reviewer_email"]');
+    if (name && !name.dataset.ykReady) {
+      name.dataset.ykReady = 'true';
+      name.placeholder = 'Your name';
+      setLabel(name, 'Your name (required)');
+    }
+    if (email && !email.dataset.ykReady) {
+      email.dataset.ykReady = 'true';
+      email.placeholder = 'Your email';
+      setLabel(email, 'Your email (required)');
+    }
+    // Photo step: the hint goes under the upload field, as in the design
+    const mediaPage = modal.querySelector('.jdgm-write-review-modal__page--share-media');
+    const hint = mediaPage?.querySelector('.jdgm-write-review-modal__page-header .jdgm-write-review-modal__intro');
+    const upload = mediaPage?.querySelector('.jdgm-write-review-modal__field-group--media-upload');
+    if (hint && upload) {
+      hint.classList.add('yk-jm-media-hint');
+      upload.insertAdjacentElement('afterend', hint);
+    }
+    // Skip on the photo step (the photo is optional)
+    const nav = modal.querySelector('.jdgm-write-review-modal__navigation');
+    const next = modal.querySelector('.jdgm-write-review-modal__nav-btn-next');
+    if (nav && next && !nav.querySelector('.yk-jm-skip')) {
+      const skip = document.createElement('button');
+      skip.type = 'button';
+      skip.className = 'jdgm-write-review-modal__nav-btn yk-jm-skip';
+      skip.textContent = 'Skip';
+      skip.addEventListener('click', () => {
+        next.classList.remove('yk-jm-incomplete');
+        next.click();
+      });
+      next.insertAdjacentElement('beforebegin', skip);
+    }
+    update(modal);
+  };
+
+  // The main button looks inactive until the required fields of the current step are filled (or a photo is added)
+  const update = (modal) => {
+    const page = modal.querySelector('.jdgm-write-review-modal__page.current-page');
+    const next = modal.querySelector('.jdgm-write-review-modal__nav-btn-next');
+    if (!page || !next) return;
+    const isMedia = page.classList.contains('jdgm-write-review-modal__page--share-media');
+    modal.classList.toggle('yk-jm-on-media', isMedia);
+    let incomplete = false;
+    if (isMedia) {
+      incomplete = !page.querySelector('.jdgm-write-review-modal__media-preview-container');
+    } else {
+      incomplete = Array.from(page.querySelectorAll('textarea[name="review_body"], input[name="reviewer_name"], input[name="reviewer_email"]'))
+        .some((field) => !field.disabled && !field.value.trim());
+    }
+    next.classList.toggle('yk-jm-incomplete', incomplete);
+    next.setAttribute('aria-disabled', String(incomplete));
+  };
+
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.jdgm-write-review-modal').forEach(enhance);
+  });
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+  document.addEventListener('input', (event) => {
+    const modal = event.target.closest && event.target.closest('.jdgm-write-review-modal');
+    if (modal) update(modal);
+  });
+  // An inactive main button does nothing (the design shows it greyed out until the step is filled)
+  document.addEventListener('click', (event) => {
+    const next = event.target.closest && event.target.closest('.jdgm-write-review-modal__nav-btn-next.yk-jm-incomplete');
+    if (!next) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }, true);
+})();
 
 document.querySelectorAll('[data-yk-pdp-reviews]').forEach(initYkPdpReviews);
 document.addEventListener('shopify:section:load', (event) => {
@@ -508,5 +656,61 @@ document.addEventListener('click', (event) => {
   if (!variant || !variant.value) return;
   event.preventDefault();
   const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
-  window.location.href = root + 'cart/' + variant.value + ':' + qty + '?payment=shop_pay';
+  // QA 16.11 p.19: checkout opens in a new tab, the product page stays open
+  const checkout = window.open(root + 'cart/' + variant.value + ':' + qty + '?payment=shop_pay', '_blank', 'noopener');
+  if (!checkout) window.location.href = root + 'cart/' + variant.value + ':' + qty + '?payment=shop_pay';
+});
+
+// Sticky Add to cart bar (design "Page Scrolling"): shown once the buy buttons are above the screen
+document.querySelectorAll('[data-yk-sticky-buy]').forEach((bar) => {
+  const section = bar.closest('section') || document;
+  const buy = section.querySelector('[data-yk-buy]');
+  const add = section.querySelector('[data-yk-add]');
+  if (!buy || !add) return;
+  const button = bar.querySelector('[data-yk-sticky-add]');
+  const price = bar.querySelector('[data-yk-sticky-price]');
+  const variantText = bar.querySelector('[data-yk-sticky-variant]');
+  const mainPrice = section.querySelector('[data-yk-price]');
+  const picker = section.querySelector('[data-yk-variant-picker]');
+  button.textContent = add.textContent.trim() || button.textContent;
+
+  const sync = () => {
+    if (mainPrice) {
+      const copy = mainPrice.cloneNode(true);
+      copy.querySelectorAll('s').forEach((el) => el.remove());
+      price.textContent = copy.textContent.trim();
+    }
+    if (picker && variantText) {
+      const values = Array.from(picker.querySelectorAll('fieldset')).map((fieldset) => fieldset.querySelector('input:checked')?.value).filter(Boolean);
+      if (values.length) variantText.textContent = values.join(' / ');
+    }
+    const available = add.closest('[data-yk-buy-available]');
+    button.disabled = Boolean(available && available.hidden);
+  };
+  if (picker) picker.addEventListener('change', () => window.setTimeout(sync, 0));
+
+  let shown = false;
+  const show = (on) => {
+    if (on === shown) return;
+    shown = on;
+    if (on) sync();
+    bar.classList.toggle('is-visible', on);
+    bar.toggleAttribute('inert', !on);
+    bar.setAttribute('aria-hidden', String(!on));
+    document.body.classList.toggle('yk-sticky-buy-on', on);
+  };
+  const footer = document.querySelector('.footer, footer, [data-section-type="footer"]');
+  const update = () => {
+    const passed = buy.getBoundingClientRect().bottom < 0;
+    const atFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight : false;
+    show(passed && !atFooter);
+  };
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+
+  button.addEventListener('click', () => {
+    if (button.disabled) return;
+    add.click();
+  });
 });

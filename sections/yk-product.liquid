@@ -362,6 +362,21 @@
       {%- endfor -%}
     </div>
   </div>
+
+  {%- comment -%}Design "Page Scrolling": a bar at the bottom with the product and Add to cart once the buy buttons scroll out of view{%- endcomment -%}
+  <div class="yk-sticky-buy" data-yk-sticky-buy aria-hidden="true" inert>
+    <div class="yk-sticky-buy__inner">
+      {%- if product.featured_image -%}
+        {{ product.featured_image | image_url: width: 160 | image_tag: class: 'yk-sticky-buy__image', width: 80, height: 80, loading: 'lazy', alt: '' }}
+      {%- endif -%}
+      <div class="yk-sticky-buy__info">
+        <p class="yk-sticky-buy__title">{{ product.title | escape }}</p>
+        <p class="yk-sticky-buy__variant" data-yk-sticky-variant{% if product.has_only_default_variant %} hidden{% endif %}>{{ current_variant.title | escape }}</p>
+        <p class="yk-sticky-buy__price" data-yk-sticky-price>{{ current_variant.price | money }}</p>
+      </div>
+      <button class="yk-sticky-buy__button" type="button" data-yk-sticky-add>Add to cart</button>
+    </div>
+  </div>
 </section>
 
 {% schema %}

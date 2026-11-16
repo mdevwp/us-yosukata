@@ -3,7 +3,7 @@
  * Measurements follow the Figma frames: desktop 1600, mobile 390.
  */
 .yk-product {
-  --yk-pdp-ink: #1c1c1a;
+  --yk-pdp-ink: #1d1d1b;
   --yk-pdp-muted: #696969;
   --yk-pdp-line: #eee;
   --yk-pdp-stock: #bb2e00;
@@ -606,7 +606,7 @@
 
 /* Product tabs */
 .yk-details {
-  color: #1c1c1a;
+  color: #1d1d1b;
   font-family: var(--yk-font-body);
 }
 .yk-details *,
@@ -643,7 +643,7 @@
   transition: background-color .2s ease, color .2s ease;
 }
 .yk-details__tab:hover { background: #ececec; }
-.yk-details__tab.is-active { background: #1c1c1a; color: #fff; }
+.yk-details__tab.is-active { background: #1d1d1b; color: #fff; }
 .yk-details__panel { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; }
 .yk-details__panel[hidden] { display: none; }
 .yk-details__panel > * { max-width: 1078px; }
@@ -859,7 +859,7 @@
 
 /* Reviews: summary header + Judge.me widget restyled to the redesign */
 .yk-reviews-pdp {
-  color: #1c1c1a;
+  color: #1d1d1b;
   font-family: var(--yk-font-body);
 }
 .yk-reviews-pdp__inner {
@@ -894,7 +894,7 @@
 }
 .yk-reviews-pdp__empty {
   margin: 0;
-  color: #1c1c1a;
+  color: #1d1d1b;
   font-family: var(--yk-font-heading);
   font-size: 16px;
   font-weight: 600;
@@ -970,7 +970,7 @@
 .yk-reviews-pdp__widget { margin-top: 16px; }
 
 /* Judge.me widget */
-.yk-reviews-pdp #judgeme_product_reviews { max-width: none !important; margin: 0 !important; color: #1c1c1a; font-family: var(--yk-font-body); }
+.yk-reviews-pdp #judgeme_product_reviews { max-width: none !important; margin: 0 !important; color: #1d1d1b; font-family: var(--yk-font-body); }
 .yk-reviews-pdp #judgeme_product_reviews .jm-review-widget__header > .jm-cluster,
 .yk-reviews-pdp #judgeme_product_reviews .jm-reviewer-avatar,
 .yk-reviews-pdp #judgeme_product_reviews .jm-transparency-badge-list,
@@ -1035,7 +1035,7 @@
 .yk-reviews-pdp #judgeme_product_reviews .jm-star-rating__font-icon { color: var(--yk-red) !important; font-size: 18px; }
 .yk-reviews-pdp #judgeme_product_reviews .jm-review-content { margin-top: 16px !important; gap: 16px; }
 .yk-reviews-pdp #judgeme_product_reviews .jm-review-content__body,
-.yk-reviews-pdp #judgeme_product_reviews .jm-review-content__body p { color: #1c1c1a; font-family: var(--yk-font-body); font-size: 14px; line-height: 22px; }
+.yk-reviews-pdp #judgeme_product_reviews .jm-review-content__body p { color: #1d1d1b; font-family: var(--yk-font-body); font-size: 14px; line-height: 22px; }
 .yk-reviews-pdp #judgeme_product_reviews .jm-review-content__title,
 .yk-reviews-pdp #judgeme_product_reviews .jm-custom-form__title,
 .yk-reviews-pdp #judgeme_product_reviews [class*='custom-form'] b,
@@ -1161,11 +1161,11 @@ body.yk-redesign .jdgm-write-review-modal {
   --yk-jm-red: var(--yk-red, #ba0029);
   --yk-jm-field: #f6f6f6;
   z-index: 1400; /* above the theme's back-to-top button */
-  color: #1c1c1a;
+  color: #1d1d1b;
   font-family: var(--yk-font-body);
 }
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__overlay {
-  background-color: rgba(28, 28, 26, 0.35);
+  background-color: rgba(0, 0, 0, .2);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
@@ -1207,7 +1207,7 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__close-btn {
   background: #fff;
 }
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__close-btn svg { width: 20px; height: 20px; }
-body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__close-btn path { stroke: #1c1c1a; stroke-width: 1.5; }
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__close-btn path { stroke: #1d1d1b; stroke-width: 1.5; }
 
 /* Step layout: title top left, content below, buttons at the bottom */
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__page {
@@ -1236,7 +1236,7 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__title {
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__intro,
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__text {
   margin: 8px 0 0;
-  color: #1c1c1a;
+  color: #1d1d1b;
   font-family: var(--yk-font-body);
   font-size: 16px;
   font-weight: 400;
@@ -1350,7 +1350,7 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-input 
   border: 1px solid var(--yk-jm-field);
   border-radius: 16px;
   background-color: var(--yk-jm-field);
-  color: #1c1c1a;
+  color: #1d1d1b;
   font-family: var(--yk-font-body);
   font-size: 16px;
   line-height: 24px;
@@ -1362,7 +1362,7 @@ body.yk-redesign .jdgm-write-review-modal textarea.jdgm-write-review-modal__fiel
 }
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-input::placeholder { color: #696969; }
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-input:focus {
-  border-color: #1c1c1a;
+  border-color: #1d1d1b;
   outline: none;
 }
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-help,
@@ -1471,16 +1471,16 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__nav-btn-back
   min-width: 0;
   padding: 0;
   background-color: var(--yk-jm-field);
-  color: #1c1c1a;
+  color: #1d1d1b;
   font-size: 0;
 }
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__nav-btn-back:hover { background-color: #ececec; }
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__nav-btn-back svg { width: 18px; height: 18px; }
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__nav-btn-back path { stroke-width: 1.5; }
 body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__btn--repeat-not-now {
-  border: 1px solid #1c1c1a;
+  border: 1px solid #1d1d1b;
   background: #fff;
-  color: #1c1c1a;
+  color: #1d1d1b;
 }
 
 /* Thank you */
@@ -1692,3 +1692,289 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__nav-btn-clos
 }
 .yk-product__row a:hover,
 .yk-product__callout a:hover { color: #8f001f; text-decoration-color: transparent; }
+
+/* ===== Product page, tester 16.11 ===== */
+
+/* p.9: review date as in the design (Montserrat 600, Text/Caption #6A6A6A); Judge.me sets its own size on the inner text */
+.yk-reviews-pdp #judgeme_product_reviews .jm-reviewer-info__details > .jm-cluster:nth-child(2) .jm-text {
+  color: #6a6a6a !important;
+  font: inherit !important;
+}
+
+/* p.10, p.11: pagination arrows as thin chevrons, hover on the numbers and arrows */
+.yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button--nav svg { display: none; }
+.yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button--nav .jm-with-icon::before {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: currentColor;
+  -webkit-mask: var(--yk-chevron-mask) center / contain no-repeat;
+  mask: var(--yk-chevron-mask) center / contain no-repeat;
+}
+.yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button--nav:first-child .jm-with-icon::before { transform: scaleX(-1); }
+.yk-reviews-pdp {
+  --yk-chevron-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 3 5 5-5 5'/%3E%3C/svg%3E");
+}
+.yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button { transition: background-color .2s ease, color .2s ease; cursor: pointer; }
+.yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button--page:not(.jm-pagination-controls__button--active):hover { background: #e3e3e3 !important; }
+.yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button--active:hover { background: #8f001f !important; }
+.yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button--nav:not(:disabled):hover { background: var(--yk-grey-bg) !important; color: var(--yk-red) !important; }
+.yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button--nav:disabled { opacity: .35; cursor: default; }
+
+/* p.36: on phones the whole pagination fits one line, the arrow no longer wraps */
+@media (max-width: 959px) {
+  .yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls > .jm-cluster { flex-wrap: nowrap !important; gap: 2px; }
+  .yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__button { min-width: 36px; height: 36px; font-size: 13px; }
+  .yk-reviews-pdp #judgeme_product_reviews .jm-pagination-controls__ellipsis { min-width: 16px; }
+}
+
+/* p.12: Judge.me "Verified" mark and seal (a link to judge.me) next to the review count */
+.yk-reviews-pdp__trust { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
+.yk-reviews-pdp__trust .jm-medals { display: flex; align-items: center; }
+.yk-reviews-pdp__trust .jm-medals__medal-link { display: block; line-height: 0; }
+.yk-reviews-pdp__trust svg { max-height: 40px; width: auto; }
+
+/* p.35: the photo-row arrow only when the photos overflow */
+.yk-reviews-pdp #judgeme_product_reviews .jm-media-grid.yk-no-overflow .jm-media-grid__arrow { display: none !important; }
+
+/* p.14: anchor jumps to the reviews stop below the sticky header */
+.yk-reviews-pdp, .yk-reviews-pdp #judgeme_product_reviews { scroll-margin-top: 120px; }
+
+/* p.18: "Bigger markdowns" card as in the design: the texture under the Figma gradient (#1C1C1C, #5E5E5E, #1C1C1C) and 20% black */
+.yk-product__promo {
+  background:
+    linear-gradient(rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)),
+    linear-gradient(90deg, rgba(28, 28, 28, .85) 0%, rgba(94, 94, 94, .55) 50%, rgba(28, 28, 28, .85) 100%),
+    #1c1c1c var(--yk-promo-bg) 50% 50% / cover no-repeat;
+}
+
+/* p.20: sticky Add to cart bar at the bottom of the screen */
+.yk-sticky-buy {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1200;
+  background: #fff;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, .08);
+  transform: translateY(100%);
+  visibility: hidden;
+  transition: transform .3s ease, visibility 0s linear .3s;
+}
+.yk-sticky-buy.is-visible { transform: none; visibility: visible; transition: transform .3s ease; }
+.yk-sticky-buy__inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(var(--yk-max) + 2 * var(--yk-gutter));
+  margin: 0 auto;
+  padding: 12px var(--yk-gutter);
+}
+.yk-sticky-buy__image { flex: none; width: 48px; height: 48px; border-radius: 8px; object-fit: contain; background: var(--yk-grey-bg); }
+.yk-sticky-buy__info { flex: 1; min-width: 0; }
+.yk-sticky-buy__info p { margin: 0; }
+.yk-sticky-buy__title {
+  overflow: hidden;
+  color: var(--yk-black);
+  font-family: var(--yk-font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.yk-sticky-buy__variant { color: #6a6a6a; font-family: var(--yk-font-heading); font-size: 12px; font-weight: 500; line-height: 18px; }
+.yk-sticky-buy__variant[hidden] { display: none; }
+.yk-sticky-buy__price { color: var(--yk-black); font-family: var(--yk-font-heading); font-size: 14px; font-weight: 600; line-height: 20px; }
+.yk-sticky-buy__button {
+  flex: none;
+  height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--yk-red);
+  color: #fff;
+  font-family: var(--yk-font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s ease;
+}
+.yk-sticky-buy__button:hover { background: #8f001f; }
+.yk-sticky-buy__button:disabled { opacity: .5; cursor: default; }
+body.yk-sticky-buy-on .back-to-top { bottom: 88px; transition: bottom .3s ease; }
+@media (min-width: 960px) {
+  .yk-sticky-buy__inner { gap: 24px; padding-top: 16px; padding-bottom: 16px; }
+  .yk-sticky-buy__image { width: 64px; height: 64px; }
+  .yk-sticky-buy__title { font-size: 16px; line-height: 24px; }
+  .yk-sticky-buy__price { font-size: 16px; line-height: 24px; }
+  .yk-sticky-buy__button { width: 225px; height: 56px; }
+  body.yk-sticky-buy-on .back-to-top { bottom: 112px; }
+}
+
+/* p.31: on phones the gallery dots sit on a white pill, so they stay apart from the photo */
+@media (max-width: 959px) {
+  .yk-gallery__dots {
+    left: 50%;
+    right: auto;
+    bottom: 16px;
+    padding: 6px 10px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, .92);
+    transform: translateX(-50%);
+  }
+}
+
+/* p.32: smaller Shop logo in "Buy with shop" on phones, as in the design */
+@media (max-width: 959px) {
+  .yk-product__shop-logo { width: 36px; }
+}
+
+/* ---- Write-a-review window ---- */
+
+/* p.24: the page behind is blurred (design: background blur 25, 20% black). Judge.me put 50% opacity on the
+   overlay, which weakened the blur, so the overlay is fully opaque and the colour carries the 20% */
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__overlay {
+  opacity: 1 !important;
+  background-color: rgba(0, 0, 0, .2) !important;
+  -webkit-backdrop-filter: blur(25px);
+  backdrop-filter: blur(25px);
+}
+
+/* p.15: hover on the terms and privacy links */
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__gdpr-statement a { transition: color .2s ease, text-decoration-color .2s ease; }
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__gdpr-statement a:hover { color: var(--yk-red); text-decoration-color: transparent; }
+
+/* p.25: 0/1000 symbols counter */
+body.yk-redesign .jdgm-write-review-modal .yk-jm-counter {
+  margin: 8px 0 0;
+  color: #6a6a6a;
+  font-family: var(--yk-font-body);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* p.23, p.28: the main button is inactive until the step is filled */
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__nav-btn-next.yk-jm-incomplete {
+  opacity: .5;
+  cursor: default;
+}
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__nav-btn-next.yk-jm-incomplete:hover { background-color: var(--yk-jm-red); }
+
+/* p.28: Skip on the photo step (outlined pill, as in the design) */
+body.yk-redesign .jdgm-write-review-modal .yk-jm-skip { display: none; }
+body.yk-redesign .jdgm-write-review-modal.yk-jm-on-media .yk-jm-skip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  border: 1px solid var(--yk-pdp-ink);
+  background: #fff;
+  color: var(--yk-pdp-ink);
+}
+body.yk-redesign .jdgm-write-review-modal.yk-jm-on-media .yk-jm-skip:hover { background: var(--yk-grey-bg); }
+body.yk-redesign .jdgm-write-review-modal.yk-jm-on-media .yk-jm-skip + .jdgm-write-review-modal__nav-btn-next { margin-left: 0; }
+body.yk-redesign .jdgm-write-review-modal.yk-jm-on-media:has(.jdgm-write-review-modal__media-preview-container) .yk-jm-skip { display: none; }
+body.yk-redesign .jdgm-write-review-modal.yk-jm-on-media:has(.jdgm-write-review-modal__media-preview-container) .jdgm-write-review-modal__nav-btn-next { margin-left: auto; }
+
+/* p.27: the name comes before the email, as in the design (Judge.me keeps its own step order) */
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__page--about-you .jdgm-write-review-modal__form-group > .jdgm-write-review-modal__field-group:has(input[name="reviewer_name"]) { order: -1; }
+
+/* p.29: no YouTube link field in the design */
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__page--share-media .jdgm-write-review-modal__field-group:not(.jdgm-write-review-modal__field-group--media-upload) { display: none; }
+
+/* p.28: red upload icon */
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-upload-icon svg path { fill: var(--yk-jm-red); }
+
+/* p.30: the hint under the upload field */
+body.yk-redesign .jdgm-write-review-modal .yk-jm-media-hint {
+  margin: 16px 0 0;
+  color: #6a6a6a;
+  text-align: center;
+}
+
+/* p.17: keyboard focus on the upload field: a dark ring inside the rounded box, not a cut blue outline */
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload { outline: none !important; }
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:focus-within,
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--yk-pdp-ink);
+}
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-upload:focus,
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-input:focus { outline: none; }
+
+/* p.15, p.16: after a photo is added the field shows the photos as 120px tiles and a white "+" tile for more */
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+}
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) .jdgm-write-review-modal__media-previews-container {
+  display: contents;
+}
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) .jdgm-write-review-modal__media-upload {
+  order: 2;
+  position: relative;
+  flex: none;
+  width: 120px;
+  height: 120px;
+  min-height: 0;
+  padding: 0;
+  border-radius: 16px;
+  background: #fff;
+  cursor: pointer;
+}
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) .jdgm-write-review-modal__media-upload > * { display: none; }
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) .jdgm-write-review-modal__media-upload::before {
+  content: "+";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--yk-pdp-ink);
+  font-size: 28px;
+  font-weight: 300;
+}
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-preview-container {
+  position: relative;
+  flex: none;
+  width: 120px;
+  height: 120px;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #e9e9e9;
+}
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-preview-content { position: absolute; inset: 0; width: 100%; height: 100%; }
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-thumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+}
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-delete {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-delete svg { width: 12px; height: 12px; }
+@media (max-width: 767px) {
+  body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) { padding: 16px; }
+  body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-preview-container,
+  body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__field-group--media-upload:has(.jdgm-write-review-modal__media-preview-container) .jdgm-write-review-modal__media-upload { width: 96px; height: 96px; }
+}
