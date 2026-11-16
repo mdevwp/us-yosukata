@@ -475,16 +475,18 @@ function initYkPdpReviews(section) {
   // a "Verified buyer" hint on the red badge of each review, the photo-row arrow only when the photos overflow
   const count = section.querySelector('.yk-reviews-pdp__count, .yk-reviews-pdp__average');
   const decorate = () => {
-    if (count && !section.querySelector('.yk-reviews-pdp__trust')) {
+    if (count) {
       const badge = widget.querySelector('.jm-review-widget__header .jm-verified-badge');
       const medals = widget.querySelector('.jm-review-widget__header .jm-medals');
-      if (badge || medals) {
-        const trust = document.createElement('div');
+      let trust = section.querySelector('.yk-reviews-pdp__trust');
+      if (!trust && (badge || medals)) {
+        trust = document.createElement('div');
         trust.className = 'yk-reviews-pdp__trust';
-        if (badge) trust.appendChild(badge.cloneNode(true));
-        if (medals) trust.appendChild(medals.cloneNode(true));
         count.insertAdjacentElement('afterend', trust);
       }
+      // Judge.me draws its seal a little later than the badge, so each is added once it exists
+      if (trust && badge && !trust.querySelector('.jm-verified-badge')) trust.prepend(badge.cloneNode(true));
+      if (trust && medals && medals.querySelector('a, svg') && !trust.querySelector('.jm-medals')) trust.appendChild(medals.cloneNode(true));
     }
     widget.querySelectorAll('.jm-verified-buyer-badge:not([title])').forEach((el) => {
       el.title = 'Verified buyer';
