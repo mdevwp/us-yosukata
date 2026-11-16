@@ -175,35 +175,7 @@
             {%- render 'free-shipping-bar' %}
 
             <div class="cart__footer-inner">
-              {%- if settings.show_cart_notes -%}
-                <div class="cart__footer-order-note-wrapper" aria-expanded="false" aria-hidden="true">
-                  <button
-                    type="button"
-                    class="cart__footer-order-note-trigger fs-body-75 btn btn--text-link"
-                    data-order-note-trigger
-                  >
-                    <div class="cart__footer-order-note-trigger-icons">
-                      {% render 'icon', icon: 'plus-small' %}
-                      {% render 'icon', icon: 'minus-small', class: 'hidden' %}
-                    </div>
-                    <span class="cart__footer-order-note-trigger-text" data-cart-not-trigger-text>
-                      {{ 'cart.general.order_note_button_add' | t }}
-                    </span>
-                  </button>
-                  <div class="cart__footer-order-note-input" cart-note-input>
-                    <label for="CartSpecialInstructions" class="fs-body-100">
-                      {{- 'cart.general.order_note_label' | t -}}
-                    </label>
-                    <textarea
-                      name="note"
-                      id="CartSpecialInstructions"
-                      style="background-color: var(--color-background);"
-                      class="input"
-                      placeholder="{{ 'cart.general.order_note_placeholder' | t }}"
-                    >{{ cart.note }}</textarea>
-                  </div>
-                </div>
-              {%- endif -%}
+
 
               <div
                 class="cart__footer-subtotal-wrapper {% if  cart.cart_level_discount_applications.size > 0 %}cart__footer-subtotal-wrapper--has-discount{% endif %}"
@@ -240,6 +212,36 @@
                   {{ 'cart.general.taxes_and_shipping_at_checkout' | t }}
                 {%- endif -%}
               </p>
+
+              {%- if settings.show_cart_notes -%}
+                <div class="cart__footer-order-note-wrapper" aria-expanded="false" aria-hidden="true">
+                  <button
+                    type="button"
+                    class="cart__footer-order-note-trigger fs-body-75 btn btn--text-link"
+                    data-order-note-trigger
+                  >
+                    <div class="cart__footer-order-note-trigger-icons">
+                      {% render 'icon', icon: 'plus-small' %}
+                      {% render 'icon', icon: 'minus-small', class: 'hidden' %}
+                    </div>
+                    <span class="cart__footer-order-note-trigger-text" data-cart-not-trigger-text>
+                      {{ 'cart.general.order_note_button_add' | t }}
+                    </span>
+                  </button>
+                  <div class="cart__footer-order-note-input" cart-note-input>
+                    <label for="CartSpecialInstructions" class="fs-body-100">
+                      {{- 'cart.general.order_note_label' | t -}}
+                    </label>
+                    <textarea
+                      name="note"
+                      id="CartSpecialInstructions"
+                      style="background-color: var(--color-background);"
+                      class="input"
+                      placeholder="{{ 'cart.general.order_note_placeholder' | t }}"
+                    >{{ cart.note }}</textarea>
+                  </div>
+                </div>
+              {%- endif -%}
 
               <div class="cart__input-buttons">
                 <button

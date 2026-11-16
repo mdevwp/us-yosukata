@@ -500,6 +500,9 @@ body.yk-redesign .yk-header .header__icon-touch:has([data-js-cart-count]) { posi
 .yk-redesign button[name="checkout"] .btn-anim { display: none; }
 .yk-redesign .quick-cart__submit:hover,
 .yk-redesign button[name="checkout"]:hover { background: #8f001f; color: #fff; }
+/* The live theme gives Checkout a 1px "red" border (theme.css, synced from live 16.11); on the filled button it takes the button colour */
+body.yk-redesign form.quick-cart__form .quick-cart__footer-inner .quick-cart__submit { border: 1px solid var(--yk-red); }
+body.yk-redesign form.quick-cart__form .quick-cart__footer-inner .quick-cart__submit:hover { border-color: #8f001f; }
 .yk-redesign .quick-cart__submit:focus-visible,
 .yk-redesign button[name="checkout"]:focus-visible { outline: 2px solid var(--yk-black, #000); outline-offset: 2px; }
 
