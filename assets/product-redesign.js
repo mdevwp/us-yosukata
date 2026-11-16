@@ -656,11 +656,10 @@ document.addEventListener('click', (event) => {
   const qtyInput = buy.querySelector('[data-yk-qty] input[name="quantity"]');
   const qty = Math.max(1, parseInt(qtyInput ? qtyInput.value : '1', 10) || 1);
   if (!variant || !variant.value) return;
-  event.preventDefault();
   const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
-  // QA 16.11 p.19: checkout opens in a new tab, the product page stays open
-  const checkout = window.open(root + 'cart/' + variant.value + ':' + qty + '?payment=shop_pay', '_blank', 'noopener');
-  if (!checkout) window.location.href = root + 'cart/' + variant.value + ':' + qty + '?payment=shop_pay';
+  // QA 16.11 p.19: checkout opens in a new tab, the product page stays open. The link itself (target="_blank")
+  // is followed by the browser; here it only gets the current variant and quantity.
+  link.href = root + 'cart/' + variant.value + ':' + qty + '?payment=shop_pay';
 });
 
 // Sticky Add to cart bar (design "Page Scrolling"): shown once the buy buttons are above the screen
