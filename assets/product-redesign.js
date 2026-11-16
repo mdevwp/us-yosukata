@@ -39,15 +39,60 @@ function initYkGallery(gallery) {
     setActive(clamped);
   };
 
-  const setZoom = (on) => {
+  const ZOOM_SCALE = 2.2; // matches .is-zoomed .yk-gallery__image { transform: scale(2.2) }
+  let origin = { x: 50, y: 50 };
+  const setZoom = (on, touch = false) => {
     if (!zoom) return;
     main.classList.toggle('is-zoomed', on);
+    main.classList.toggle('is-touch-zoom', on && touch);
     zoom.setAttribute('aria-pressed', on ? 'true' : 'false');
+    origin = { x: 50, y: 50 };
     if (!on) slides.forEach((slide) => slide.querySelector('.yk-gallery__image')?.style.removeProperty('transform-origin'));
   };
+  const setOrigin = (x, y) => {
+    origin = { x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) };
+    const image = slides[index].querySelector('.yk-gallery__image');
+    if (image) image.style.transformOrigin = `${origin.x}% ${origin.y}%`;
+  };
+
+  // QA 16.11 p.37: on a touch screen the zoomed photo follows the finger (drag), and zooms back out
+  // only on the lens button (−) or a double tap
+  let pan = null;
+  let lastTap = 0;
+  main.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse' || !main.classList.contains('is-touch-zoom')) return;
+    if (event.target.closest('button, a')) return;
+    pan = { x: event.clientX, y: event.clientY, ox: origin.x, oy: origin.y, moved: false, id: event.pointerId };
+    main.setPointerCapture?.(event.pointerId);
+  });
+  main.addEventListener('pointermove', (event) => {
+    if (!pan || event.pointerId !== pan.id) return;
+    const rect = main.getBoundingClientRect();
+    const dx = event.clientX - pan.x;
+    const dy = event.clientY - pan.y;
+    if (Math.abs(dx) + Math.abs(dy) > 4) pan.moved = true;
+    // Moving transform-origin by d% shifts the scaled photo by (scale - 1) * d% of the box: the photo moves with the finger
+    setOrigin(pan.ox - (dx / rect.width) * 100 / (ZOOM_SCALE - 1), pan.oy - (dy / rect.height) * 100 / (ZOOM_SCALE - 1));
+  });
+  const endPan = (event) => {
+    if (!pan || event.pointerId !== pan.id) return;
+    const tapped = !pan.moved;
+    pan = null;
+    if (!tapped) return;
+    const now = Date.now();
+    if (now - lastTap < 350) {
+      lastTap = 0;
+      setZoom(false);
+    } else {
+      lastTap = now;
+    }
+  };
+  main.addEventListener('pointerup', endPan);
+  main.addEventListener('pointercancel', (event) => { if (pan && event.pointerId === pan.id) pan = null; });
 
   const moveZoom = (event) => {
     if (!main.classList.contains('is-zoomed')) return;
+    if (main.classList.contains('is-touch-zoom') || (event.pointerType && event.pointerType !== 'mouse')) return;
     const rect = main.getBoundingClientRect();
     const x = Math.max(0, Math.min(rect.width, event.clientX - rect.left));
     const y = Math.max(0, Math.min(rect.height, event.clientY - rect.top));
@@ -103,6 +148,16 @@ function initYkGallery(gallery) {
   if (zoom) {
     zoom.addEventListener('click', (event) => {
       event.stopPropagation();
+      // On a touch screen the button toggles: + zooms in, − zooms back out
+      if (main.classList.contains('is-touch-zoom')) {
+        setZoom(false);
+        return;
+      }
+      if (lastPointer !== 'mouse') {
+        setZoom(true, true);
+        setOrigin(50, 50);
+        return;
+      }
       const rect = main.getBoundingClientRect();
       setZoom(true);
       moveZoom({ clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
@@ -118,7 +173,10 @@ function initYkGallery(gallery) {
       if (zoomed) moveZoom(event);
     });
     main.addEventListener('pointermove', moveZoom);
-    main.addEventListener('pointerleave', () => setZoom(false));
+    // Only the mouse leaving the photo ends the zoom: on touch screens every lifted finger "leaves" too
+    main.addEventListener('pointerleave', (event) => {
+      if (event.pointerType === 'mouse' && !main.classList.contains('is-touch-zoom')) setZoom(false);
+    });
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') setZoom(false);
     });

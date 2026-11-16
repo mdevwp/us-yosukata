@@ -87,6 +87,8 @@
         {%- if product.media.size > 0 -%}
           <button class="yk-gallery__zoom" type="button" aria-label="{{ section.settings.zoom_label | escape }}" aria-pressed="false" data-yk-gallery-zoom>
             {% render 'yk-icon', icon: 'zoom-in' %}
+            {%- comment -%}Shown instead while the photo is zoomed on a touch screen: a tap zooms back out{%- endcomment -%}
+            <svg class="yk-icon yk-icon--zoom-out" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="7.25"/><path d="M9 12h6M17 17l6 6"/></svg>
           </button>
           <span class="yk-gallery__lens" aria-hidden="true" data-yk-gallery-lens></span>
         {%- endif -%}

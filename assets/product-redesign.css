@@ -1985,3 +1985,12 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-delete
 @media (max-width: 959px) {
   .yk-product__inner { padding-bottom: 25px; }
 }
+
+/* p.37: zoom on touch screens: the finger moves the photo (the page does not scroll under it), the lens button
+   stays and shows a minus to zoom back out; the cursor lens is only for the mouse */
+.yk-gallery__zoom .yk-icon--zoom-out { display: none; }
+.yk-gallery__main.is-touch-zoom { cursor: auto; touch-action: none; }
+.yk-gallery__main.is-touch-zoom .yk-gallery__lens { display: none; }
+.yk-gallery__main.is-touch-zoom .yk-gallery__zoom { visibility: visible; z-index: 4; }
+.yk-gallery__main.is-touch-zoom .yk-gallery__zoom .yk-icon--zoom-in { display: none; }
+.yk-gallery__main.is-touch-zoom .yk-gallery__zoom .yk-icon--zoom-out { display: block; }
