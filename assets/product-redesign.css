@@ -2025,8 +2025,6 @@ body.yk-redesign .jdgm-write-review-modal .jdgm-write-review-modal__media-delete
   }
 }
 
-/* p.7: the free shipping row reads as reached when the order ships free */
-.yk-product__row [data-yk-ship-note].is-free { font-weight: 600; }
 
 /* p.12: the "Get 5% off" teaser (Shopify Forms) is lifted above the sticky Add to cart bar; see product-redesign.js */
 body.yk-sticky-buy-on shopify-forms-embed { --yk-teaser-lift: 80px; }

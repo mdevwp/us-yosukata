@@ -766,7 +766,7 @@ document.querySelectorAll('[data-yk-ship-note]').forEach((note) => {
     const inCart = current ? cartIds.includes(current.id) : false;
     const left = threshold - cartTotal - (inCart ? 0 : price);
     text.textContent = left > 0 ? note.dataset.textMore.replace('[amount]', money(left)) : note.dataset.textFree;
-    note.classList.toggle('is-free', left <= 0);
+    note.classList.toggle('yk-ship-free', left <= 0);
   };
   const refresh = () => {
     const root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
