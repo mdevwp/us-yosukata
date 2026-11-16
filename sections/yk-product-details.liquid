@@ -174,9 +174,9 @@
                   assign spec_value = product.metafields[spec_path[0]][spec_path[1]].value
                 endif
                 comment
-                  US store: sizes in inches (client 11.11), as in the design "13.5 inch (34cm)". A diameter stored in
+                  US store: sizes in inches only (client 11.11). A diameter stored in
                   cm or mm gets the inch size from the product title (13.5" — the nominal size the product is sold as),
-                  or cm / 2.54 when the title has none; the metric value stays in brackets.
+                  or cm / 2.54 when the title has none.
                 endcomment
                 if spec_path[1] contains 'diameter' and spec_value != blank
                   assign spec_cm = 0
@@ -217,7 +217,8 @@
                     if spec_whole == spec_cm
                       assign spec_cm_text = spec_whole | append: ''
                     endif
-                    assign spec_value = spec_inch_text | append: ' inch (' | append: spec_cm_text | append: 'cm)'
+                    # Inches only (QA product p.4: client 11.11 "for the US, inches only"; the design's "(34cm)" is left out)
+                    assign spec_value = spec_inch_text | append: '"'
                   endif
                 endif
                 comment
