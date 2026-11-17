@@ -2017,3 +2017,8 @@
   .yk-set__arrow:disabled { cursor: default; opacity: .4; }
   .yk-set__arrow .yk-icon { width: 26px; height: 26px; }
 }
+
+/* Homepage reviews: verified buyer mark next to the name, the same red badge as on the product page */
+.yk-review__author { display: flex; align-items: center; gap: 8px; }
+.yk-review__verified { display: inline-flex; flex: none; color: var(--yk-red); }
+.yk-review__verified .yk-icon { width: 20px; height: 20px; }

@@ -52,6 +52,12 @@
             assign yk_body = yk_item | split: 'jdgm-carousel-item__review-body' | last | split: '>' | slice: 1, 9999 | join: '>' | split: '</div>' | first | strip
             assign yk_title = yk_item | split: 'jdgm-carousel-item__review-title' | last | split: '>' | slice: 1, 9999 | join: '>' | split: '</div>' | first | strip_html | strip
             assign yk_name = yk_item | split: 'jdgm-carousel-item__reviewer-name' | last | split: '>' | slice: 1, 9999 | join: '>' | split: '</div>' | first | strip_html | strip
+            # Verified buyer (QA: "no Verified mark on the homepage reviews"): Judge.me marks it in the item markup
+            assign yk_item_lower = yk_item | downcase
+            assign yk_verified = false
+            if yk_item_lower contains 'verified'
+              assign yk_verified = true
+            endif
           -%}
           {%- if yk_body != blank -%}
             <li class="yk-review">
@@ -64,7 +70,10 @@
                 <h3 class="yk-review__title">{{ yk_title }}</h3>
               {%- endif -%}
               <div class="yk-review__text">{{ yk_body | strip_html | strip | escape | prepend: '<p>' | append: '</p>' }}</div>
-              <p class="yk-review__author">{{ yk_name | default: 'Anonymous' }}</p>
+              <p class="yk-review__author">
+                {{- yk_name | default: 'Anonymous' -}}
+                {%- if yk_verified -%}<span class="yk-review__verified" title="Verified buyer">{% render 'yk-icon', icon: 'verified' %}<span class="visually-hidden">Verified buyer</span></span>{%- endif -%}
+              </p>
             </li>
           {%- endif -%}
         {%- endfor -%}
