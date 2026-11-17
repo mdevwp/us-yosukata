@@ -310,7 +310,13 @@ document.querySelectorAll('[data-yk-product]').forEach(initYkProduct);
     if (!root || root.ykStyled) return;
     if (!sheet) {
       sheet = new CSSStyleSheet();
-      sheet.replaceSync('svg[class~="w-[34px]"] { width: 46px; height: 24px; }');
+      // Updated design 17.11 (Mobile/Subheading): the installments line in Montserrat SemiBold 14/22, -1.5%,
+      // Text/Body colour, instead of Shopify's own GT Standard 400
+      sheet.replaceSync(
+        'svg[class~="w-[34px]"] { width: 46px; height: 24px; } ' +
+        'p.font-sans { font-family: var(--yk-font-body, Montserrat), sans-serif !important; font-size: 14px; ' +
+        'font-weight: 600; line-height: 22px; letter-spacing: -0.015em; color: var(--yk-pdp-ink, #1d1d1b); }'
+      );
     }
     root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
     root.ykStyled = true;
