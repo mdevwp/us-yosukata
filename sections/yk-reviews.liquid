@@ -44,6 +44,7 @@
     -%}
 
 
+    {%- if yk_use_jm -%}<!-- YKDEBUG {{ yk_jm_items[1] | replace: '--', '- -' | truncate: 3000 }} YKDEBUG -->{%- endif -%}
     <ul class="yk-reviews__track" role="list" data-yk-reviews-track>
       {%- if yk_use_jm -%}
         {%- for yk_item in yk_jm_items offset: 1 -%}
