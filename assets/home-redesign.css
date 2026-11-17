@@ -2022,3 +2022,16 @@
 .yk-review__author { display: flex; align-items: center; gap: 8px; }
 .yk-review__verified { display: inline-flex; flex: none; color: var(--yk-red); }
 .yk-review__verified .yk-icon { width: 20px; height: 20px; }
+
+/* "Why do you need to Season?": the seasoning video and wok care guide links in the intro are visible links
+   (they were styled as plain text), the same red underlined style as the other links of the redesign */
+.yk-season__intro a {
+  color: var(--yk-red);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-underline-offset: 2px;
+  transition: color .2s ease, text-decoration-color .2s ease;
+}
+.yk-season__intro a:hover { color: #8f001f; text-decoration-color: transparent; }
+.yk-season__intro a:focus-visible { outline: 2px solid var(--yk-red); outline-offset: 2px; }
