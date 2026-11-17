@@ -44,7 +44,6 @@
     -%}
 
 
-    {%- if yk_use_jm -%}{%- for yk_dbg in yk_jm_items -%}{%- if yk_dbg contains 'Watanabe' -%}<!-- YKDEBUG {{ yk_dbg | replace: '--', '- -' }} YKDEBUG -->{%- endif -%}{%- endfor -%}<!-- YKHEAD {{ yk_jm_items[0] | replace: '--', '- -' | slice: -1500, 1500 }} YKHEAD -->{%- endif -%}
     <ul class="yk-reviews__track" role="list" data-yk-reviews-track>
       {%- if yk_use_jm -%}
         {%- for yk_item in yk_jm_items offset: 1 -%}
