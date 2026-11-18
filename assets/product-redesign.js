@@ -843,8 +843,12 @@ document.querySelectorAll('[data-yk-sticky-buy]').forEach((bar) => {
   const update = () => {
     const headerBottom = header ? Math.max(0, header.getBoundingClientRect().bottom) : 0;
     const passed = priceRow.getBoundingClientRect().bottom < headerBottom;
+    // Meeting 18.11 p.9: name, price and Add to cart in view without scrolling on 1280x720, 1366x768 (125/150%),
+    // iPhone SE/13 and Android 360x800 - while the main Add to cart is still below the screen, the bar is shown too
+    const addRect = add.getBoundingClientRect();
+    const addBelow = addRect.height > 0 && addRect.bottom > window.innerHeight;
     const atFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight : false;
-    show(passed && !atFooter);
+    show((passed || addBelow) && !atFooter);
   };
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
