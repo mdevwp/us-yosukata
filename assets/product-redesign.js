@@ -855,3 +855,15 @@ document.querySelectorAll('[data-yk-sticky-buy]').forEach((bar) => {
     add.click();
   });
 });
+
+/* QA 18.11: gallery video - only a Play button over the cover; the native controls appear once it starts */
+document.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-yk-gallery-play]');
+  if (!button) return;
+  const video = button.parentElement.querySelector('video');
+  if (!video) return;
+  button.hidden = true;
+  video.controls = true;
+  const playing = video.play();
+  if (playing && playing.catch) playing.catch(() => {});
+});

@@ -2083,3 +2083,30 @@ body.yk-sticky-buy-on shopify-forms-embed { --yk-teaser-lift: 80px; }
   .yk-product__info > .yk-product__price-row + .yk-product__chips,
   .yk-product__price-row + .yk-product__text { margin-top: 24px; }
 }
+
+/* QA 18.11: the gallery video shows only a Play button over its cover until it plays */
+.yk-gallery__slide--video { position: relative; }
+.yk-gallery__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  padding: 0 0 0 4px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .9);
+  color: #1d1d1b;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .25);
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: transform .2s ease, background .2s ease;
+}
+.yk-gallery__play:hover,
+.yk-gallery__play:focus-visible { background: #fff; transform: translate(-50%, -50%) scale(1.06); }
+.yk-gallery__play[hidden] { display: none; }
+@media (max-width: 959px) { .yk-gallery__play { width: 60px; height: 60px; } }

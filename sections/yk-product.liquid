@@ -90,7 +90,11 @@
                       | default: product.title
                   }}
                 {%- when 'video' -%}
-                  {{ media | video_tag: controls: true, preload: 'metadata', image_size: '1100x', class: 'yk-gallery__video' }}
+                  {%- comment -%}QA 18.11: before playback only a Play button over the cover, the player controls appear once it plays{%- endcomment -%}
+                  {{ media | video_tag: controls: false, playsinline: true, preload: 'metadata', image_size: '1100x', class: 'yk-gallery__video' }}
+                  <button class="yk-gallery__play" type="button" aria-label="Play video" data-yk-gallery-play>
+                    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+                  </button>
                 {%- when 'external_video' -%}
                   {{ media | external_video_tag: class: 'yk-gallery__video' }}
                 {%- when 'model' -%}
