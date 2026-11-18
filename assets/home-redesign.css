@@ -2080,7 +2080,7 @@
     background: var(--yk-hero-mobile-bg, none) center / cover no-repeat;
     filter: blur(28px) brightness(.55);
   }
-  .yk-hero__media img[src*="Chef1"] {
+  .yk-hero .yk-hero__slide .yk-hero__media img[src*="Chef1"] {
     top: 0;
     bottom: auto;
     height: 78%;
@@ -2096,7 +2096,7 @@
    the colour of the photo texture and the photo edge fades into it. Only for this slide (desktop photo bg4 in src). */
 @media (max-width: 599px) {
   .yk-hero__media:has(img[src*="bg4."]) { background: #2e2e35; }
-  .yk-hero__media img[src*="bg4."] {
+  .yk-hero .yk-hero__slide .yk-hero__media img[src*="bg4."] {
     top: -32%;
     bottom: auto;
     height: 100%;
