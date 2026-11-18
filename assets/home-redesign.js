@@ -284,6 +284,34 @@ function initYkCommunity(section) {
     dots.forEach((dot, i) => dot.classList.toggle('is-active', i === index));
   };
   track.addEventListener('scroll', update, { passive: true });
+
+  // Meeting 18.11, option A: on phones the tiles turn by themselves every 5 seconds (nobody swipes the carousel);
+  // the first touch stops it for good. Only while the section is on screen; off with reduced motion.
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let timer = null;
+  let stopped = false;
+  let onScreen = false;
+  const next = () => {
+    if (track.scrollWidth <= track.clientWidth + 1) return;
+    const count = dots.length;
+    const index = Math.round(track.scrollLeft / (track.clientWidth || 1));
+    const target = (index + 1) % count;
+    track.scrollTo({ left: target * track.clientWidth, behavior: 'smooth' });
+  };
+  const sync = () => {
+    const run = !stopped && onScreen && !document.hidden;
+    if (run && !timer) timer = window.setInterval(next, 5000);
+    if (!run && timer) { window.clearInterval(timer); timer = null; }
+  };
+  const stop = () => { stopped = true; sync(); };
+  ['pointerdown', 'touchstart', 'wheel'].forEach((type) => track.addEventListener(type, stop, { passive: true, once: true }));
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => { onScreen = entries[0].isIntersecting; sync(); }, { threshold: 0.5 }).observe(track);
+  } else {
+    onScreen = true;
+  }
+  document.addEventListener('visibilitychange', sync);
+  sync();
 }
 
 document.querySelectorAll('[data-yk-community]').forEach(initYkCommunity);
