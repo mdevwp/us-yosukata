@@ -11,6 +11,7 @@
   assign socials = 'instagram,twitter,threads,facebook,tiktok,youtube,pinterest' | split: ','
   # QA 18.11 p.7: customer support hours under the Company column
   assign support_html = ''
+  assign support_title_esc = section.settings.yk_support_title | escape
   if section.settings.yk_support_hours != blank
     assign support_title = section.settings.yk_support_title | escape
     assign support_hours = section.settings.yk_support_hours | escape | newline_to_br
@@ -18,6 +19,21 @@
       assign support_html = '<p class="yk-footer__support-title">' | append: support_title | append: '</p>'
     endif
     assign support_html = support_html | append: '<p class="yk-footer__support-hours">' | append: support_hours | append: '</p>'
+  endif
+  # Phone only when it is filled in (QA 18.11 p.7)
+  if section.settings.yk_support_phone != blank
+    assign support_phone = section.settings.yk_support_phone | escape
+    assign support_tel = section.settings.yk_support_phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' | remove: '.'
+    assign support_phone_html = '<p class="yk-footer__support-phone">Phone: <a href="tel:' | append: support_tel | append: '">' | append: support_phone | append: '</a></p>'
+    if support_html contains 'yk-footer__support-hours'
+      assign support_html = support_html | replace: '<p class="yk-footer__support-hours">', support_phone_html | append: '<p class="yk-footer__support-hours">'
+    else
+      assign support_title_html = ''
+      if section.settings.yk_support_title != blank
+        assign support_title_html = '<p class="yk-footer__support-title">' | append: support_title_esc | append: '</p>'
+      endif
+      assign support_html = support_title_html | append: support_phone_html
+    endif
   endif
 -%}
 <footer class="yk-footer" data-section-id="{{ section.id }}" data-section-type="footer">

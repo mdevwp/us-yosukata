@@ -6,7 +6,8 @@
   Params: recommended (products), offers (products)
 {%- endcomment -%}
 {%- liquid
-  assign yk_badge_1_tag = 'pre-seasoned'
+  # QA 18.11: no Pre-Seasoned badge anywhere (was 'pre-seasoned')
+  assign yk_badge_1_tag = ''
   assign yk_badge_2_tag = 'bestseller'
 -%}
 <div class="yk-search" id="YkSearch" data-yk-search hidden role="dialog" aria-modal="true" aria-labelledby="YkSearchTitle">
@@ -65,7 +66,7 @@
                   assign card_image = product.metafields.custom.card_image.value | default: product.featured_media
                   assign badge_1 = false
                   assign badge_2 = false
-                  if tags contains yk_badge_1_tag
+                  if yk_badge_1_tag != blank and tags contains yk_badge_1_tag
                     assign badge_1 = true
                   endif
                   if tags contains yk_badge_2_tag and product.type != 'Bundle'
