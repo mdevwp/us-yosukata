@@ -2133,3 +2133,8 @@
 @media (min-width: 1680px) {
   .yk-hero .yk-hero__slide .yk-hero__media img[src*="home-hero.jpg"] { right: calc((100% - var(--yk-max)) / 2 + 40px); }
 }
+
+/* QA 18.11 p.6: bigger product photos in the cards on phones now that the cards carry one badge at most */
+@media (max-width: 959px) {
+  .yk-card__image-link { padding: 52px 16px 48px; }
+}

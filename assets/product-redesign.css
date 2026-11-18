@@ -2064,3 +2064,22 @@ body.yk-sticky-buy-on shopify-forms-embed { --yk-teaser-lift: 80px; }
 /* p.2: "Your order ships carbon neutral" as in the design (Subheading: SemiBold 14/22, -1.5%, Text/Title), larger leaf */
 .yk-product__callout { color: var(--yk-black); font-weight: 600; letter-spacing: -0.015em; }
 .yk-product__callout .yk-icon { width: 24px; height: 24px; }
+
+/* QA 18.11 p.8: a bigger, bolder red price with more room above and below (desktop and mobile) */
+.yk-product__title + .yk-product__price-row { margin-top: 16px; }
+.yk-product__price {
+  color: var(--yk-red);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 36px;
+}
+.yk-product__compare { font-size: 16px; line-height: 24px; vertical-align: 4px; }
+.yk-product__info > .yk-product__price-row + .yk-product__chips,
+.yk-product__price-row + .yk-product__text { margin-top: 20px; }
+@media (min-width: 960px) {
+  .yk-product__title + .yk-product__price-row { margin-top: 24px; }
+  .yk-product__price { font-size: 36px; line-height: 44px; }
+  .yk-product__compare { font-size: 20px; line-height: 28px; vertical-align: 6px; }
+  .yk-product__info > .yk-product__price-row + .yk-product__chips,
+  .yk-product__price-row + .yk-product__text { margin-top: 24px; }
+}

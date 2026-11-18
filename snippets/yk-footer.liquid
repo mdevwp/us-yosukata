@@ -9,6 +9,16 @@
   assign link_blocks = section.blocks | where: 'type', 'links'
   assign newsletter_block = section.blocks | where: 'type', 'newsletter' | first
   assign socials = 'instagram,twitter,threads,facebook,tiktok,youtube,pinterest' | split: ','
+  # QA 18.11 p.7: customer support hours under the Company column
+  assign support_html = ''
+  if section.settings.yk_support_hours != blank
+    assign support_title = section.settings.yk_support_title | escape
+    assign support_hours = section.settings.yk_support_hours | escape | newline_to_br
+    if support_title != blank
+      assign support_html = '<p class="yk-footer__support-title">' | append: support_title | append: '</p>'
+    endif
+    assign support_html = support_html | append: '<p class="yk-footer__support-hours">' | append: support_hours | append: '</p>'
+  endif
 -%}
 <footer class="yk-footer" data-section-id="{{ section.id }}" data-section-type="footer">
   <div class="yk-footer__inner">
@@ -81,8 +91,15 @@
               {%- endfor -%}
             </ul>
           {%- endif -%}
+          {%- if forloop.last and support_html != blank -%}
+            <div class="yk-footer__support yk-footer__support--desktop">{{ support_html }}</div>
+          {%- endif -%}
         </details>
       {%- endfor -%}
+      {%- comment -%}On phones the hours stay visible below the collapsible columns{%- endcomment -%}
+      {%- if support_html != blank -%}
+        <div class="yk-footer__support yk-footer__support--mobile">{{ support_html }}</div>
+      {%- endif -%}
     </div>
 
     <div class="yk-footer__bottom">

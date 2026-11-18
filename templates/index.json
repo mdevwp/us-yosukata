@@ -293,7 +293,7 @@
       ],
       "settings": {
         "title": "FAQs",
-        "first_open": true
+        "first_open": false
       }
     },
     "yk_special_offers": {
@@ -312,7 +312,7 @@
         "show_quick_add": true,
         "quick_add_label": "Quick Add",
         "choose_options_label": "Choose options",
-        "badge_1_tag": "Pre-Seasoned",
+        "badge_1_tag": "",
         "badge_1_label": "Pre-Seasoned",
         "badge_1_color": "#235fa3",
         "badge_1_text_color": "#ffffff",
