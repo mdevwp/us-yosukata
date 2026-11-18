@@ -304,7 +304,7 @@ function initYkCommunity(section) {
     if (!run && timer) { window.clearInterval(timer); timer = null; }
   };
   const stop = () => { stopped = true; sync(); };
-  ['pointerdown', 'touchstart', 'wheel'].forEach((type) => track.addEventListener(type, stop, { passive: true, once: true }));
+  ['pointerdown', 'touchstart'].forEach((type) => track.addEventListener(type, stop, { passive: true, once: true }));
   if ('IntersectionObserver' in window) {
     new IntersectionObserver((entries) => { onScreen = entries[0].isIntersecting; sync(); }, { threshold: 0.5 }).observe(track);
   } else {
