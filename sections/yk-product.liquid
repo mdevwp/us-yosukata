@@ -59,7 +59,7 @@
         <a href="{{ routes.root_url }}">{{ 'general.navigation.home' | t }}</a>
         {%- if crumb_collection != blank -%}
           <span aria-hidden="true">|</span>
-          <a href="{{ crumb_collection.url }}">{{ crumb_collection.title | escape }}</a>
+          <a href="{{ crumb_collection.url }}">{{ crumb_collection.title | remove: " - New" | remove: " - new" | escape }}</a>
         {%- endif -%}
         <span aria-hidden="true">|</span>
         <span aria-current="page">{{ product.title | escape }}</span>
