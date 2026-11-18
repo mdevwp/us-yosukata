@@ -61,7 +61,8 @@
         -%}
         <picture class="yk-hero__media"{% if yk_hero_bg != blank %} style="--yk-hero-mobile-bg: url('{{ yk_hero_bg }}');"{% endif %}>
           {%- if block.settings.image_mobile != blank -%}
-            <source media="(max-width: 959px)" srcset="{{ block.settings.image_mobile | image_url: width: 780 }} 780w, {{ block.settings.image_mobile | image_url: width: 1080 }} 1080w">
+            {%- comment -%}QA 18.11 p.2: tablets (600-959px) take the wide photo of the later slides, the portrait one left empty sides there{%- endcomment -%}
+            <source media="(max-width: {% if forloop.first or block.settings.image == blank %}959{% else %}599{% endif %}px)" srcset="{{ block.settings.image_mobile | image_url: width: 780 }} 780w, {{ block.settings.image_mobile | image_url: width: 1080 }} 1080w, {{ block.settings.image_mobile | image_url: width: 1600 }} 1600w">
           {%- elsif forloop.first -%}
             <source media="(max-width: 959px)" srcset="{{ 'home-hero-mobile.jpg' | asset_url }}">
           {%- endif -%}

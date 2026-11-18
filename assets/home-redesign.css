@@ -2148,3 +2148,56 @@
 @media (max-width: 599px) {
   .yk-hero .yk-hero__slide .yk-hero__media img[src*="Chef1"] { top: 9%; height: 74%; }
 }
+
+/* QA 18.11 p.2: Hero slides after the first on phones and tablets. The empty or blurred sides are gone: every photo
+   now has a full background. Tablets show the wide desktop photo across the slide width at the top (its subject sits
+   above the title) and the rest of the slide continues the photo's dark background. On phones the chef is the wide
+   photo too (the portrait one was only 400px wide, so it had blurred sides), framed on him in the upper part, and the
+   Iron Wok fire is moved up above the badges and title. */
+@media (max-width: 959px) {
+  .yk-hero .yk-hero__slide:not(:first-child) .yk-hero__media { background: #1d1d23; }
+  .yk-hero .yk-hero__slide:not(:first-child) .yk-hero__media::before { content: none; }
+}
+@media (min-width: 600px) and (max-width: 959px) {
+  .yk-hero .yk-hero__slide:not(:first-child):not(.yk-hero__slide--no-mobile-image) .yk-hero__media img {
+    inset: 0 0 auto 0;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    object-fit: cover;
+    transform: none;
+    -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 78%, transparent 100%);
+  }
+}
+@media (max-width: 599px) {
+  .yk-hero .yk-hero__slide:not(:first-child) .yk-hero__media img[src*="Chef1"] {
+    top: 0;
+    bottom: auto;
+    left: 50%;
+    width: auto;
+    max-width: none;
+    height: 60%;
+    object-fit: fill;
+    transform: translateX(-60.5%);
+    -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+  }
+  .yk-hero .yk-hero__slide:not(:first-child) .yk-hero__media img[src*="bg1."] {
+    top: -14%;
+    bottom: auto;
+    left: -5%;
+    width: 110%;
+    max-width: none;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+  }
+}
+
+/* QA 18.11 p.10: Behind the Yosukata Brand on phones, twice the space between the award badges and the chef photo (design) */
+@media (max-width: 959px) {
+  .yk-brand__visual { margin-top: 46px; }
+}
