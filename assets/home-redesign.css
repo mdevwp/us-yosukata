@@ -2051,3 +2051,8 @@
     object-position: right bottom;
   }
 }
+
+/* Hero, first slide on narrow phones: the photo at the slide height (was 120.5%), so the wok is not cut at the sides */
+@media (max-width: 479px) {
+  .yk-hero__slide:first-child .yk-hero__media img { top: 0; height: 100%; object-position: center bottom; }
+}
