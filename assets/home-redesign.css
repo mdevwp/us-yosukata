@@ -2067,3 +2067,26 @@
   }
   .yk-hero__media img[src*="home-hero.jpg"] { top: auto; bottom: 0; height: 90%; }
 }
+
+/* Hero chef slide on phones, client 18.11: the portrait was stretched to the full slide height, so the face was big
+   and the badges and title covered his chin. The photo now takes the upper ~78%, his head and shoulders sit above the
+   text; the sides show a blurred, darkened copy of the same photo (as on tablets) and the bottom fades into the dark
+   gradient under the text. Only for this slide (its desktop photo Chef1 is in the img src; the phone photo comes from <source>). */
+@media (max-width: 599px) {
+  .yk-hero__media:has(img[src*="Chef1"])::before {
+    content: "";
+    position: absolute;
+    inset: -40px;
+    background: var(--yk-hero-mobile-bg, none) center / cover no-repeat;
+    filter: blur(28px) brightness(.55);
+  }
+  .yk-hero__media img[src*="Chef1"] {
+    top: 0;
+    bottom: auto;
+    height: 78%;
+    object-fit: contain;
+    object-position: center top;
+    -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+  }
+}
