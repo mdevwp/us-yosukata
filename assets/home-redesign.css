@@ -2035,3 +2035,19 @@
 }
 .yk-season__intro a:hover { color: #8f001f; text-decoration-color: transparent; }
 .yk-season__intro a:focus-visible { outline: 2px solid var(--yk-red); outline-offset: 2px; }
+
+/* Hero, first slide on desktop: the whole wok with its wooden handle in view. The photo (1534x1080, black
+   background) was stretched to the slide width and cropped at the top, which cut off the handle; now it fits the
+   slide height, sits at the right, and the black slide background continues it on the left (the grey table band
+   at the bottom of the photo is repeated there, so there is no visible edge). Only for this photo. */
+@media (min-width: 960px) {
+  .yk-hero__media:has(img[src*="home-hero.jpg"]) {
+    background: linear-gradient(to top, #353239 0, #2e2c31 4%, #1a191e 7%, #09090b 11%, #000 14%);
+  }
+  .yk-hero__media img[src*="home-hero.jpg"] {
+    top: 0;
+    height: 100%;
+    object-fit: contain;
+    object-position: right bottom;
+  }
+}
