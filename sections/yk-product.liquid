@@ -239,7 +239,16 @@
                 {%- capture block_text -%}{% render 'yk-product-short-text', product: product %}{%- endcapture -%}
               {%- endif -%}
             {%- endif -%}
-            {%- if block_text != blank -%}
+            {%- if block_text != blank and block.settings.style == 'subtitle' -%}
+              {%- comment -%}Updated design 17.11: the parameters as grey chips (size, finish, bottom) under the price{%- endcomment -%}
+              {%- assign chip_parts = block_text | strip_html | split: '·' -%}
+              <ul class="yk-product__chips" role="list" {{ block.shopify_attributes }}>
+                {%- for chip in chip_parts -%}
+                  {%- assign chip_text = chip | strip -%}
+                  {%- if chip_text != blank -%}<li class="yk-product__chip">{{ chip_text }}</li>{%- endif -%}
+                {%- endfor -%}
+              </ul>
+            {%- elsif block_text != blank -%}
               <div class="yk-product__text yk-product__text--{{ block.settings.style }}" {{ block.shopify_attributes }}>{{ block_text }}</div>
             {%- endif -%}
 

@@ -312,10 +312,15 @@ document.querySelectorAll('[data-yk-product]').forEach(initYkProduct);
       sheet = new CSSStyleSheet();
       // Updated design 17.11 (Mobile/Subheading): the installments line in Montserrat SemiBold 14/22, -1.5%,
       // Text/Body colour, instead of Shopify's own GT Standard 400
+      // QA 18.11 p.3: left-aligned like the design, no "Zero interest" pill, and the Shop logo and the (?) button
+      // on the text line (the 46x24 logo is for desktop only; on phones it hung below the line)
       sheet.replaceSync(
-        'svg[class~="w-[34px]"] { width: 46px; height: 24px; } ' +
+        '@media (min-width: 960px) { svg[class~="w-[34px]"] { width: 46px; height: 24px; } } ' +
         'p.font-sans { font-family: var(--yk-font-body, Montserrat), sans-serif !important; font-size: 14px; ' +
-        'font-weight: 600; line-height: 22px; letter-spacing: -0.015em; color: var(--yk-pdp-ink, #1d1d1b); }'
+        'font-weight: 600; line-height: 22px; letter-spacing: -0.015em; color: var(--yk-pdp-ink, #1d1d1b); text-align: left; } ' +
+        'span[class*="min-h-5"] { display: none !important; } ' +
+        'div[class*="text-purple-primary"] { vertical-align: -0.2em; } ' +
+        'button { vertical-align: middle; padding: 0 0 0 2px; }'
       );
     }
     root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
@@ -831,8 +836,13 @@ document.querySelectorAll('[data-yk-sticky-buy]').forEach((bar) => {
     document.body.classList.toggle('yk-sticky-buy-on', on);
   };
   const footer = document.querySelector('.footer, footer, [data-section-type="footer"]');
+  // QA 18.11 p.4: the bar shows as soon as the price leaves the visible area (under the sticky header), so the price
+  // is always in view; on phones and on desktop
+  const priceRow = section.querySelector('.yk-product__price-row') || mainPrice || buy;
+  const header = document.querySelector('.header__outer-wrapper, .yk-header, header');
   const update = () => {
-    const passed = buy.getBoundingClientRect().bottom < 0;
+    const headerBottom = header ? Math.max(0, header.getBoundingClientRect().bottom) : 0;
+    const passed = priceRow.getBoundingClientRect().bottom < headerBottom;
     const atFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight : false;
     show(passed && !atFooter);
   };

@@ -1150,7 +1150,7 @@
 }
 .yk-product__button--shop:hover { background: var(--yk-grey-bg); }
 .yk-product__button--shop:focus-visible { outline: 2px solid var(--yk-red); outline-offset: 2px; }
-.yk-product__shop-logo { display: block; width: 44px; height: auto; color: #5a31f4; transform: translateY(1px); }
+.yk-product__shop-logo { display: block; width: 44px; height: auto; color: #5a31f4; }
 @media (min-width: 960px) {
   .yk-product__shop-logo { width: 48px; }
 }
@@ -2034,3 +2034,33 @@ body.yk-sticky-buy-on shopify-forms-embed { --yk-teaser-lift: 80px; }
 
 /* Updated design 17.11 (Montserrat): info rows under the buy buttons in Text/Title (black), Regular 14/22 */
 .yk-product__row-text { color: var(--yk-black); }
+
+/* ===== Product page, updated design 17.11 / QA 18.11 ===== */
+
+/* p.1: parameters as grey chips right under the price (Mobile/Caption: Montserrat SemiBold 12/18, Text/Title) */
+.yk-product__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.yk-product__info > .yk-product__chips { margin-top: 16px; }
+.yk-product__chip {
+  padding: 8px 16px;
+  border-radius: 100px;
+  background: var(--yk-grey-bg);
+  color: var(--yk-black);
+  font-family: var(--yk-font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+}
+@media (min-width: 960px) {
+  .yk-product__chip { font-size: 14px; line-height: 20px; }
+}
+
+/* p.2: "Your order ships carbon neutral" as in the design (Subheading: SemiBold 14/22, -1.5%, Text/Title), larger leaf */
+.yk-product__callout { color: var(--yk-black); font-weight: 600; letter-spacing: -0.015em; }
+.yk-product__callout .yk-icon { width: 24px; height: 24px; }
