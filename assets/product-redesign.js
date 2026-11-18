@@ -1,4 +1,4 @@
-/* Redesign 2026: product page */
+/* Redesign 2026: product page (meeting 18.11) */
 function initYkGallery(gallery) {
   if (!gallery || gallery.dataset.ready) return;
   gallery.dataset.ready = 'true';
