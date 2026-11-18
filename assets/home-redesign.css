@@ -2056,3 +2056,14 @@
 @media (max-width: 479px) {
   .yk-hero__slide:first-child .yk-hero__media img { top: 0; height: 100%; object-position: center bottom; }
 }
+
+/* Hero on desktop, client 18.11: the chef photo framed from higher up, so his head is not cut and more of him is
+   in view (it was anchored to the bottom and lost its top quarter); the wok on the first slide a bit smaller,
+   still standing on the table band at the bottom */
+@media (min-width: 960px) {
+  .yk-hero__media img[src*="Chef1"] { object-position: center 25%; }
+  .yk-hero__media:has(img[src*="home-hero.jpg"]) {
+    background: linear-gradient(to top, #353239 0, #2e2c31 3.6%, #1a191e 6.3%, #09090b 10%, #000 12.6%);
+  }
+  .yk-hero__media img[src*="home-hero.jpg"] { top: auto; bottom: 0; height: 90%; }
+}
