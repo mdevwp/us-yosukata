@@ -232,6 +232,39 @@ function initYkProduct(section) {
     });
   }
 
+  // Meeting 18.11 p.13: "Add both" puts this product and the set item in the cart in one request
+  const set = section.querySelector('[data-yk-set]');
+  if (set) {
+    const setError = set.querySelector('[data-yk-set-error]');
+    set.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-yk-set-add]');
+      if (!button || button.classList.contains('is-loading')) return;
+      const variantInput = form && form.querySelector('[data-yk-variant-id]');
+      const items = [{ id: Number(variantInput ? variantInput.value : 0), quantity: 1 }, { id: Number(button.dataset.ykSetAdd), quantity: 1 }];
+      button.classList.add('is-loading');
+      if (setError) setError.hidden = true;
+      fetch(`${root}cart/add.js`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ items }) })
+        .then((response) => response.json().then((body) => ({ ok: response.ok, body })))
+        .then(({ ok, body }) => {
+          if (!ok) throw new Error(body.description || body.message || 'Add to cart failed');
+          document.dispatchEvent(new CustomEvent('apps:product-added-to-cart'));
+          const cartIcon = Array.from(document.querySelectorAll('[data-js-cart-icon]')).find((icon) => icon.offsetParent);
+          if (document.querySelector('.quick-cart') && cartIcon) {
+            window.setTimeout(() => cartIcon.click(), 300);
+          } else {
+            window.location.href = `${root}cart`;
+          }
+        })
+        .catch((err) => {
+          if (setError) {
+            setError.textContent = err.message;
+            setError.hidden = false;
+          }
+        })
+        .finally(() => button.classList.remove('is-loading'));
+    });
+  }
+
   section.querySelectorAll('[data-yk-qty]').forEach((qty) => {
     const input = qty.querySelector('input');
     qty.querySelectorAll('[data-yk-qty-step]').forEach((button) => {

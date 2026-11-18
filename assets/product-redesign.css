@@ -328,6 +328,60 @@
 .yk-product__terms-form { margin: 0; }
 .yk-product__terms shopify-payment-terms { display: block; }
 
+/* Complete your set (meeting 18.11 p.13): natural pairs with one-click "Add both" */
+.yk-product__set { margin-top: 24px; }
+.yk-product__set-title {
+  margin: 0 0 8px;
+  font-family: var(--yk-font-heading);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--yk-pdp-ink);
+}
+.yk-product__set-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.yk-product__set-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 8px 8px;
+  border: 1px solid var(--yk-pdp-line);
+  border-radius: 12px;
+}
+.yk-product__set-media { flex: 0 0 56px; width: 56px; height: 56px; overflow: hidden; border-radius: 8px; background: #f6f6f6; }
+.yk-product__set-media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.yk-product__set-info { display: grid; flex: 1 1 auto; min-width: 0; gap: 2px; }
+.yk-product__set-name {
+  overflow: hidden;
+  color: var(--yk-pdp-ink);
+  font-size: 13px;
+  line-height: 18px;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.yk-product__set-name:hover { text-decoration: underline; }
+.yk-product__set-price { color: var(--yk-pdp-ink); font-size: 13px; font-weight: 600; line-height: 18px; }
+.yk-product__set-total { color: var(--yk-pdp-muted); font-weight: 400; }
+.yk-product__set-add {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--yk-pdp-ink);
+  border-radius: 100px;
+  background: #fff;
+  color: var(--yk-pdp-ink);
+  font-family: var(--yk-font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color .2s, color .2s;
+}
+.yk-product__set-add:hover { background: var(--yk-pdp-ink); color: #fff; }
+.yk-product__set-add.is-loading { opacity: .5; pointer-events: none; }
+.yk-product__set-error { margin: 8px 0 0; color: var(--yk-pdp-stock); font-size: 13px; }
+
 /* Promo */
 .yk-product__promo {
   position: relative;

@@ -334,6 +334,67 @@
               </p>
             {%- endif -%}
 
+          {%- when 'complete_set' -%}
+            {%- comment -%}
+              Meeting 18.11 p.13: natural sets next to the price and the button. On a wok page: the lid of the
+              same size (from the "Lids by wok size" list) and one accessory, each with "Add both", which puts
+              this wok and that item in the cart in one click. Hidden on other products.
+            {%- endcomment -%}
+            {%- if product.type == 'Wok' and current_variant.available -%}
+              {%- liquid
+                assign set_size = product.title | split: '"' | first | split: ' ' | last | strip
+                assign set_handles = ''
+                assign set_lines = block.settings.lid_map | newline_to_br | split: '<br />'
+                for set_line in set_lines
+                  assign set_pair = set_line | split: '='
+                  if set_pair.size == 2
+                    assign set_pair_size = set_pair[0] | strip
+                    if set_pair_size == set_size
+                      assign set_handles = set_pair[1] | strip | append: ','
+                    endif
+                  endif
+                endfor
+                if block.settings.accessory != blank
+                  assign set_handles = set_handles | append: block.settings.accessory
+                endif
+                assign set_handles = set_handles | split: ','
+                assign set_count = 0
+              -%}
+              {%- capture set_items -%}
+                {%- for set_handle in set_handles -%}
+                  {%- assign set_product = all_products[set_handle] -%}
+                  {%- if set_product == blank or set_product.available == false or set_product.id == product.id -%}{%- continue -%}{%- endif -%}
+                  {%- assign set_variant = set_product.selected_or_first_available_variant -%}
+                  {%- assign set_total = current_variant.price | plus: set_variant.price -%}
+                  {%- assign set_count = set_count | plus: 1 -%}
+                  <li class="yk-product__set-item">
+                    <a class="yk-product__set-media" href="{{ set_product.url }}" tabindex="-1" aria-hidden="true">
+                      {%- if set_product.featured_media -%}
+                        {{ set_product.featured_media | image_url: width: 160 | image_tag: width: 64, height: 64, loading: 'lazy', alt: '' }}
+                      {%- endif -%}
+                    </a>
+                    <div class="yk-product__set-info">
+                      <a class="yk-product__set-name" href="{{ set_product.url }}">{{ set_product.title | remove_first: 'Yosukata ' | escape }}</a>
+                      <span class="yk-product__set-price">+ {{ set_variant.price | money }}<span class="yk-product__set-total"> · set {{ set_total | money }}</span></span>
+                    </div>
+                    <button
+                      class="yk-product__set-add"
+                      type="button"
+                      data-yk-set-add="{{ set_variant.id }}"
+                      aria-label="Add {{ product.title | escape }} and {{ set_product.title | escape }} to cart"
+                    >{{ block.settings.button_label | escape }}</button>
+                  </li>
+                {%- endfor -%}
+              {%- endcapture -%}
+              {%- if set_count > 0 -%}
+                <div class="yk-product__set" {{ block.shopify_attributes }} data-yk-set>
+                  <p class="yk-product__set-title">{{ block.settings.title | escape }}</p>
+                  <ul class="yk-product__set-list" role="list">{{ set_items }}</ul>
+                  <p class="yk-product__set-error" role="alert" hidden data-yk-set-error></p>
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+
           {%- when 'callout' -%}
             <div class="yk-product__callout" {{ block.shopify_attributes }}>
               {%- if block.settings.icon != 'none' -%}{% render 'yk-icon', icon: block.settings.icon %}{%- endif -%}
@@ -622,6 +683,18 @@
         { "type": "paragraph", "content": "Uses Theme settings > Cart > Free shipping threshold. [amount] is how much is left, counting the cart and this product." },
         { "type": "text", "id": "text_more", "label": "Below the threshold", "default": "Add [amount] more for free shipping" },
         { "type": "text", "id": "text_free", "label": "Threshold reached", "default": "This order ships free" }
+      ]
+    },
+    {
+      "type": "complete_set",
+      "name": "Complete your set",
+      "limit": 1,
+      "settings": [
+        { "type": "paragraph", "content": "Shown on woks only (product type Wok). The size is read from the title, e.g. 13.5\" in \"Yosukata 13.5\" ... Wok\"." },
+        { "type": "text", "id": "title", "label": "Heading", "default": "Complete your set" },
+        { "type": "textarea", "id": "lid_map", "label": "Lids by wok size", "info": "One line per size: wok size = lid product handle", "default": "11.8 = wok-lid-11-4-inch-stainless-steel-tempered-glass-insert\n13.5 = 13-5-inch-wooden-wok-lid-with-carbonized-finish\n14 = 14-inch-wooden-wok-lid-with-carbonized-finish" },
+        { "type": "text", "id": "accessory", "label": "Accessory product handle", "default": "utensils-set-17-inch-stainless-steel-wok-spatula-and-ladle-set" },
+        { "type": "text", "id": "button_label", "label": "Button", "default": "Add both" }
       ]
     },
     {

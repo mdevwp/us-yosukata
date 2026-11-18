@@ -469,6 +469,15 @@
             "notify_success": "Thanks! We’ll email you as soon as it’s back in stock."
           }
         },
+        "complete_set": {
+          "type": "complete_set",
+          "settings": {
+            "title": "Complete your set",
+            "lid_map": "11.8 = wok-lid-11-4-inch-stainless-steel-tempered-glass-insert\n13.5 = 13-5-inch-wooden-wok-lid-with-carbonized-finish\n14 = 14-inch-wooden-wok-lid-with-carbonized-finish",
+            "accessory": "utensils-set-17-inch-stainless-steel-wok-spatula-and-ladle-set",
+            "button_label": "Add both"
+          }
+        },
         "promo": {
           "type": "promo",
           "settings": {
@@ -532,6 +541,7 @@
         "variant_picker",
         "carbon",
         "buy_buttons",
+        "complete_set",
         "promo",
         "row_returns",
         "row_help",
