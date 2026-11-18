@@ -2138,3 +2138,13 @@
 @media (max-width: 959px) {
   .yk-card__image-link { padding: 52px 16px 48px; }
 }
+
+/* Meeting 18.11 p.1, p.7: a taller Hero on desktop so more of each photo shows (it was capped at 800px, so on 2560
+   screens the photos were cut hard): 52% of the width, but never taller than the screen below the header */
+@media (min-width: 960px) {
+  .yk-hero__slide { min-height: clamp(560px, min(52vw, calc(100vh - 190px)), 1250px); }
+}
+/* Chef slide on phones: the portrait closer to the middle of the slide */
+@media (max-width: 599px) {
+  .yk-hero .yk-hero__slide .yk-hero__media img[src*="Chef1"] { top: 9%; height: 74%; }
+}

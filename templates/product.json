@@ -583,7 +583,8 @@
           "type": "specs",
           "settings": {
             "specs": "Material | custom.material | custom.material_photo\nHandle material | custom.handle_material | custom.handle_material_photo\nDiameter | custom.diameter | custom.diameter_photo"
-          }
+          },
+          "disabled": true
         },
         "tab_care": {
           "type": "tab",
@@ -837,8 +838,8 @@
   },
   "order": [
     "yk_product",
-    "yk_details",
     "yk_recs",
+    "yk_details",
     "yk_reviews",
     "1763379844eb994b3c",
     "yk_benefits",

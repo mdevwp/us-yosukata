@@ -1426,10 +1426,11 @@ html.yk-search-lock { overflow: hidden; }
   body.yk-redesign .yk-header .header__links-primary .header__links-list { gap: 20px; }
 }
 
-/* Footer: customer support hours under the Company column (QA 18.11 p.7); on phones below the columns */
+/* Footer: customer support hours (meeting 18.11 p.10): its own column right of Company; on phones below the columns */
 .yk-footer__support p { margin: 0; }
+.yk-footer__support { padding: 20px 0 24px; border-bottom: 1px solid rgba(255, 255, 255, .25); }
 .yk-footer__support-title {
-  color: #939393;
+  color: #fff;
   font-family: var(--yk-font-heading);
   font-size: 14px;
   font-weight: 500;
@@ -1442,11 +1443,11 @@ html.yk-search-lock { overflow: hidden; }
   font-weight: 500;
   line-height: 20px;
 }
-.yk-footer__support--desktop { display: none; }
-.yk-footer__support--mobile { padding: 20px 0 24px; border-bottom: 1px solid rgba(255, 255, 255, .25); }
 @media (min-width: 960px) {
-  .yk-footer__support--desktop { display: block; margin-top: 40px; }
-  .yk-footer__support--mobile { display: none; }
-  .yk-footer__support-title { font-size: 16px; line-height: 24px; }
-  .yk-footer__support-hours { margin-top: 16px !important; font-size: 14px; line-height: 24px; }
+  .yk-footer__top {
+    grid-template-columns: minmax(0, 600fr) minmax(0, 80fr) minmax(0, 230fr) minmax(0, 200fr) minmax(0, 290fr);
+  }
+  .yk-footer__support { grid-column: 5; grid-row: 1; padding: 0; border: 0; }
+  .yk-footer__support-title { padding-bottom: 16px; color: #939393; font-size: 16px; line-height: 24px; }
+  .yk-footer__support-hours { margin-top: 0 !important; font-size: 14px; line-height: 24px; }
 }

@@ -91,14 +91,11 @@
               {%- endfor -%}
             </ul>
           {%- endif -%}
-          {%- if forloop.last and support_html != blank -%}
-            <div class="yk-footer__support yk-footer__support--desktop">{{ support_html }}</div>
-          {%- endif -%}
         </details>
       {%- endfor -%}
-      {%- comment -%}On phones the hours stay visible below the collapsible columns{%- endcomment -%}
+      {%- comment -%}Meeting 18.11 p.10: support hours as their own column, right of Company (below the columns on phones){%- endcomment -%}
       {%- if support_html != blank -%}
-        <div class="yk-footer__support yk-footer__support--mobile">{{ support_html }}</div>
+        <div class="yk-footer__support">{{ support_html }}</div>
       {%- endif -%}
     </div>
 
