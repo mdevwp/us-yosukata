@@ -731,6 +731,23 @@
 {%- endif -%}
 
 <script>
+  // Meeting 18.11 p.2: the sticky header (announcement + info row + main row, 192px) covered too much of short laptop
+  // screens and the section titles under it; once the page is scrolled, the grey info row folds away (96px main row stays)
+  (() => {
+    let compact = false;
+    const sync = () => {
+      const y = window.scrollY;
+      const next = compact ? y > 40 : y > 200;
+      if (next === compact) return;
+      compact = next;
+      document.body.classList.toggle('yk-header-compact', compact);
+    };
+    window.addEventListener('scroll', sync, { passive: true });
+    sync();
+  })();
+</script>
+
+<script>
   // Set heading height at component level
   const header = document.querySelector('[data-section-type="header"]');
   document.documentElement.style.setProperty('--height-header', header.offsetHeight + 'px');

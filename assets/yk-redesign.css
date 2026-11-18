@@ -1457,3 +1457,8 @@ html.yk-search-lock { overflow: hidden; }
 .yk-footer__support-phone a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .yk-footer__support-phone + .yk-footer__support-hours { margin-top: 4px; }
 @media (min-width: 960px) { .yk-footer__support-phone { margin-top: 0; } }
+
+/* Meeting 18.11 p.2: compact sticky header once the page is scrolled - the grey info row folds away */
+@media (min-width: 960px) {
+  body.yk-redesign.yk-header-compact .yk-utility { max-height: 0; overflow: hidden; }
+}
