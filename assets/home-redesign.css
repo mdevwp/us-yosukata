@@ -2090,3 +2090,18 @@
     mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
   }
 }
+
+/* Hero "Iron frying pans" slide on phones, client 18.11: the pan sits in the lower half of the phone photo, under the
+   title and badges; the photo is moved up by about a third so the pan shows above the text. The freed bottom takes
+   the colour of the photo texture and the photo edge fades into it. Only for this slide (desktop photo bg4 in src). */
+@media (max-width: 599px) {
+  .yk-hero__media:has(img[src*="bg4."]) { background: #2e2e35; }
+  .yk-hero__media img[src*="bg4."] {
+    top: -32%;
+    bottom: auto;
+    height: 100%;
+    object-position: center top;
+    -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 82%, transparent 100%);
+  }
+}
