@@ -2128,8 +2128,8 @@
   }
 }
 @media (min-width: 1280px) {
-  .yk-hero .yk-hero__slide .yk-hero__media img[src*="home-hero.jpg"] { right: calc(var(--yk-gutter) + 100px); }
+  .yk-hero .yk-hero__slide .yk-hero__media img[src*="home-hero.jpg"] { right: calc(var(--yk-gutter) + 40px); }
 }
 @media (min-width: 1680px) {
-  .yk-hero .yk-hero__slide .yk-hero__media img[src*="home-hero.jpg"] { right: calc((100% - var(--yk-max)) / 2 + 100px); }
+  .yk-hero .yk-hero__slide .yk-hero__media img[src*="home-hero.jpg"] { right: calc((100% - var(--yk-max)) / 2 + 40px); }
 }
