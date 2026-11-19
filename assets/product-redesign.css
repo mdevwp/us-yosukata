@@ -2168,3 +2168,8 @@ body.yk-sticky-buy-on shopify-forms-embed { --yk-teaser-lift: 80px; }
 .yk-gallery__play:focus-visible { background: #fff; transform: translate(-50%, -50%) scale(1.06); }
 .yk-gallery__play[hidden] { display: none; }
 @media (max-width: 959px) { .yk-gallery__play { width: 60px; height: 60px; } }
+
+/* QA 19.11 p.3: Shop Pay installments as in the design - left aligned, SemiBold, black text. The message itself
+   is Shopify's (its wording depends on the price and the installment plans); the Shop logo and the (?) button inside
+   it are lined up with the text by a small style the script adds into Shopify's element. */
+.yk-product__terms { color: var(--yk-black); font-size: 16px; font-weight: 600; letter-spacing: -0.015em; line-height: 24px; text-align: left; }

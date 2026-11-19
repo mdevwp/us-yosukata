@@ -969,3 +969,47 @@ document.addEventListener('click', (event) => {
   const playing = video.play();
   if (playing && playing.catch) playing.catch(() => {});
 });
+
+// QA 19.11 p.3: inside Shopify's installments message the Shop logo and the (?) button sat below the text line.
+// The element keeps its parts in an open shadow root without style hooks, so a small sheet is added there
+// (and added again if Shopify redraws the message, e.g. after a variant change).
+(() => {
+  const css = `
+    p { font-weight: inherit; }
+    div.inline-flex.align-middle { vertical-align: -3.7px !important; }
+    div.inline-flex.align-middle svg { display: block; width: 42px; height: auto; }
+    button { vertical-align: baseline !important; }
+  `;
+  let sheet = null;
+  const style = (terms) => {
+    const root = terms.shadowRoot;
+    if (!root) return false;
+    if ('adoptedStyleSheets' in root && 'replaceSync' in CSSStyleSheet.prototype) {
+      if (!sheet) { sheet = new CSSStyleSheet(); sheet.replaceSync(css); }
+      if (!root.adoptedStyleSheets.includes(sheet)) root.adoptedStyleSheets = [...root.adoptedStyleSheets, sheet];
+    } else if (!root.querySelector('style[data-yk-terms]')) {
+      const tag = document.createElement('style');
+      tag.dataset.ykTerms = 'true';
+      tag.textContent = css;
+      root.append(tag);
+    }
+    return true;
+  };
+  const watch = (terms) => {
+    if (terms.dataset.ykTermsStyled) return;
+    let tries = 0;
+    const attempt = () => {
+      if (style(terms)) {
+        terms.dataset.ykTermsStyled = 'true';
+        new MutationObserver(() => style(terms)).observe(terms.shadowRoot, { childList: true, subtree: true });
+      } else if (tries++ < 40) {
+        setTimeout(attempt, 250);
+      }
+    };
+    attempt();
+  };
+  const run = () => document.querySelectorAll('.yk-product__terms shopify-payment-terms').forEach(watch);
+  run();
+  if (window.customElements) customElements.whenDefined('shopify-payment-terms').then(run);
+  document.addEventListener('shopify:section:load', run);
+})();
