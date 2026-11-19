@@ -449,6 +449,8 @@
   border: 1px solid #e3e3e3;
   border-radius: 100px;
   background: var(--yk-grey-bg);
+  /* Design token Text/Caption */
+  color: #6a6a6a;
   font-family: var(--yk-font-heading);
   font-size: 12px;
   font-weight: 500;
