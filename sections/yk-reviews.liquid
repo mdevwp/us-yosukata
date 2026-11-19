@@ -46,6 +46,12 @@
 
     <ul class="yk-reviews__track" role="list" data-yk-reviews-track>
       {%- if yk_use_jm -%}
+        {%- liquid
+          # One review per named author and no repeated texts, so the slider does not show the same person
+          # several times (Judge.me featured reviews can hold a few reviews from one buyer)
+          assign yk_seen = '|'
+          assign yk_total = 0
+        -%}
         {%- for yk_item in yk_jm_items offset: 1 -%}
           {%- liquid
             assign yk_rating = yk_item | split: 'jdgm-carousel-item__reviewer-name' | first | split: 'jdgm--on' | size | minus: 1 | at_least: 1 | at_most: 5
@@ -58,8 +64,28 @@
             if yk_item_lower contains 'verified'
               assign yk_verified = true
             endif
+            assign yk_name_key = yk_name | downcase | strip
+            assign yk_text_key = yk_body | strip_html | downcase | remove: ' ' | remove: '!' | remove: '.' | remove: ',' | truncate: 60, ''
+            assign yk_text_mark = '|t:' | append: yk_text_key | append: '|'
+            assign yk_skip = false
+            if yk_body == blank
+              assign yk_skip = true
+            elsif yk_seen contains yk_text_mark
+              assign yk_skip = true
+            elsif yk_name_key != blank and yk_name_key != 'anonymous'
+              assign yk_name_mark = '|n:' | append: yk_name_key | append: '|'
+              if yk_seen contains yk_name_mark
+                assign yk_skip = true
+              else
+                assign yk_seen = yk_seen | append: yk_name_mark
+              endif
+            endif
+            unless yk_skip
+              assign yk_seen = yk_seen | append: yk_text_mark
+              assign yk_total = yk_total | plus: 1
+            endunless
           -%}
-          {%- if yk_body != blank -%}
+          {%- unless yk_skip -%}
             <li class="yk-review">
               <div class="yk-review__stars" role="img" aria-label="{{ yk_rating }} / 5">
                 {%- for i in (1..5) -%}
@@ -75,7 +101,7 @@
                 {%- if yk_verified -%}<span class="yk-review__verified" title="Verified buyer">{% render 'yk-icon', icon: 'verified' %}<span class="visually-hidden">Verified buyer</span></span>{%- endif -%}
               </p>
             </li>
-          {%- endif -%}
+          {%- endunless -%}
         {%- endfor -%}
       {%- else -%}
         {%- for block in section.blocks -%}
