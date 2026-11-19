@@ -390,6 +390,13 @@
         "section_padding": "section--vertical-padding-top-bottom"
       }
     },
+    "yk_product_faq": {
+      "type": "yk-product-faq",
+      "settings": {
+        "title": "FAQs",
+        "mode": "preview"
+      }
+    },
     "recommendations": {
       "type": "recommended-products",
       "settings": {
@@ -852,6 +859,7 @@
     "yk_details",
     "yk_reviews",
     "1763379844eb994b3c",
+    "yk_product_faq",
     "yk_benefits",
     "main",
     "product_tabs",

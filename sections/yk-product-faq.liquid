@@ -1,0 +1,94 @@
+{%- comment -%}
+  Product FAQ in the redesign style (same look as the homepage FAQ). The questions come from the StoreRank AI
+  app: its app embed puts them in the page as JSON (script#storerank-product-faqs), this section draws them
+  as our accordion, all closed. The app's own FAQ block stays as it was.
+  Show: "Only with ?faq=design" lets the client compare without changing the page for everyone.
+  Whenever ours is shown, the app's FAQ block on the page is hidden, so the questions never show twice.
+{%- endcomment -%}
+<section
+  class="yk-faq yk-product-faq"
+  aria-labelledby="YkProductFaqTitle-{{ section.id }}"
+  data-yk-product-faq
+  data-mode="{{ section.settings.mode }}"
+  hidden
+>
+  <div class="yk-faq__inner">
+    {%- if section.settings.title != blank -%}
+      <h2 class="yk-faq__title" id="YkProductFaqTitle-{{ section.id }}">{{ section.settings.title | escape }}</h2>
+    {%- endif -%}
+    <div class="yk-faq__list" data-yk-product-faq-list></div>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const section = document.currentScript.previousElementSibling;
+    if (!section || section.dataset.ready) return;
+    section.dataset.ready = 'true';
+    const preview = new URLSearchParams(window.location.search).get('faq') === 'design';
+    if (section.dataset.mode !== 'always' && !(section.dataset.mode === 'preview' && preview) && !window.Shopify?.designMode) return;
+
+    const draw = () => {
+      const source = document.getElementById('storerank-product-faqs');
+      if (!source) return false;
+      let items = [];
+      try { items = JSON.parse(source.textContent); } catch (error) { return true; }
+      items = (Array.isArray(items) ? items : []).filter((item) => item && item.question && item.answer);
+      if (!items.length) return true;
+      const list = section.querySelector('[data-yk-product-faq-list]');
+      items.forEach((item) => {
+        const details = document.createElement('details');
+        details.className = 'yk-faq__item';
+        details.name = `yk-product-faq-${section.id || 'main'}`;
+        const summary = document.createElement('summary');
+        summary.className = 'yk-faq__question';
+        const question = document.createElement('span');
+        question.textContent = item.question;
+        const toggle = document.createElement('span');
+        toggle.className = 'yk-faq__toggle';
+        toggle.setAttribute('aria-hidden', 'true');
+        summary.append(question, toggle);
+        const answer = document.createElement('div');
+        answer.className = 'yk-faq__answer';
+        String(item.answer).split(/\n\s*\n/).forEach((text) => {
+          if (!text.trim()) return;
+          const paragraph = document.createElement('p');
+          paragraph.textContent = text.trim();
+          answer.append(paragraph);
+        });
+        details.append(summary, answer);
+        list.append(details);
+      });
+      section.hidden = false;
+      // Ours replaces the app's own FAQ block on this page (it stays in the template, just not shown)
+      document.querySelectorAll('.storerank-faqs').forEach((app) => {
+        const wrap = app.closest('.shopify-section') || app;
+        if (!wrap.contains(section)) wrap.hidden = true;
+      });
+      return true;
+    };
+    if (!draw()) document.addEventListener('DOMContentLoaded', draw, { once: true });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "YK Product FAQ",
+  "class": "yk-product-faq-section",
+  "settings": [
+    { "type": "paragraph", "content": "Questions come from the StoreRank AI app (its app embed must be on). Edit them in the app." },
+    { "type": "text", "id": "title", "label": "Heading", "default": "FAQs" },
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Show",
+      "options": [
+        { "value": "preview", "label": "Only with ?faq=design in the link" },
+        { "value": "always", "label": "Always (the app's own FAQ block is then hidden)" }
+      ],
+      "default": "preview"
+    }
+  ],
+  "presets": [{ "name": "YK Product FAQ" }]
+}
+{% endschema %}
