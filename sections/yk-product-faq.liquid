@@ -4,6 +4,7 @@
   as our accordion, all closed. The app's own FAQ block stays as it was.
   Show: "Only with ?faq=design" lets the client compare without changing the page for everyone.
   Whenever ours is shown, the app's FAQ block on the page is hidden, so the questions never show twice.
+  The app's block stays as the alternative: add ?faq=app to the link to see it instead of ours.
 {%- endcomment -%}
 <section
   class="yk-faq yk-product-faq"
@@ -25,8 +26,10 @@
     const section = document.currentScript.previousElementSibling;
     if (!section || section.dataset.ready) return;
     section.dataset.ready = 'true';
-    const preview = new URLSearchParams(window.location.search).get('faq') === 'design';
-    if (section.dataset.mode !== 'always' && !(section.dataset.mode === 'preview' && preview) && !window.Shopify?.designMode) return;
+    const faqParam = new URLSearchParams(window.location.search).get('faq');
+    // ?faq=app shows the app's own FAQ block instead (the alternative), ?faq=design shows ours in preview mode
+    if (faqParam === 'app') return;
+    if (section.dataset.mode !== 'always' && !(section.dataset.mode === 'preview' && faqParam === 'design') && !window.Shopify?.designMode) return;
 
     const draw = () => {
       const source = document.getElementById('storerank-product-faqs');
@@ -86,7 +89,8 @@
         { "value": "preview", "label": "Only with ?faq=design in the link" },
         { "value": "always", "label": "Always (the app's own FAQ block is then hidden)" }
       ],
-      "default": "preview"
+      "default": "preview",
+      "info": "The app's own FAQ stays as the alternative: with ?faq=app in the link it shows instead of this one."
     }
   ],
   "presets": [{ "name": "YK Product FAQ" }]
