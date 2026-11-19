@@ -449,8 +449,6 @@
   border: 1px solid #e3e3e3;
   border-radius: 100px;
   background: var(--yk-grey-bg);
-  /* Design token Text/Caption */
-  color: #6a6a6a;
   font-family: var(--yk-font-heading);
   font-size: 12px;
   font-weight: 500;
@@ -2111,14 +2109,15 @@ body.yk-sticky-buy-on shopify-forms-embed { --yk-teaser-lift: 80px; }
   padding: 8px 16px;
   border-radius: 100px;
   background: var(--yk-grey-bg);
-  color: var(--yk-black);
+  /* Design 19.11: chip text in Text/Caption grey */
+  color: #6a6a6a;
   font-family: var(--yk-font-heading);
   font-size: 12px;
   font-weight: 600;
   line-height: 18px;
 }
 @media (min-width: 960px) {
-  .yk-product__chip { font-size: 14px; line-height: 20px; }
+  .yk-product__chip { font-size: 14px; line-height: 22px; }
 }
 
 /* p.2: "Your order ships carbon neutral" as in the design (Subheading: SemiBold 14/22, -1.5%, Text/Title), larger leaf */
