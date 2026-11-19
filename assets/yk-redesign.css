@@ -438,6 +438,11 @@ body.yk-redesign .yk-header .header__row-mobile .header__icon-touch--account { d
   backdrop-filter: blur(12.5px);
 }
 
+/* QA 19.11 p.5: the old theme's red border animation (theme-deferred.css, every .btn) is not for text links
+   such as Remove in the cart - it ran over the word */
+.yk-redesign .btn.btn--text-link::before,
+.yk-redesign .btn.btn--text-link::after { content: none; display: none; }
+
 /* Cart count: small badge on the top right corner of the cart icon, not over it */
 body.yk-redesign .yk-header [data-js-cart-count] {
   top: -7px;
@@ -1059,13 +1064,19 @@ html.yk-search-lock { overflow: hidden; }
   z-index: 2147482990;
   color: var(--yk-black, #000);
   font-family: var(--yk-font-body);
+  /* QA 19.11 p.2: the blur sits on the popup itself - on the overlay inside it Chrome drew only the dimming, without the blur */
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  transition: -webkit-backdrop-filter .3s ease, backdrop-filter .3s ease;
+}
+.yk-search.is-open {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
 }
 .yk-search__overlay {
   position: absolute;
   inset: 0;
   background: rgba(28, 28, 26, .3);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
   opacity: 0;
   transition: opacity .3s ease;
 }
@@ -1198,6 +1209,8 @@ html.yk-search-lock { overflow: hidden; }
   scrollbar-width: none;
 }
 .yk-search__track::-webkit-scrollbar { display: none; }
+.yk-search__track.is-dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; user-select: none; }
+.yk-search__track.is-dragging * { pointer-events: none; }
 .yk-search__card { flex: 0 0 calc((100% - 8px) / 2.1); min-width: 0; scroll-snap-align: start; }
 .yk-search__card-media {
   position: relative;
@@ -1332,7 +1345,7 @@ html.yk-search-lock { overflow: hidden; }
   .yk-search__empty-text { max-width: none; font-size: 16px; line-height: 24px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .yk-search__panel, .yk-search__overlay { transition: none; }
+  .yk-search, .yk-search__panel, .yk-search__overlay { transition: none; }
 }
 
 /* The panel scrolls: its rows keep their own height instead of shrinking to fit */

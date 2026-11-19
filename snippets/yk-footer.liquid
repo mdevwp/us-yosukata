@@ -14,7 +14,8 @@
   assign support_title_esc = section.settings.yk_support_title | escape
   if section.settings.yk_support_hours != blank
     assign support_title = section.settings.yk_support_title | escape
-    assign support_hours = section.settings.yk_support_hours | escape | newline_to_br
+    # QA 19.11 p.3: a time never breaks away from AM/PM and the time zone (non-breaking spaces)
+    assign support_hours = section.settings.yk_support_hours | escape | replace: ' AM', '&nbsp;AM' | replace: ' PM', '&nbsp;PM' | replace: ' am', '&nbsp;am' | replace: ' pm', '&nbsp;pm' | replace: 'M EST', 'M&nbsp;EST' | replace: 'M ET', 'M&nbsp;ET' | replace: 'M PST', 'M&nbsp;PST' | replace: 'M CST', 'M&nbsp;CST' | newline_to_br
     if support_title != blank
       assign support_html = '<p class="yk-footer__support-title">' | append: support_title | append: '</p>'
     endif

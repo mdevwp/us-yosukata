@@ -1192,6 +1192,10 @@
 .yk-details__media-play:hover { background: #8f001f; transform: translate(-50%, -50%) scale(1.05); }
 .yk-details__media-play:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 .yk-details__media--embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+/* Safari (QA 19.11 p.4): the player is loaded ahead under the cover; the cover and the play button let the tap
+   through to the player, so the video starts on the first tap */
+.yk-details__media--primed .yk-details__media-el { position: relative; z-index: 1; pointer-events: none; opacity: 1; filter: brightness(.9); }
+.yk-details__media--primed .yk-details__media-play { z-index: 2; pointer-events: none; }
 
 /* "Buy with shop" as in Figma: white, outlined, Shop logo in Shop purple */
 .yk-product__button--shop {

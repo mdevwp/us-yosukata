@@ -771,6 +771,71 @@ document.addEventListener('click', (event) => {
   play.remove();
 });
 
+// QA 19.11 p.4: Safari (and every browser on iPhone/iPad) does not start a YouTube player that is created by a
+// click, so the video needed a second tap. There the player is loaded ahead, under the cover, when the video
+// comes near the screen; the tap goes straight to the player and the cover goes away once the video plays.
+(() => {
+  const ua = navigator.userAgent;
+  const appleTouch = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const desktopSafari = /Safari\//.test(ua) && !/Chrome|Chromium|CriOS|FxiOS|Edg|OPR|Android/.test(ua);
+  if (!appleTouch && !desktopSafari) return;
+
+  const reveal = (box) => {
+    if (!box || box.dataset.ykEmbedPlaying) return;
+    box.dataset.ykEmbedPlaying = 'true';
+    box.querySelectorAll('.yk-details__media-el, [data-yk-embed-play]').forEach((el) => el.remove());
+    box.classList.remove('yk-details__media--primed');
+  };
+  const boxForWindow = (source) => Array.from(document.querySelectorAll('.yk-details__media--primed'))
+    .find((box) => box.querySelector('iframe')?.contentWindow === source);
+
+  const prime = (box) => {
+    if (box.querySelector('iframe') || !/youtube/.test(box.dataset.ykEmbed || '')) return;
+    const src = box.dataset.ykEmbed.replace('autoplay=1', 'autoplay=0')
+      + `&playsinline=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
+    const frame = document.createElement('iframe');
+    frame.src = src;
+    frame.title = box.dataset.ykEmbedTitle || 'Video';
+    frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    frame.allowFullscreen = true;
+    frame.addEventListener('load', () => {
+      // Ask the player to report its state (playing = 1, buffering = 3)
+      const send = (message) => frame.contentWindow?.postMessage(JSON.stringify(message), '*');
+      send({ event: 'listening', id: 1, channel: 'widget' });
+      send({ event: 'command', func: 'addEventListener', args: ['onStateChange'], id: 1, channel: 'widget' });
+    });
+    box.prepend(frame);
+    box.classList.add('yk-details__media--primed');
+  };
+
+  window.addEventListener('message', (event) => {
+    if (!/youtube/.test(event.origin)) return;
+    let data = event.data;
+    try { data = typeof data === 'string' ? JSON.parse(data) : data; } catch (error) { return; }
+    const state = data?.event === 'onStateChange' ? data.info : data?.info?.playerState;
+    if (state === 1 || state === 3) reveal(boxForWindow(event.source));
+  });
+  // Backup for desktop Safari: a click into the player moves the focus to it
+  window.addEventListener('blur', () => {
+    setTimeout(() => {
+      const active = document.activeElement;
+      if (active?.tagName === 'IFRAME') reveal(active.closest('.yk-details__media--primed'));
+    }, 0);
+  });
+
+  const boxes = document.querySelectorAll('[data-yk-embed]');
+  if (!boxes.length) return;
+  if (!('IntersectionObserver' in window)) { boxes.forEach(prime); return; }
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      observer.unobserve(entry.target);
+      prime(entry.target);
+    });
+  }, { rootMargin: '600px 0px' });
+  boxes.forEach((box) => observer.observe(box));
+})();
+
 // "Buy with shop" (design style): open Shop Pay checkout for the selected variant and quantity
 document.addEventListener('click', (event) => {
   const link = event.target.closest('[data-yk-shop-pay]');

@@ -248,6 +248,53 @@
       };
       offers.querySelector('[data-yk-search-prev]').addEventListener('click', () => go(-1));
       offers.querySelector('[data-yk-search-next]').addEventListener('click', () => go(1));
+
+      // QA 19.11 p.1: the slider follows a mouse drag too (phones already swipe it natively)
+      let dragId = null;
+      let dragX = 0;
+      let dragStart = 0;
+      let dragged = false;
+      track.addEventListener('pointerdown', (event) => {
+        if (event.pointerType !== 'mouse' || event.button !== 0) return;
+        if (track.scrollWidth <= track.clientWidth + 2 || event.target.closest('button, form')) return;
+        dragId = event.pointerId;
+        dragX = event.clientX;
+        dragStart = track.scrollLeft;
+        dragged = false;
+      });
+      track.addEventListener('pointermove', (event) => {
+        if (dragId !== event.pointerId) return;
+        const delta = event.clientX - dragX;
+        if (!dragged && Math.abs(delta) < 6) return;
+        if (!dragged) {
+          dragged = true;
+          try { track.setPointerCapture(dragId); } catch (error) { /* already released */ }
+          track.classList.add('is-dragging');
+        }
+        track.scrollLeft = dragStart - delta;
+      });
+      const dragEnd = (event) => {
+        if (dragId !== event.pointerId) return;
+        dragId = null;
+        if (!dragged) return;
+        const step = track.children[0].getBoundingClientRect().width + 8 || 1;
+        let index = Math.round(track.scrollLeft / step);
+        const startIndex = Math.round(dragStart / step);
+        // A short drag still moves one card in the drag direction
+        if (index === startIndex && Math.abs(track.scrollLeft - dragStart) > 40) index += track.scrollLeft > dragStart ? 1 : -1;
+        track.classList.remove('is-dragging');
+        track.scrollTo({ left: Math.max(0, index) * step, behavior: 'smooth' });
+      };
+      track.addEventListener('pointerup', dragEnd);
+      track.addEventListener('pointercancel', dragEnd);
+      // A drag does not open the product the mouse was released on
+      track.addEventListener('click', (event) => {
+        if (!dragged) return;
+        event.preventDefault();
+        event.stopPropagation();
+        dragged = false;
+      }, true);
+      track.addEventListener('dragstart', (event) => event.preventDefault());
     }
 
     // Quick add on the offer cards: adds to the cart and opens the cart drawer
