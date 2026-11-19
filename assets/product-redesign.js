@@ -852,6 +852,34 @@ document.addEventListener('click', (event) => {
 });
 
 // Free shipping progress under the buy button (QA product p.7): the cart total plus this product against the threshold
+// Promo box with an extra discount: recount [savings] for the selected variant
+document.querySelectorAll('[data-yk-promo]').forEach((promo) => {
+  const section = promo.closest('section') || document;
+  const variantsEl = section.querySelector('[data-yk-variants]');
+  const variants = variantsEl ? JSON.parse(variantsEl.textContent) : [];
+  const variantInput = section.querySelector('[data-yk-variant-id]');
+  const percent = Number(promo.dataset.percent) || 0;
+  const title = promo.querySelector('[data-yk-promo-title]');
+  const text = promo.querySelector('[data-yk-promo-text]');
+  const money = (cents) => {
+    const format = window.theme?.moneyFormat || window.Shopify?.money_format || '${{amount}}';
+    return format.replace(/\{\{\s*(\w+)\s*\}\}/, (match, key) => {
+      const value = (cents / 100).toFixed(key.includes('no_decimals') ? 0 : 2);
+      return key.includes('comma') ? value.replace('.', ',') : value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    });
+  };
+  const fill = (template, savings) => template.split('[percent]').join(String(percent)).split('[savings]').join(savings);
+  const render = () => {
+    const current = variants.find((variant) => String(variant.id) === String(variantInput?.value));
+    if (!current) return;
+    const markdown = current.compare_at_price > current.price ? current.compare_at_price - current.price : 0;
+    const savings = money(markdown + Math.round(current.price * percent / 100));
+    if (title) title.textContent = fill(promo.dataset.title || '', savings);
+    if (text) text.textContent = fill(promo.dataset.text || '', savings);
+  };
+  section.querySelector('[data-yk-variant-picker]')?.addEventListener('change', () => window.setTimeout(render, 0));
+});
+
 document.querySelectorAll('[data-yk-ship-note]').forEach((note) => {
   const section = note.closest('section') || document;
   const text = note.querySelector('[data-yk-ship-note-text]');

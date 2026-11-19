@@ -489,12 +489,13 @@
           "type": "promo",
           "settings": {
             "icon": "tag",
-            "title": "Bigger markdowns",
-            "text": "We've refreshed our sale with discounts of up to 50% on select styles.",
+            "extra_percent": 10,
+            "title": "Extra [percent]% off applying",
+            "text": "Added to your sale discount. Total savings: [savings]",
             "link": "",
             "show_when_sold_out": false
           },
-          "disabled": true
+          "disabled": false
         },
         "row_returns": {
           "type": "info_row",
