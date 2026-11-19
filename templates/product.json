@@ -489,7 +489,7 @@
           "type": "promo",
           "settings": {
             "icon": "tag",
-            "extra_percent": 10,
+            "extra_percent": 0,
             "title": "Extra [percent]% off applying",
             "text": "Added to your sale discount. Total savings: [savings]",
             "link": "",
