@@ -359,14 +359,106 @@
                 endif
                 assign set_handles = set_handles | split: ','
                 assign set_count = 0
+
+                # QA 19.11: when the store sells this pair as a bundle (collection "bundles"), "Add both" adds the
+                # bundle at its price. A bundle matches by tags: the same wok (size, steel, bottom, seasoning)
+                # and exactly the same items as the suggested product (e.g. only a wooden lid - no board,
+                # chopsticks or extra tools). Several matches: the cheapest. None: the two products, as before.
+                assign set_parts = 'wooden lid|stainless steel lid|tempered glass|ladle|spatula|skimmer|turner|stainless steel utensils|carbon steel utensils|bamboo chopsticks|wooden chopsticks|cooking chopsticks|stainless steel cutting board' | split: '|'
+                assign set_wok_tags = product.tags | join: '|' | downcase | split: '|'
+                assign set_base = set_size | append: '-inch'
+                for set_tag in set_wok_tags
+                  if set_tag == 'black carbon steel' or set_tag == 'blue carbon steel' or set_tag == 'flat bottom' or set_tag == 'round bottom' or set_tag == 'pre-seasoned' or set_tag == 'unseasoned'
+                    assign set_base = set_base | append: '|' | append: set_tag
+                  endif
+                endfor
+                assign set_base = set_base | split: '|'
+                # Bundles for this wok: "parts~variant id~price" per line
+                assign set_bundles = ''
+                assign set_bundle_collection = collections['bundles']
               -%}
+              {%- if set_bundle_collection != blank -%}
+                {%- paginate set_bundle_collection.products by 250 -%}
+                  {%- for set_bundle in set_bundle_collection.products -%}
+                    {%- liquid
+                      assign set_bundle_variant = set_bundle.selected_or_first_available_variant
+                      unless set_bundle_variant.available
+                        continue
+                      endunless
+                      assign set_bundle_tags = set_bundle.tags | join: '|' | downcase | split: '|'
+                      assign set_ok = true
+                      for set_need in set_base
+                        unless set_bundle_tags contains set_need
+                          assign set_ok = false
+                          break
+                        endunless
+                      endfor
+                      unless set_ok
+                        continue
+                      endunless
+                      assign set_bundle_parts = ''
+                      for set_part in set_parts
+                        if set_bundle_tags contains set_part
+                          assign set_bundle_parts = set_bundle_parts | append: set_part | append: ','
+                        endif
+                      endfor
+                      assign set_bundles = set_bundles | append: set_bundle_parts | append: '~' | append: set_bundle_variant.id | append: '~' | append: set_bundle_variant.price | append: '~' | append: set_bundle.url | append: '\n'
+                    -%}
+                  {%- endfor -%}
+                {%- endpaginate -%}
+              {%- endif -%}
+              {%- assign set_bundles = set_bundles | split: '\n' -%}
               {%- capture set_items -%}
                 {%- for set_handle in set_handles -%}
                   {%- assign set_product = all_products[set_handle] -%}
                   {%- if set_product == blank or set_product.available == false or set_product.id == product.id -%}{%- continue -%}{%- endif -%}
                   {%- assign set_variant = set_product.selected_or_first_available_variant -%}
-                  {%- assign set_total = current_variant.price | plus: set_variant.price -%}
-                  {%- assign set_count = set_count | plus: 1 -%}
+                  {%- liquid
+                    assign set_total = current_variant.price | plus: set_variant.price
+                    assign set_count = set_count | plus: 1
+                    # Items of the suggested product, in the bundles' tag words
+                    assign set_item_tags = set_product.tags | join: '|' | downcase | split: '|'
+                    assign set_item_parts = ''
+                    for set_part in set_parts
+                      assign set_has = false
+                      if set_item_tags contains set_part
+                        assign set_has = true
+                      elsif set_part == 'stainless steel lid' and set_item_tags contains 'wok lid' and set_item_tags contains 'stainless steel'
+                        assign set_has = true
+                      elsif set_part == 'stainless steel utensils' and set_item_tags contains 'stainless steel'
+                        if set_item_tags contains 'ladle' or set_item_tags contains 'spatula'
+                          assign set_has = true
+                        endif
+                      elsif set_part == 'carbon steel utensils' and set_item_tags contains 'carbon steel'
+                        if set_item_tags contains 'ladle' or set_item_tags contains 'spatula'
+                          assign set_has = true
+                        endif
+                      endif
+                      if set_has
+                        assign set_item_parts = set_item_parts | append: set_part | append: ','
+                      endif
+                    endfor
+                    # The cheapest bundle with exactly these items, if it is cheaper than buying the two
+                    assign set_add_id = set_variant.id
+                    assign set_bundle_url = ''
+                    assign set_saving = 0
+                    if set_item_parts != blank
+                      for set_line in set_bundles
+                        assign set_cols = set_line | split: '~'
+                        if set_cols.size == 4 and set_cols[0] == set_item_parts
+                          assign set_bundle_price = set_cols[2] | plus: 0
+                          if set_bundle_price < set_total
+                            assign set_line_saving = set_total | minus: set_bundle_price
+                            if set_line_saving > set_saving
+                              assign set_saving = set_line_saving
+                              assign set_add_id = set_cols[1]
+                              assign set_bundle_url = set_cols[3]
+                            endif
+                          endif
+                        endif
+                      endfor
+                    endif
+                  -%}
                   <li class="yk-product__set-item">
                     <a class="yk-product__set-media" href="{{ set_product.url }}" tabindex="-1" aria-hidden="true">
                       {%- if set_product.featured_media -%}
@@ -375,12 +467,17 @@
                     </a>
                     <div class="yk-product__set-info">
                       <a class="yk-product__set-name" href="{{ set_product.url }}">{{ set_product.title | remove_first: 'Yosukata ' | escape }}</a>
-                      <span class="yk-product__set-price">+ {{ set_variant.price | money }}<span class="yk-product__set-total"> · set {{ set_total | money }}</span></span>
+                      {%- if set_saving > 0 -%}
+                        <span class="yk-product__set-price">set {{ set_total | minus: set_saving | money }}<span class="yk-product__set-total"> · save {{ set_saving | money }}</span></span>
+                      {%- else -%}
+                        <span class="yk-product__set-price">+ {{ set_variant.price | money }}<span class="yk-product__set-total"> · set {{ set_total | money }}</span></span>
+                      {%- endif -%}
                     </div>
                     <button
                       class="yk-product__set-add"
                       type="button"
-                      data-yk-set-add="{{ set_variant.id }}"
+                      data-yk-set-add="{{ set_add_id }}"
+                      {% if set_saving > 0 %}data-yk-set-bundle data-bundle-url="{{ set_bundle_url }}"{% endif %}
                       aria-label="Add {{ product.title | escape }} and {{ set_product.title | escape }} to cart"
                     >{{ block.settings.button_label | escape }}</button>
                   </li>

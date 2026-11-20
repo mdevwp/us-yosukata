@@ -240,7 +240,10 @@ function initYkProduct(section) {
       const button = event.target.closest('[data-yk-set-add]');
       if (!button || button.classList.contains('is-loading')) return;
       const variantInput = form && form.querySelector('[data-yk-variant-id]');
-      const items = [{ id: Number(variantInput ? variantInput.value : 0), quantity: 1 }, { id: Number(button.dataset.ykSetAdd), quantity: 1 }];
+      // A bundle already holds this wok, so only the bundle goes in the cart
+      const items = button.hasAttribute('data-yk-set-bundle')
+        ? [{ id: Number(button.dataset.ykSetAdd), quantity: 1 }]
+        : [{ id: Number(variantInput ? variantInput.value : 0), quantity: 1 }, { id: Number(button.dataset.ykSetAdd), quantity: 1 }];
       button.classList.add('is-loading');
       if (setError) setError.hidden = true;
       fetch(`${root}cart/add.js`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ items }) })
